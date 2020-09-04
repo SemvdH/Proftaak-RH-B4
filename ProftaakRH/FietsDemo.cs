@@ -25,7 +25,7 @@ namespace FietsDemo
             }
 
             // Connecting
-            errorCode = errorCode = await bleBike.OpenDevice("Avans Bike B5F0");
+            errorCode = errorCode = await bleBike.OpenDevice("Avans Bike AC48");
             // __TODO__ Error check
 
             var services = bleBike.GetServices;
@@ -43,7 +43,7 @@ namespace FietsDemo
             errorCode = await bleBike.SubscribeToCharacteristic("6e40fec2-b5a3-f393-e0a9-e50e24dcca9e");
 
             // Heart rate
-            errorCode = await bleHeart.OpenDevice("Avans Bike B5F0");
+            errorCode = await bleHeart.OpenDevice("Avans Bike AC48");
 
             await bleHeart.SetService("HeartRate");
 
@@ -66,7 +66,7 @@ namespace FietsDemo
                 Console.WriteLine("SYNC     : " + bytes[0]);
                 ANT[0] = bytes[0];
                 Console.WriteLine("LENGTH   : " + bytes[1]);
-                
+
                 int length = Convert.ToInt32(bytes[1], 16);
                 ANT[1] = length.ToString();
                 Console.WriteLine("MSG ID   : " + bytes[2]);
@@ -78,15 +78,50 @@ namespace FietsDemo
                 }
                 ANT[3] = msg;
 
+                byte[] message = new byte[length];
+
+                Array.Copy(e.Data, 3, message, 0, length);
+
+                foreach(string b in BitConverter.ToString(message).Split('-'))
+                {
+                    Console.WriteLine(b);
+                }
+
                 Console.WriteLine("MSG      : " + msg);
                 string checksum = bytes[3 + length];
                 ANT[4] = checksum;
                 Console.WriteLine("CHECKSUM : " + checksum);
+
+
+                Console.WriteLine(BitConverter.ToString(e.Data));
+                
             } else
             {
                 Console.WriteLine("BPM:     " + Convert.ToInt32(bytes[1], 16));
             }
             Console.WriteLine();
+        }
+
+        private static void DoCrazyShitWithANT(byte[] bytes)
+        {
+            if(bytes.Length >= 5)
+            {
+
+                //Console.WriteLine("SYNC     : " + bytes[0]);
+                //Console.WriteLine("LENGTH   : " + bytes[1]);
+
+                //int length = Convert.ToInt32(bytes[1], 16);
+                //Console.WriteLine("MSG ID   : " + bytes[2]);
+                //string msg = string.Empty;
+                //for (int i = 3; i < 3 + length; i++)
+                //{
+                //    msg += bytes[i];
+                //}
+
+                //Console.WriteLine("MSG      : " + msg);
+                //byte checksum = bytes[3 + length];
+                //Console.WriteLine("CHECKSUM : " + checksum);
+            }
         }
     }
 }
