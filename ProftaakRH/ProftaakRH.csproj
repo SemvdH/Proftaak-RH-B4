@@ -6,7 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BLELibrary">
-      <HintPath>.\BLELibrary.dll</HintPath>
+      <HintPath>.\dll\BLELibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 
