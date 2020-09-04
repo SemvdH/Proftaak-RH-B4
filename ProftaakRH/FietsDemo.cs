@@ -82,10 +82,7 @@ namespace FietsDemo
 
                 Array.Copy(e.Data, 3, message, 0, length);
 
-                foreach(string b in BitConverter.ToString(message).Split('-'))
-                {
-                    Console.WriteLine(b);
-                }
+                DoCrazyShitWithMsg(message);
 
                 Console.WriteLine("MSG      : " + msg);
                 string checksum = bytes[3 + length];
@@ -102,25 +99,12 @@ namespace FietsDemo
             Console.WriteLine();
         }
 
-        private static void DoCrazyShitWithANT(byte[] bytes)
+        private static void DoCrazyShitWithMsg(byte[] bytes)
         {
-            if(bytes.Length >= 5)
+            String[] hexvalues = BitConverter.ToString(bytes).Split('-');
+            for (int i = 0; i < hexvalues.Length; i++)
             {
-
-                //Console.WriteLine("SYNC     : " + bytes[0]);
-                //Console.WriteLine("LENGTH   : " + bytes[1]);
-
-                //int length = Convert.ToInt32(bytes[1], 16);
-                //Console.WriteLine("MSG ID   : " + bytes[2]);
-                //string msg = string.Empty;
-                //for (int i = 3; i < 3 + length; i++)
-                //{
-                //    msg += bytes[i];
-                //}
-
-                //Console.WriteLine("MSG      : " + msg);
-                //byte checksum = bytes[3 + length];
-                //Console.WriteLine("CHECKSUM : " + checksum);
+                Console.WriteLine("Byte {0}: {1}" , i, hexvalues[i]);
             }
         }
     }
