@@ -15,6 +15,7 @@ namespace Hardware
             else
             if (bytes.Length == 8)
             {
+                
                 switch (bytes[0])
                 {
                     case 0x10:
@@ -34,6 +35,15 @@ namespace Hardware
                         break;
                     case 0x19:
                         Console.WriteLine($"Event count: {bytes[1]} (Rollover 256)");
+                        if (bytes[2] != 0xFF)
+                        {
+                            Console.WriteLine($"Instantaneous cadence: {bytes[2]} RPM (Range 0-254)");
+                            
+                        }
+                        int accumPower = bytes[3] | (bytes[4] << 8);
+                        
+                        Console.WriteLine($"Accumulated power: {accumPower} watt (Rollover 65536)");
+                        //Console.WriteLine();
                         break;
 
                     default:
