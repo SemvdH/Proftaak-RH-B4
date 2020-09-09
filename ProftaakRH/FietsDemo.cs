@@ -11,15 +11,14 @@ namespace FietsDemo
 {
     internal class Program
     {
-        static void Main(string[] args)
-        {
-            foo foo = new foo();
-            //BLEReceiver bLEReceiver = new BLEReceiver(foo);
+        //static void Main(string[] args)
+        //{
+        //    foo foo = new foo();
+        //    BLEReceiver bLEReceiver = new BLEReceiver(foo);
 
-
-            //bLEReceiver.ConnectToBLE();
-            Console.Read();
-        }
+        //    bLEReceiver.ConnectToBLE();
+        //    Console.Read();
+        //}
 
         interface IFoo
         {
@@ -144,7 +143,7 @@ namespace FietsDemo
             {
 
                 Console.WriteLine("Foo class received {0}", Convert.ToString(bytes));
-                
+
             }
         }
 
