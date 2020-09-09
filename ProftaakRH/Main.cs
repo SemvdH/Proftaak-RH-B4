@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Hardware;
+using System.Threading;
+
 
 namespace ProftaakRH
 {
@@ -11,9 +13,19 @@ namespace ProftaakRH
         static void Main(string[] args)
         {
             IDataConverter dataConverter = new DataConverter();
-            BLEReciever bLEReceiver = new BLEReciever(dataConverter);
+            BLEHandler bLEHandler = new BLEHandler(dataConverter);
 
-            bLEReceiver.Connect();
+            bLEHandler.Connect();
+
+            while (!bLEHandler.Running)
+            {
+                Thread.Yield();
+            }
+
+            Console.WriteLine("odlodlJNgeojhtosj\n/nng;sjonghjsngl;zdf\nnhgLLBJHS\nEOGHSFJBNSLDFJSLDFJGHOAIJo;r\njnAJFVBHHBRG");
+
+            bLEHandler.setResistance(50);
+
 
             Console.ReadLine();
         }
