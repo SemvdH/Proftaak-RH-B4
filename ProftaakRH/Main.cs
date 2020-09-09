@@ -13,9 +13,9 @@ namespace ProftaakRH
             IDataConverter dataConverter = new DataConverter();
             BLEReciever bLEReceiver = new BLEReciever(dataConverter);
 
-            bLEReceiver.Connect("sdkgjnzsoifgnzaiof");
+            bLEReceiver.Connect();
 
-            //Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }
