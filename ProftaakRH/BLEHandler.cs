@@ -140,10 +140,10 @@ namespace Hardware
                 antMessage[i] = 0xFF;
             }
             //antMessage[10] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
-            antMessage[11] = 50; //hardcoded for testing
+            antMessage[11] = 100; //hardcoded for testing
 
             byte checksum = 0;
-            for (int i = 0; i < antMessage.Length -1; i++)
+            for (int i = 0; i < antMessage.Length; i++)
             {
                 checksum ^= antMessage[i];
             }
