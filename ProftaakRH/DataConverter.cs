@@ -27,6 +27,10 @@ namespace Hardware
 
                         int input = bytes[4] | (bytes[5] << 8);
                         Console.WriteLine($"Speed is : {input * 0.01}m/s (Range 65.534m/4)");
+                        if (bytes[6] != 0xFF)
+                        {
+                            Console.WriteLine("Heart rate byte: {0}", Convert.ToString(bytes[6],2));
+                        }
                         break;
                     case 0x19:
 
