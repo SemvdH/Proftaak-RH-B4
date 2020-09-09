@@ -22,7 +22,7 @@ namespace ProftaakRH
                 Thread.Yield();
             }
 
-            bLEHandler.setResistance(50);
+            bLEHandler.setResistance(25);
             Console.ReadLine();
         }
     }

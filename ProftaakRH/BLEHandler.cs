@@ -131,7 +131,7 @@ namespace Hardware
         {
             byte[] antMessage = new byte[13];
             antMessage[0] = 0x4A;
-            antMessage[1] = 0x08;
+            antMessage[1] = 0x09;
             antMessage[2] = 0x4E;
             antMessage[3] = 0x05;
             antMessage[4] = 0x30;
@@ -148,8 +148,8 @@ namespace Hardware
                 checksum ^= antMessage[i];
             }
 
-            //antMessage[12] = checksum;// no because dumb reasons. it is somehow always 0x39 ?!?!?!?    magic i tell you!(or a bug:D)
-            antMessage[12] = 0x39;
+            antMessage[12] = checksum;// no because dumb reasons. it is somehow always 0x39 ?!?!?!?    magic i tell you!(or a bug:D)
+            //antMessage[12] = 0x39;
 
 
             bleBike.WriteCharacteristic("6E40FEC3-B5A3-F393-E0A9-E50E24DCCA9E", antMessage);
