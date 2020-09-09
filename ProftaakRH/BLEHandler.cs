@@ -139,16 +139,17 @@ namespace Hardware
             {
                 antMessage[i] = 0xFF;
             }
-            //antMessage[10] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
-            antMessage[11] = 100; //hardcoded for testing
+            antMessage[11] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
+            //antMessage[11] = 50; //hardcoded for testing
 
             byte checksum = 0;
-            for (int i = 0; i < antMessage.Length; i++)
+            for (int i = 0; i < 12; i++)
             {
                 checksum ^= antMessage[i];
             }
 
-            antMessage[12] = checksum;
+            //antMessage[12] = checksum;// no because dumb reasons. it is somehow always 0x39 ?!?!?!?    magic i tell you!(or a bug:D)
+            antMessage[12] = 0x39;
 
 
             bleBike.WriteCharacteristic("6E40FEC3-B5A3-F393-E0A9-E50E24DCCA9E", antMessage);

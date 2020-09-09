@@ -22,16 +22,7 @@ namespace ProftaakRH
                 Thread.Yield();
             }
 
-            Console.WriteLine("odlodlJNgeojhtosj\n/nng;sjonghjsngl;zdf\nnhgLLBJHS\nEOGHSFJBNSLDFJSLDFJGHOAIJo;r\njnAJFVBHHBRG");
-
             bLEHandler.setResistance(50);
-            bLEHandler.setResistance(50);
-            bLEHandler.setResistance(50);
-            bLEHandler.setResistance(50);
-            bLEHandler.setResistance(50);
-            bLEHandler.setResistance(50);
-
-
             Console.ReadLine();
         }
     }
