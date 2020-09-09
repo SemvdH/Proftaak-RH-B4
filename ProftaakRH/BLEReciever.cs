@@ -10,12 +10,14 @@ namespace Hardware
     class BLEReciever
     {
         IDataConverter dataConverter;
-        BLE bleBike;
-        BLE bleHeart;
+        private BLE bleBike;
+        private BLE bleHeart;
+        public bool running { get; }
 
         public BLEReciever(IDataConverter dataConverter)
         {
             this.dataConverter = dataConverter;
+            bool running = false;
         }
 
         public void Connect()
@@ -34,7 +36,7 @@ namespace Hardware
                     Console.WriteLine("connecting to {0}", name);
                     Connect(name);
                     break;
-                   
+
                 }
             }
         }
@@ -90,6 +92,7 @@ namespace Hardware
                 disposeBLE();
                 return;
             }
+            this.running = true;
         }
 
         private void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
@@ -103,6 +106,7 @@ namespace Hardware
         {
             this.bleBike?.Dispose();
             this.bleHeart?.Dispose();
+            this.running = false;
         }
     }
 }
