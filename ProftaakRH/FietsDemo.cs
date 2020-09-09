@@ -11,7 +11,7 @@ namespace FietsDemo
 {
     internal class Program
     {
-        static void Main(string[] args)
+        /*static void Main(string[] args)
         {
             foo foo = new foo();
             //BLEReceiver bLEReceiver = new BLEReceiver(foo);
@@ -19,7 +19,7 @@ namespace FietsDemo
 
             //bLEReceiver.ConnectToBLE();
             Console.Read();
-        }
+        }*/
 
         interface IFoo
         {
@@ -78,6 +78,13 @@ namespace FietsDemo
 
                 Console.Read();
             }
+
+           /* public async void ConnectToSimulation()
+            {
+                BikeSimulator bikeSimulator = new BikeSimulator();
+                bikeSimulator.StartSimulation(foo);
+
+            }*/
 
             private void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
             {
