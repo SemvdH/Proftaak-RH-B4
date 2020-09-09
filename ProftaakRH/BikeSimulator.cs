@@ -1,6 +1,7 @@
 ﻿using LibNoise.Primitive;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -11,7 +12,16 @@ namespace Hardware.Simulators
     class BikeSimulator
     {
         IDataConverter dataConverter;
+        private int elapsedTime = 0;
         private int eventCounter = 0;
+        private double distanceTraveled = 0;
+        private int equipmentType = 25;
+        private double speed = 0;
+        private int BPM = 0;
+        private int cadence = 0;
+        private double resistance = 0;
+
+
 
         public BikeSimulator(IDataConverter dataConverter)
         {
@@ -27,34 +37,54 @@ namespace Hardware.Simulators
             
             while (true)
             {
-                byte[] array = { 0x19, 0x16, 0x00, 0xFF, 0x28, 0x00, 0x00, 0x20 };
-                Console.WriteLine(improvedPerlin.GetValue(x)+1);
-                //0x10 message
-                /*foreach(byte s in array)
-                {
-                    Console.Write("{0:X}",s);
-                }*/
-                dataConverter.Bike(GenerateBike(improvedPerlin.GetValue(x)+1));
-                //0x19 message
-                //dataConverter.Bike(array);
-                //Heartbeat message
-                //dataConverter.BPM(array);
+                CalculateVariables(improvedPerlin.GetValue(x)+1);
+                dataConverter.Bike(GenerateBike0x19());
+                dataConverter.Bike(GenerateBike0x10());
+                dataConverter.BPM(GenerateHeart());
 
                 Thread.Sleep(1000);
-                x += 1f;
+                x += 0.1f;
                 eventCounter++;
+                elapsedTime++;
             }
 
         }
-        private byte[] GenerateBike(float perlin)
+        private byte[] GenerateBike0x19()
         {
-            byte[] bikeByte = {0x19,0x}
-            return new byte[1];
+            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+            return bikeByte;
         }
 
-        private double Random(double x)
+        private byte[] GenerateBike0x10()
+        {
+            string binary = Convert.ToString((int)speed, 2);
+            byte b = Convert.ToByte(binary.Substring(0, 3));
+            byte b2 = Convert.ToByte(binary.Substring(8));
+            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), b, b2, Convert.ToByte(BPM), 0xFF };
+            return bikeByte;
+        }
+
+        private byte[] GenerateHeart()
+        {
+            byte[] hartByte = { 0x00, Convert.ToByte(BPM)};
+            return hartByte;
+        }
+
+        private void CalculateVariables(float perlin)
+        {
+            this.speed = perlin * 5 / 0.001 ;
+            
+            
+            Console.WriteLine(speed);
+            this.distanceTraveled = (distanceTraveled+speed) % 256;
+            this.BPM = (int) perlin * 80;
+            this.cadence = (int)speed * 4;
+
+        }
+
+        /*private double Random(double x)
         {
             return (Math.Sin(2 * x) + Math.Sin(Math.PI * x) + 2) / 4;
-        }
+        }*/
     }
 }
