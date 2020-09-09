@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Hardware.Simulators;
+using Hardware;
 
 namespace FietsDemo
 {
@@ -12,8 +14,10 @@ namespace FietsDemo
         static void Main(string[] args)
         {
             foo foo = new foo();
-            BLEReceiver bLEReceiver = new BLEReceiver(foo);
-            bLEReceiver.ConnectToBLE();
+            //BLEReceiver bLEReceiver = new BLEReceiver(foo);
+
+
+            //bLEReceiver.ConnectToBLE();
             Console.Read();
         }
 

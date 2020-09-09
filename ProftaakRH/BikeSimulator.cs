@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProftaakRH
+namespace Hardware.Simulators
 {
-    class Class1
+    class BikeSimulator
     {
+        IDataConverter dataConverter;
     }
 }

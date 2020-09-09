@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProftaakRH
+namespace Hardware
 {
-    class Class1
+    class BLEReciever
     {
+        IDataConverter dataConverter;
     }
 }
