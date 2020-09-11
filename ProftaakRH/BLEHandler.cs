@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 
 namespace Hardware
 {
+    /// <summary>
+    /// <c>BLEHandler</c> class that handles connection and traffic to and from the bike
+    /// </summary>
     class BLEHandler
     {
         IDataConverter dataConverter;
@@ -14,12 +17,19 @@ namespace Hardware
         private BLE bleHeart;
         public bool Running { get; set; }
 
+        /// <summary>
+        /// Makes a new BLEHandler object
+        /// </summary>
+        /// <param name="dataConverter">the dataconverter object</param>
         public BLEHandler(IDataConverter dataConverter)
         {
             this.dataConverter = dataConverter;
             bool running = false;
         }
 
+        /// <summary>
+        /// Checks for available devices to connect to, and if one is found, it connects to it
+        /// </summary>
         public void Connect()
         {
             BLE bleBike = new BLE();
@@ -40,6 +50,11 @@ namespace Hardware
                 }
             }
         }
+
+        /// <summary>
+        /// Connects to the device with the given name
+        /// </summary>
+        /// <param name="deviceName">The name of the device to connect to</param>
         public async void Connect(string deviceName)
         {
             int errorCode = 0;
@@ -95,12 +110,17 @@ namespace Hardware
 
             Console.WriteLine("connected to BLE");
             this.Running = true;
+
         }
 
+        /// <summary>
+        /// Callback for when the subscription value of the ble bike has changed
+        /// </summary>
+        /// <param name="sender"> the sender object</param>
+        /// <param name="e">the value changed event</param>
         private void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
             
-
             if (e.ServiceName == "6e40fec2-b5a3-f393-e0a9-e50e24dcca9e")
             {
                 byte[] payload = new byte[8];
@@ -118,6 +138,9 @@ namespace Hardware
 
         }
 
+        /// <summary>
+        /// Disposes of the current BLE object, if it exists.
+        /// </summary>
         private void disposeBLE()
         {
             this.bleBike?.Dispose();
@@ -125,6 +148,10 @@ namespace Hardware
             this.Running = false;
         }
 
+        /// <summary>
+        /// Method <c>setResistance</c> converts the input percentage to bytes and sends it to the bike.
+        /// </summary>
+        /// <param name="percentage">The precentage of resistance to set</param>
         public void setResistance(float percentage)
         {
             byte[] antMessage = new byte[13];
