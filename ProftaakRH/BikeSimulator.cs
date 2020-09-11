@@ -69,6 +69,32 @@ namespace Hardware.Simulators
             return hartByte;
         }
 
+        public byte[] GenerateResistance(float percentage)
+        {
+            byte[] antMessage = new byte[13];
+            antMessage[0] = 0x4A;
+            antMessage[1] = 0x09;
+            antMessage[2] = 0x4E;
+            antMessage[3] = 0x05;
+            antMessage[4] = 0x30;
+            for (int i = 5; i < 11; i++)
+            {
+                antMessage[i] = 0xFF;
+            }
+            antMessage[11] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
+            //antMessage[11] = 50; //hardcoded for testing
+
+            byte checksum = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                checksum ^= antMessage[i];
+            }
+
+            antMessage[12] = checksum;//reminder that i am dumb :P
+
+            return antMessage;
+        }
+
         //Calculates the needed variables
         //Input perlin value
         private void CalculateVariables(float perlin)
@@ -84,7 +110,12 @@ namespace Hardware.Simulators
 
         public void setResistance(byte[] bytes)
         {
-            throw new NotImplementedException();
+            if(bytes.Length == 13)
+            {
+                this.resistance = Convert.ToDouble(bytes[11])/2;
+                Console.WriteLine(resistance);
+
+            }
         }
 
         /*private double Random(double x)

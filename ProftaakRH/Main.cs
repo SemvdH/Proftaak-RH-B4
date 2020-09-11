@@ -13,6 +13,7 @@ namespace ProftaakRH
         {
             IDataConverter dataConverter = new DataConverter();
             BikeSimulator bikeSimulator = new BikeSimulator(dataConverter);
+            bikeSimulator.setResistance(bikeSimulator.GenerateResistance(1f));
             bikeSimulator.StartSimulation();
 
             Console.ReadLine();
