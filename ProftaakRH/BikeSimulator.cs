@@ -21,6 +21,8 @@ namespace Hardware.Simulators
         private int cadence = 0;
         private double resistance = 0;
 
+        byte[] array;
+
 
 
         public BikeSimulator(IDataConverter dataConverter)
@@ -73,7 +75,7 @@ namespace Hardware.Simulators
         private void CalculateVariables(float perlin)
         {
             this.speed = perlin * 5 / 0.001 ;
-            
+            array = BitConverter.GetBytes(speed);
             
             Console.WriteLine(speed);
             this.distanceTraveled = (distanceTraveled+speed) % 256;

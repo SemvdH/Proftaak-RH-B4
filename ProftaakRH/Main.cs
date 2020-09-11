@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Hardware;
+using Hardware.Simulators;
 
 
 namespace ProftaakRH
@@ -13,8 +14,6 @@ namespace ProftaakRH
             IDataConverter dataConverter = new DataConverter();
             BikeSimulator bikeSimulator = new BikeSimulator(dataConverter);
             bikeSimulator.StartSimulation();
-
-            bLEReceiver.Connect();
 
             Console.ReadLine();
         }
