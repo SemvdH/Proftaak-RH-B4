@@ -20,8 +20,12 @@ namespace Hardware.Simulators
         private int BPM = 0;
         private int cadence = 0;
         private double resistance = 0;
+        private double power;
+        private double accPower;
 
-        byte[] array;
+        byte[] speedArray;
+        byte[] powerArray;
+        byte[] accPowerArray;
 
 
 
@@ -60,14 +64,14 @@ namespace Hardware.Simulators
         //Generate an ANT message for page 0x19
         private byte[] GenerateBike0x19()
         {
-            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), Convert.ToByte(cadence%254), accPowerArray[0], accPowerArray[1], 0x0E, 0x00, 0x20 };
             return bikeByte;
         }
 
         //Generate an ANT message for page 0x10
         private byte[] GenerateBike0x10()
         {
-            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), array[0], array[1], Convert.ToByte(BPM), 0xFF };
+            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
             return bikeByte;
         }
 
@@ -111,11 +115,14 @@ namespace Hardware.Simulators
         {
             this.speed = perlin * 5 / 0.01 ;
             short sped = (short)speed;
-            array = BitConverter.GetBytes(sped);
+            speedArray = BitConverter.GetBytes(sped);
             this.distanceTraveled = (distanceTraveled+(speed*0.01)) % 256;
             this.BPM = (int) (perlin * 80);
-            this.cadence = (int)speed * 4;
-
+            this.cadence = (int)speed * 2;
+            this.power = ((1 + resistance) * speed) % 4094;
+            this.accPower = (this.accPower + this.power) % 65536;
+            // TO DO power to power LSB & MSN
+            accPowerArray = BitConverter.GetBytes((short)accPower);
         }
 
         //Set resistance in simulated bike
