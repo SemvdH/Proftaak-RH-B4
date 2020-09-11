@@ -23,13 +23,15 @@ namespace ProftaakRH
             }
 
             bLEHandler.setResistance(25);
-            while (true)
+            bool running = true;
+            while (running)
             {
                 string input = Console.ReadLine();
                 input.ToLower();
                 input.Trim();
                 if(input == "quit")
                 {
+                    running = false;
                     break;
                 }
                 try
