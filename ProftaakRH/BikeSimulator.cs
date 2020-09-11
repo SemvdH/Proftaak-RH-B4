@@ -64,7 +64,8 @@ namespace Hardware.Simulators
         //Generate an ANT message for page 0x19
         private byte[] GenerateBike0x19()
         {
-            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), Convert.ToByte(cadence%254), accPowerArray[0], accPowerArray[1], 0x0E, 0x00, 0x20 };
+            byte statByte = (byte)(powerArray[1] >> 4);
+            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), Convert.ToByte(cadence%254), accPowerArray[0], accPowerArray[1], powerArray[0], statByte, 0x20 };
             return bikeByte;
         }
 
@@ -118,10 +119,11 @@ namespace Hardware.Simulators
             speedArray = BitConverter.GetBytes(sped);
             this.distanceTraveled = (distanceTraveled+(speed*0.01)) % 256;
             this.BPM = (int) (perlin * 80);
-            this.cadence = (int)speed * 2;
-            this.power = ((1 + resistance) * speed) % 4094;
+            this.cadence = (int)speed/6;
+            this.power = ((1 + resistance) * speed)/14 % 4094;
             this.accPower = (this.accPower + this.power) % 65536;
             // TO DO power to power LSB & MSN
+            powerArray = BitConverter.GetBytes((short)this.power);
             accPowerArray = BitConverter.GetBytes((short)accPower);
         }
 
