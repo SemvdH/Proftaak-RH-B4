@@ -4,8 +4,15 @@ using System.Text;
 
 namespace Hardware
 {
+    /// <summary>
+    /// DataConverter class that handles all conversion of received data from the BLE bike.
+    /// </summary>
     class DataConverter : IDataConverter
     {
+        /// <summary>
+        /// Receives, parses and displays any incoming data from the bike.
+        /// </summary>
+        /// <param name="bytes">the array of bytes that was received</param>
         public void Bike(byte[] bytes)
         {
             if (bytes == null)
@@ -50,6 +57,7 @@ namespace Hardware
                         if (instantPower != 0xFFF)
                         Console.WriteLine($"Instant power: {instantPower} watt (Range 0-4094)");
 
+                        // other flags that are not really used but might be useful
                         int trainerStatus = bytes[6] & 0b00001111; // bit 4-7
                         int flags = bytes[7] >> 4;
                         int FEState = bytes[7] & 0b00001111;
@@ -68,6 +76,10 @@ namespace Hardware
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Gets and prints the BPM from the message received from the bike.
+        /// </summary>
+        /// <param name="bytes">The array with bytes that was received</param>
         public void BPM(byte[] bytes)
         {
             if (bytes == null)
@@ -92,6 +104,9 @@ namespace Hardware
         }
     }
 
+    /// <summary>
+    /// Dataconverter interface for handling data received from the bike
+    /// </summary>
     interface IDataConverter
     {
         void BPM(byte[] bytes);
