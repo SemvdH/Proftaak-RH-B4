@@ -99,9 +99,7 @@ namespace Hardware
 
         private void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
-            //Console.WriteLine("Received from {0}: {1}", e.ServiceName,
-            //    BitConverter.ToString(e.Data).Replace("-", " "));
-            //send to dataconverter
+            
 
             if (e.ServiceName == "6e40fec2-b5a3-f393-e0a9-e50e24dcca9e")
             {
@@ -140,7 +138,7 @@ namespace Hardware
                 antMessage[i] = 0xFF;
             }
             antMessage[11] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
-            //antMessage[11] = 50; //hardcoded for testing
+            
 
             byte checksum = 0;
             for (int i = 0; i < 12; i++)
