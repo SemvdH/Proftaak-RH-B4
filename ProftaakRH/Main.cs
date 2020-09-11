@@ -23,7 +23,25 @@ namespace ProftaakRH
             }
 
             bLEHandler.setResistance(25);
-            Console.ReadLine();
+            while (true)
+            {
+                string input = Console.ReadLine();
+                input.ToLower();
+                input.Trim();
+                if(input == "quit")
+                {
+                    break;
+                }
+                try
+                {
+                    int resistance = Int32.Parse(input);
+                    bLEHandler.setResistance(resistance);
+                }
+                catch
+                {
+                    //do nothing
+                }
+            }
         }
     }
 }

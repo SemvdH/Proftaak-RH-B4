@@ -51,16 +51,16 @@ namespace Hardware
                         
                         Console.WriteLine($"Accumulated power: {accumPower} watt (Rollover 65536)");
 
-                        int instantPower = (bytes[5]) | (bytes[6]>>4)<<8;
+                        int instantPower = (bytes[5]) | (bytes[6] & 0b00001111)<<8;
                         
 
                         if (instantPower != 0xFFF)
                         Console.WriteLine($"Instant power: {instantPower} watt (Range 0-4094)");
 
-                        // other flags that are not really used but might be useful
-                        int trainerStatus = bytes[6] & 0b00001111; // bit 4-7
+                        int trainerStatus = bytes[6] & 0b11110000; // bit 4-7
                         int flags = bytes[7] >> 4;
                         int FEState = bytes[7] & 0b00001111;
+
 
                         break;
 
