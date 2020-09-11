@@ -7,14 +7,14 @@ using System.Security.Cryptography;
 
 namespace Hardware
 {
-    class BLEReciever
+    class BLEHandler
     {
         IDataConverter dataConverter;
         private BLE bleBike;
         private BLE bleHeart;
-        public bool running { get; set; }
+        public bool Running { get; set; }
 
-        public BLEReciever(IDataConverter dataConverter)
+        public BLEHandler(IDataConverter dataConverter)
         {
             this.dataConverter = dataConverter;
             bool running = false;
@@ -94,7 +94,7 @@ namespace Hardware
             }
 
             Console.WriteLine("connected to BLE");
-            this.running = true;
+            this.Running = true;
         }
 
         private void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
@@ -108,7 +108,8 @@ namespace Hardware
                 byte[] payload = new byte[8];
                 Array.Copy(e.Data, 4, payload, 0, 8);
                 this.dataConverter.Bike(payload);
-            }else if(e.ServiceName == "00002a37-0000-1000-8000-00805f9b34fb")
+            }
+            else if (e.ServiceName == "00002a37-0000-1000-8000-00805f9b34fb")
             {
                 this.dataConverter.BPM(e.Data);
             }
@@ -123,7 +124,34 @@ namespace Hardware
         {
             this.bleBike?.Dispose();
             this.bleHeart?.Dispose();
-            this.running = false;
+            this.Running = false;
+        }
+
+        public void setResistance(float percentage)
+        {
+            byte[] antMessage = new byte[13];
+            antMessage[0] = 0x4A;
+            antMessage[1] = 0x09;
+            antMessage[2] = 0x4E;
+            antMessage[3] = 0x05;
+            antMessage[4] = 0x30;
+            for (int i = 5; i < 11; i++)
+            {
+                antMessage[i] = 0xFF;
+            }
+            antMessage[11] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
+            //antMessage[11] = 50; //hardcoded for testing
+
+            byte checksum = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                checksum ^= antMessage[i];
+            }
+
+            antMessage[12] = checksum;//reminder that i am dumb :P
+
+
+            bleBike.WriteCharacteristic("6E40FEC3-B5A3-F393-E0A9-E50E24DCCA9E", antMessage);
         }
     }
 }
