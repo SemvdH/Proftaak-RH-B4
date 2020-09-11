@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Hardware.Simulators
 {
-    class BikeSimulator
+    class BikeSimulator : IHandler
     {
         IDataConverter dataConverter;
         private int elapsedTime = 0;
@@ -69,21 +69,33 @@ namespace Hardware.Simulators
             return hartByte;
         }
 
+        //Calculates the needed variables
+        //Input perlin value
         private void CalculateVariables(float perlin)
         {
             this.speed = perlin * 5 / 0.01 ;
             short sped = (short)speed;
             array = BitConverter.GetBytes(sped);
-
-            this.distanceTraveled = (distanceTraveled+(speed*0.001)) % 256;
+            this.distanceTraveled = (distanceTraveled+(speed*0.01)) % 256;
             this.BPM = (int) (perlin * 80);
             this.cadence = (int)speed * 4;
 
+        }
+
+        public void setResistance(byte[] bytes)
+        {
+            throw new NotImplementedException();
         }
 
         /*private double Random(double x)
         {
             return (Math.Sin(2 * x) + Math.Sin(Math.PI * x) + 2) / 4;
         }*/
+    }
+
+    interface IHandler
+    {
+        void setResistance(byte[] bytes);
+
     }
 }
