@@ -21,6 +21,7 @@ namespace Hardware.Simulators
         private int cadence = 0;
         private double resistance = 0;
 
+        //Array for the speed bytes
         byte[] array;
 
 
@@ -42,11 +43,15 @@ namespace Hardware.Simulators
             while (true)
             {
                 CalculateVariables(improvedPerlin.GetValue(x)+1);
+                
+                Console.WriteLine("BikeSimulation:\nSpeed: " + this.speed / 100 + "m/s\t" + this.BPM + "BPM\n"+"Resis: "+ this.resistance+"%\n");
 
                 //Simulate sending data
                 dataConverter.Bike(GenerateBike0x19());
                 dataConverter.Bike(GenerateBike0x10());
                 dataConverter.BPM(GenerateHeart());
+
+                
 
                 Thread.Sleep(1000);
 
