@@ -176,7 +176,7 @@ namespace Hardware
             antMessage[12] = checksum;//reminder that i am dumb :P
 
 
-            bleBike.WriteCharacteristic("6E40FEC3-B5A3-F393-E0A9-E50E24DCCA9E", antMessage);
+            bleBike?.WriteCharacteristic("6E40FEC3-B5A3-F393-E0A9-E50E24DCCA9E", antMessage);
         }
     }
 }
