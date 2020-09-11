@@ -31,44 +31,54 @@ namespace Hardware.Simulators
         }
         public void StartSimulation()
         {
+            //Example BLE Message
             //4A-09-4E-05-19-16-00-FF-28-00-00-20-F0
 
             float x = 0.0f;
 
+            //Perlin for Random values
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0,LibNoise.NoiseQuality.Best);
             
             while (true)
             {
                 CalculateVariables(improvedPerlin.GetValue(x)+1);
+
+                //Simulate sending data
                 dataConverter.Bike(GenerateBike0x19());
                 dataConverter.Bike(GenerateBike0x10());
                 dataConverter.BPM(GenerateHeart());
 
                 Thread.Sleep(1000);
+
                 x += 0.1f;
                 eventCounter++;
                 elapsedTime++;
             }
 
         }
+
+        //Generate an ANT message for page 0x19
         private byte[] GenerateBike0x19()
         {
             byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
             return bikeByte;
         }
 
+        //Generate an ANT message for page 0x10
         private byte[] GenerateBike0x10()
         {
             byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), array[0], array[1], Convert.ToByte(BPM), 0xFF };
             return bikeByte;
         }
 
+        //Generate an ANT message for BPM
         private byte[] GenerateHeart()
         {
             byte[] hartByte = { 0x00, Convert.ToByte(BPM)};
             return hartByte;
         }
 
+        //Generate an ANT message for resistance
         public byte[] GenerateResistance(float percentage)
         {
             byte[] antMessage = new byte[13];
@@ -108,22 +118,18 @@ namespace Hardware.Simulators
 
         }
 
+        //Set resistance in simulated bike
         public void setResistance(byte[] bytes)
         {
+            //TODO check if message is correct
             if(bytes.Length == 13)
             {
-                this.resistance = Convert.ToDouble(bytes[11])/2;
-                Console.WriteLine(resistance);
-
+                this.resistance = Convert.ToDouble(bytes[11])/2;                
             }
         }
-
-        /*private double Random(double x)
-        {
-            return (Math.Sin(2 * x) + Math.Sin(Math.PI * x) + 2) / 4;
-        }*/
     }
 
+    //Interface for receiving a message on the simulated bike
     interface IHandler
     {
         void setResistance(byte[] bytes);
