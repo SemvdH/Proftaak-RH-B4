@@ -59,10 +59,7 @@ namespace Hardware.Simulators
 
         private byte[] GenerateBike0x10()
         {
-            string binary = Convert.ToString((int)speed, 2);
-            byte b = Convert.ToByte(binary.Substring(0, 3));
-            byte b2 = Convert.ToByte(binary.Substring(8));
-            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), b, b2, Convert.ToByte(BPM), 0xFF };
+            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), array[0], array[1], Convert.ToByte(BPM), 0xFF };
             return bikeByte;
         }
 
@@ -74,12 +71,12 @@ namespace Hardware.Simulators
 
         private void CalculateVariables(float perlin)
         {
-            this.speed = perlin * 5 / 0.001 ;
-            array = BitConverter.GetBytes(speed);
-            
-            Console.WriteLine(speed);
-            this.distanceTraveled = (distanceTraveled+speed) % 256;
-            this.BPM = (int) perlin * 80;
+            this.speed = perlin * 5 / 0.01 ;
+            short sped = (short)speed;
+            array = BitConverter.GetBytes(sped);
+
+            this.distanceTraveled = (distanceTraveled+(speed*0.001)) % 256;
+            this.BPM = (int) (perlin * 80);
             this.cadence = (int)speed * 4;
 
         }
