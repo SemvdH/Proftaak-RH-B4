@@ -12,9 +12,9 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            new PC("DESKTOP-M2CIH87", "Fabian"),
-            new PC("T470S", "Shinichi"),
-            new PC("DESKTOP-DHS478C", "Sem"),
+            //new PC("DESKTOP-M2CIH87", "Fabian"),
+            //new PC("T470S", "Shinichi"),
+            new PC("DESKTOP-DHS478C", "semme"),
             new PC("DESKTOP-TV73FKO", "Wouter"),
             new PC("NA", "Ralf"),
             new PC("NA", "Bart") };
@@ -36,7 +36,7 @@ namespace RH_Engine
 
             stream.Write(res);
 
-            Console.WriteLine("sent message " + message);
+            //Console.WriteLine("sent message " + message);
         }
 
         public static string ReadPrefMessage(NetworkStream stream)
@@ -85,7 +85,7 @@ namespace RH_Engine
             }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-            string command = createGraphics.SkyboxCommand(2);
+            string command = createGraphics.SkyboxCommand(10);
 
             
             Console.WriteLine("tunnelID is: " + tunnelID);

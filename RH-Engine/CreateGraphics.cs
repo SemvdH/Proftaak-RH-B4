@@ -95,7 +95,7 @@ namespace RH_Engine
 
             }
 
-            Console.WriteLine(sb.ToString());
+            Console.WriteLine("MESSAGE TO SEND: " + sb.ToString());
             return sb.ToString();
 
         }
