@@ -36,15 +36,26 @@ namespace RH_Engine
             Newtonsoft.Json.Linq.JArray data = jsonData.data;
             foreach (dynamic d in data)
             {
-                foreach(PC pc in PCs)
+                foreach (PC pc in PCs)
                 {
                     if (d.clientinfo.host == pc.host && d.clientinfo.user == pc.user)
                     {
+                        Console.WriteLine("connecting to {0}, on {1} with id {2}", pc.user, pc.host, d.id);
                         return d.id;
                     }
                 }
             }
 
+            return null;
+        }
+
+        public static string GetTunnelID(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            if (jsonData.data.status == "ok")
+            {
+                return jsonData.data.id;
+            }
             return null;
         }
 
