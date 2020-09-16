@@ -60,7 +60,28 @@ namespace RH_Engine
 
             return packetLength;
         }
+        public static string ReadPrefMessage(NetworkStream stream)
+        {
+            byte[] lengthBytes = new byte[4];
 
+            stream.Read(lengthBytes, 0, 4);
+
+            int length = (int)(lengthBytes[0] | (lengthBytes[1] << 8) | (lengthBytes[1] << 16) | (lengthBytes[1] << 24));
+
+            byte[] buffer = new byte[length];
+            int totalRead = 0;
+
+            //read bytes until stream indicates there are no more
+            do
+            {
+                int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
+                totalRead += read;
+                Console.WriteLine("ReadMessage: " + read);
+            } while (stream.DataAvailable);
+
+            return Encoding.ASCII.GetString(buffer, 0, totalRead);
+
+        }
 
     }
 }
