@@ -63,20 +63,28 @@ namespace RH_Engine
 
         private static void CreateConnection(NetworkStream stream)
         {
-            //WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
-            //string msg = ReadPrefMessage(stream);
-            //Console.WriteLine(msg);
-            //string id = JSONParser.GetSessionID(msg, PCs);
-
-            //Console.WriteLine(id);
             WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
-            string result = ReadPrefMessage(stream);
-            //Console.WriteLine(result);
-            foreach (var s in JSONParser.GetUsers(result))
-            {
-                Console.WriteLine(s);
-            }
+            string id = JSONParser.GetSessionID(ReadPrefMessage(stream), PCs);
+
+            string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + id + "\"}}";
+
+            WriteTextMessage(stream, tunnelCreate);
+
+            string tunnelResponse = ReadPrefMessage(stream);
+
+            Console.WriteLine(tunnelResponse);
+
+            string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
+            Console.WriteLine("tunnelID is: " + tunnelID);
+
+            string sceneReset = "{\"id\" : \"tunnel/send\",	\"data\" :	{\"dest\" : \"" + tunnelID + "\",\"data\" :{\"id\" : \"scene/reset\",\"data\" : { }}}}}";
+            //string sceneReset = "{\"id\" : \"scene/reset\"}";
+
+            WriteTextMessage(stream, sceneReset);
+
+            Console.WriteLine(ReadPrefMessage(stream));
         }
+
     }
 
 
