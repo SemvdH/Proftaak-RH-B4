@@ -22,7 +22,7 @@ namespace RH_Engine
             int counter = 0;
             foreach (dynamic d in data)
             {
-                res[counter] = new PC(d.clientinfo.host, d.clientinfo.user);
+                res[counter] = new PC((string)d.clientinfo.host, (string)d.clientinfo.user);
                 counter++;
             }
 

@@ -34,7 +34,7 @@ namespace RH_Engine
 
             stream.Write(res);
 
-            Console.WriteLine("sent message " + message);
+            //Console.WriteLine("sent message " + message);
         }
 
         public static string ReadPrefMessage(NetworkStream stream)
@@ -45,7 +45,7 @@ namespace RH_Engine
 
             int length = BitConverter.ToInt32(lengthBytes);
 
-            Console.WriteLine("length is: " + length);
+            //Console.WriteLine("length is: " + length);
 
             byte[] buffer = new byte[length];
             int totalRead = 0;
@@ -55,7 +55,7 @@ namespace RH_Engine
             {
                 int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
                 totalRead += read;
-                Console.WriteLine("ReadMessage: " + read);
+                //Console.WriteLine("ReadMessage: " + read);
             } while (totalRead < length);
 
             return Encoding.UTF8.GetString(buffer, 0, totalRead);
@@ -71,8 +71,11 @@ namespace RH_Engine
             //Console.WriteLine(id);
             WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
             string result = ReadPrefMessage(stream);
-            Console.WriteLine(result);
-            //JSONParser.Parse(result);
+            //Console.WriteLine(result);
+            foreach (var s in JSONParser.GetUsers(result))
+            {
+                Console.WriteLine(s);
+            }
         }
     }
 
@@ -86,5 +89,10 @@ namespace RH_Engine
         }
         public string host { get; }
         public string user { get; }
+
+        public override string ToString()
+        {
+            return "PC - host:" + host + " - user:" + user;
+        }
     }
 }
