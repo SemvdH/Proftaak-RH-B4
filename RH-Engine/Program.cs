@@ -105,12 +105,4 @@ namespace RH_Engine
             return "PC - host:" + host + " - user:" + user;
         }
     }
-
-    public readonly struct VRMessage
-    {
-        public VRMessage(string id,params JObject[] data)
-        {
-            
-        }
-    }
 }
