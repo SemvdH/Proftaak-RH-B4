@@ -12,7 +12,8 @@ namespace RH_Engine
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             WriteTextMessage(client, "{\r\n\"id\" : \"session/list\"\r\n}");
-            ReadPrefMessage(client.GetStream());
+            string result = ReadPrefMessage(client.GetStream());
+            JSONParser.Parse(result);
             
         }
 
@@ -42,10 +43,10 @@ namespace RH_Engine
 
             int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
             totalRead += read;
-            Console.WriteLine("ReadMessage: " + read);
-            Console.WriteLine(Encoding.UTF8.GetString(buffer));
+            //Console.WriteLine("ReadMessage: " + read);
+            //Console.WriteLine(Encoding.UTF8.GetString(buffer));
 
-            return Encoding.ASCII.GetString(buffer, 0, totalRead);
+            return Encoding.UTF8.GetString(buffer);
         }
     }
 }
