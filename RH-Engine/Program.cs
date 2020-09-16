@@ -10,7 +10,7 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            new PC("DESKTOP-M2CIH87", "Fabian"),
+            new PC("DESKTOP-M2CIH87", "F@bian"),
             new PC("T470S", "Shinichi"),
             new PC("NA", "Sem"),
             new PC("NA", "Wouter"),
@@ -34,7 +34,7 @@ namespace RH_Engine
 
             stream.Write(res);
 
-            Console.WriteLine("sent message " + message);
+            //Console.WriteLine("sent message " + message);
         }
 
         public static string ReadPrefMessage(NetworkStream stream)
@@ -50,7 +50,6 @@ namespace RH_Engine
             byte[] buffer = new byte[length];
             int totalRead = 0;
 
-            //read bytes until stream indicates there are no more
             do
             {
                 int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
@@ -63,16 +62,26 @@ namespace RH_Engine
 
         private static void CreateConnection(NetworkStream stream)
         {
-            //WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
-            //string msg = ReadPrefMessage(stream);
-            //Console.WriteLine(msg);
-            //string id = JSONParser.GetSessionID(msg, PCs);
-
-            //Console.WriteLine(id);
             WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
-            string result = ReadPrefMessage(stream);
-            Console.WriteLine(result);
-            //JSONParser.Parse(result);
+            string id = JSONParser.GetSessionID(ReadPrefMessage(stream), PCs);
+
+            string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + id + "\"}}";
+
+            WriteTextMessage(stream, tunnelCreate);
+
+            string tunnelResponse = ReadPrefMessage(stream);
+
+            Console.WriteLine(tunnelResponse);
+
+            string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
+            Console.WriteLine("tunnelID is: " + tunnelID);
+
+            string sceneReset = "{\"id\" : \"tunnel/send\",	\"data\" :	{\"dest\" : \"" + tunnelID + "\",\"data\" :{\"id\" : \"scene/reset\",\"data\" : { }}}}}";
+            //string sceneReset = "{\"id\" : \"scene/reset\"}";
+
+            WriteTextMessage(stream, sceneReset);
+
+            Console.WriteLine(ReadPrefMessage(stream));
         }
     }
 
@@ -88,3 +97,4 @@ namespace RH_Engine
         public string user { get; }
     }
 }
+
