@@ -10,20 +10,23 @@ namespace RH_Engine
     class JSONParser
     {
         /// <summary>
-        /// parses the given response from the server into strings
+        /// returns all the users from the given response
         /// </summary>
         /// <param name="msg">the message gotten from the server, without the length prefix</param>
         /// <returns></returns>
-        public static string[] Parse(string msg)
+        public static PC[] GetUsers(string msg)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(msg);
             Newtonsoft.Json.Linq.JArray data = jsonData.data;
+            PC[] res = new PC[data.Count];
+            int counter = 0;
             foreach (dynamic d in data)
             {
-                Console.WriteLine(d.clientinfo.host);
+                res[counter] = new PC((string)d.clientinfo.host, (string)d.clientinfo.user);
+                counter++;
             }
 
-            return null;
+            return res;
 
         }
 
