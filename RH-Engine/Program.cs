@@ -10,10 +10,10 @@ namespace RH_Engine
         static void Main(string[] args)
         {
 
-            // 0x1B,0x00,0x00,0x00
+            
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
-            WriteTextMessage(client, "{\"id\":\"session/list\"}");
+            WriteTextMessage(client, "{\"id\" : \"session/list\"}");
             Console.WriteLine("got response " + ReadTextMessage(client));
         }
 
@@ -21,22 +21,31 @@ namespace RH_Engine
 
         public static void WriteTextMessage(TcpClient client, string message)
         {
+
             byte[] msg = Encoding.ASCII.GetBytes(message);
             byte[] res = new byte[msg.Length + 4];
 
             Array.Copy(res, 0, GetPacketLength(msg.Length), 0, 4);
 
             Array.Copy(res, 4, msg, 0, msg.Length);
-            var stream = new StreamWriter(client.GetStream(), Encoding.Default);
-            stream.Write(res);
-            stream.Flush();
+            var stream = new StreamWriter(client.GetStream(), Encoding.Unicode);
+            {
+                stream.Write(res);
+                stream.Flush();
+            }
+
+            Console.WriteLine("sent message " + message);
         }
 
         public static string ReadTextMessage(TcpClient client)
         {
             var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
             {
-                return stream.ReadLine();
+                Console.WriteLine("reading...");
+                int length = stream.Read();
+                Console.WriteLine(length);
+
+                return "";
             }
         }
 
@@ -51,5 +60,7 @@ namespace RH_Engine
 
             return packetLength;
         }
+
+
     }
 }
