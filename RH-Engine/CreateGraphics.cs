@@ -60,44 +60,37 @@ namespace RH_Engine
             return sb.ToString();
         }
 
-        public string SkyboxCommand(double time)
+        public string SkyboxCommand(double timeToSet)
         {
-            if (time < 0 || time > 24)
+            if (timeToSet < 0 || timeToSet > 24)
             {
                 throw new Exception("The time must be between 0 and 24!");
             }
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
 
-            using (JsonWriter writer = new JsonTextWriter(sw))
+
+            object payload = new
             {
-                writer.Formatting = Formatting.Indented;
+                id = "scene/skybox/settime",
+                time = timeToSet
+            };
 
-                writer.WriteStartObject();
-                writer.WritePropertyName("id");
-                writer.WriteValue("tunnel/send");
-                writer.WritePropertyName("data");
-                writer.WriteStartObject();
-                writer.WritePropertyName("dest");
-                writer.WriteValue(tunnelID);
-                writer.WritePropertyName("data");
-                writer.WriteStartObject();
-                writer.WritePropertyName("id");
-                writer.WriteValue("scene/skybox/settime");
-                writer.WritePropertyName("data");
-                writer.WriteStartObject();
-                writer.WritePropertyName("time");
-                writer.WriteValue(time);
-                writer.WriteEndObject();
-                writer.WriteEndObject();
-                writer.WriteEndObject();
-                writer.WriteEndObject();
+            object packet = Payload(payload);
+            Console.WriteLine(JsonConvert.SerializeObject(packet));
+            return JsonConvert.SerializeObject(packet);
 
-            }
+        }
 
-            Console.WriteLine("MESSAGE TO SEND: " + sb.ToString());
-            return sb.ToString();
-
+        private object Payload(object message)
+        {
+            return new
+            {
+                id = "tunnel/send",
+                data = new
+                {
+                    dest = tunnelID,
+                    data = message,
+                }
+            };
         }
     }
 }
