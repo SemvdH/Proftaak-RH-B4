@@ -75,14 +75,16 @@ namespace RH_Engine
             string tunnelResponse = ReadPrefMessage(stream);
 
             Console.WriteLine(tunnelResponse);
-
+            
             string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
+
+            CreateGraphics createGraphics = new CreateGraphics(tunnelID);
+            string command = createGraphics.TerrainCommand();
+
+            
             Console.WriteLine("tunnelID is: " + tunnelID);
 
-            string sceneReset = "{\"id\" : \"tunnel/send\",	\"data\" :	{\"dest\" : \"" + tunnelID + "\",\"data\" :{\"id\" : \"scene/reset\",\"data\" : { }}}}}";
-            //string sceneReset = "{\"id\" : \"scene/reset\"}";
-
-            WriteTextMessage(stream, sceneReset);
+            WriteTextMessage(stream, command);
 
             Console.WriteLine(ReadPrefMessage(stream));
         }
