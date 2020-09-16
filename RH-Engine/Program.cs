@@ -29,20 +29,6 @@ namespace RH_Engine
             Console.WriteLine("sent message " + message);
         }
 
-        private static byte[] GetPacketLength(int length)
-        {
-            Console.WriteLine("length got: " + length);
-            byte[] packetLength = new byte[4];
-
-            for (int i = 0; i < 4; i++)
-            {
-                packetLength[i] = (byte)(length >> (8 * i));
-            }
-
-            Console.WriteLine("packet length: " + BitConverter.ToString(packetLength));
-            return packetLength;
-        }
-
         public static string ReadPrefMessage(NetworkStream stream)
         {
             byte[] lengthBytes = new byte[4];
@@ -57,7 +43,7 @@ namespace RH_Engine
             int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
             totalRead += read;
             Console.WriteLine("ReadMessage: " + read);
-            Console.WriteLine(Encoding.UTF8.GetString(buffer, 4, length - 4));
+            Console.WriteLine(Encoding.UTF8.GetString(buffer));
 
             return Encoding.ASCII.GetString(buffer, 0, totalRead);
         }
