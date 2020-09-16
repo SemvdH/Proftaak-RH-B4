@@ -22,6 +22,9 @@ namespace RH_Engine
 
             CreateConnection(client.GetStream());
 
+            CreateGraphics createGraphics = new CreateGraphics("");
+            createGraphics.TerrainCommand();
+
         }
 
         public static void WriteTextMessage(NetworkStream stream, string message)
