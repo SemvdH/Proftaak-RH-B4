@@ -17,17 +17,14 @@ namespace RH_Engine
             Console.WriteLine("got response " + ReadTextMessage(client));
         }
 
-        
+
 
         public static void WriteTextMessage(TcpClient client, string message)
         {
             byte[] msg = Encoding.ASCII.GetBytes(message);
             byte[] res = new byte[msg.Length + 4];
-            res[0] = 0x1B;
-            for (int i = 1; i <= 3; i++)
-            {
-                res[i] = 0x00;
-            }
+
+            Array.Copy(res, 0, GetPacketLength(msg.Length), 0, 4);
 
             Array.Copy(res, 4, msg, 0, msg.Length);
             var stream = new StreamWriter(client.GetStream(), Encoding.Default);
@@ -41,6 +38,18 @@ namespace RH_Engine
             {
                 return stream.ReadLine();
             }
+        }
+
+        private static byte[] GetPacketLength(int length)
+        {
+            byte[] packetLength = new byte[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                packetLength[i] = (byte)(length >> (8 * i));
+            }
+
+            return packetLength;
         }
     }
 }
