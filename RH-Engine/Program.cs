@@ -9,7 +9,7 @@ namespace RH_Engine
 
     internal class Program
     {
-        private static PC[] PCs = { 
+        private static PC[] PCs = {
             new PC("DESKTOP-M2CIH87", "Fabian"),
             new PC("T470S", "Shinichi"),
             new PC("NA", "Sem"),
@@ -20,13 +20,11 @@ namespace RH_Engine
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
-            WriteTextMessage(client, "{\r\n\"id\" : \"session/list\"\r\n}");
-            string result = ReadPrefMessage(client.GetStream());
-            JSONParser.Parse(result);
+            CreateConnection(client.GetStream());
 
         }
 
-        public static void WriteTextMessage(TcpClient client, string message)
+        public static void WriteTextMessage(NetworkStream stream, string message)
         {
             byte[] msg = Encoding.ASCII.GetBytes(message);
             byte[] res = new byte[msg.Length + 4];
@@ -34,7 +32,7 @@ namespace RH_Engine
             Array.Copy(BitConverter.GetBytes(msg.Length), 0, res, 0, 4);
             Array.Copy(msg, 0, res, 4, msg.Length);
 
-            client.GetStream().Write(res);
+            stream.Write(res);
 
             Console.WriteLine("sent message " + message);
         }
@@ -47,20 +45,34 @@ namespace RH_Engine
 
             int length = BitConverter.ToInt32(lengthBytes);
 
+            Console.WriteLine("length is: " + length);
+
             byte[] buffer = new byte[length];
             int totalRead = 0;
 
-            int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
-            totalRead += read;
-            //Console.WriteLine("ReadMessage: " + read);
-            //Console.WriteLine(Encoding.UTF8.GetString(buffer));
+            //read bytes until stream indicates there are no more
+            do
+            {
+                int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
+                totalRead += read;
+                Console.WriteLine("ReadMessage: " + read);
+            } while (totalRead < length);
 
-            return Encoding.UTF8.GetString(buffer);
+            return Encoding.UTF8.GetString(buffer, 0, totalRead);
         }
 
-        private static void CreateTunnel()
+        private static void CreateConnection(NetworkStream stream)
         {
+            //WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
+            //string msg = ReadPrefMessage(stream);
+            //Console.WriteLine(msg);
+            //string id = JSONParser.GetSessionID(msg, PCs);
 
+            //Console.WriteLine(id);
+            WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
+            string result = ReadPrefMessage(stream);
+            Console.WriteLine(result);
+            //JSONParser.Parse(result);
         }
     }
 

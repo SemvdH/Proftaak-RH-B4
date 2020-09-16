@@ -27,6 +27,24 @@ namespace RH_Engine
 
         }
 
-        
+        public static string GetSessionID(string msg, PC[] PCs)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(msg);
+            Newtonsoft.Json.Linq.JArray data = jsonData.data;
+            foreach (dynamic d in data)
+            {
+                foreach(PC pc in PCs)
+                {
+                    if (d.clientinfo.host == pc.host && d.clientinfo.user == pc.user)
+                    {
+                        return d.id;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+
     }
 }
