@@ -60,7 +60,7 @@ namespace RH_Engine
             return sb.ToString();
         }
 
-        public string SkyboxCommand(int time)
+        public string SkyboxCommand(double time)
         {
             if (time < 0 || time > 24)
             {

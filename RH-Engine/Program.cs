@@ -12,8 +12,8 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            //new PC("DESKTOP-M2CIH87", "Fabian"),
-            //new PC("T470S", "Shinichi"),
+            new PC("DESKTOP-M2CIH87", "Fabian"),
+            new PC("T470S", "Shinichi"),
             new PC("DESKTOP-DHS478C", "semme"),
             new PC("DESKTOP-TV73FKO", "Wouter"),
             new PC("NA", "Ralf"),
@@ -23,6 +23,7 @@ namespace RH_Engine
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
+            Console.Read();
 
         }
 
@@ -85,7 +86,7 @@ namespace RH_Engine
             }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-            string command = createGraphics.SkyboxCommand(10);
+            string command = createGraphics.SkyboxCommand(2);
 
             
             Console.WriteLine("tunnelID is: " + tunnelID);

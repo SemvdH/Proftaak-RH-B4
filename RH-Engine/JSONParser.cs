@@ -34,8 +34,9 @@ namespace RH_Engine
         {
             dynamic jsonData = JsonConvert.DeserializeObject(msg);
             Newtonsoft.Json.Linq.JArray data = jsonData.data;
-            foreach (dynamic d in data)
+            for (int i = data.Count-1; i >= 0; i--)
             {
+                dynamic d = data[i];
                 foreach (PC pc in PCs)
                 {
                     if (d.clientinfo.host == pc.host && d.clientinfo.user == pc.user)

@@ -13,6 +13,7 @@ namespace ProftaakRH
         {
             IDataConverter dataConverter = new DataConverter();
             BLEHandler bLEHandler = new BLEHandler(dataConverter);
+            bLEHandler.Connect();
             //BikeSimulator bikeSimulator = new BikeSimulator(dataConverter);
             //bikeSimulator.setResistance(bikeSimulator.GenerateResistance(1f));
             //bikeSimulator.StartSimulation();
