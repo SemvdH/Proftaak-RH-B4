@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace RH_Engine
@@ -93,6 +95,14 @@ namespace RH_Engine
         public override string ToString()
         {
             return "PC - host:" + host + " - user:" + user;
+        }
+    }
+
+    public readonly struct VRMessage
+    {
+        public VRMessage(string id,params JObject[] data)
+        {
+            
         }
     }
 }
