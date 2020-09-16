@@ -68,19 +68,22 @@ namespace RH_Engine
             }
 
 
-            object payload = new
+            dynamic payload = new
             {
                 id = "scene/skybox/settime",
-                time = timeToSet
+                data = new {
+                    time = timeToSet
+                }
+                
             };
 
-            object packet = Payload(payload);
+            dynamic packet = Payload(payload);
             Console.WriteLine(JsonConvert.SerializeObject(packet));
             return JsonConvert.SerializeObject(packet);
 
         }
 
-        private object Payload(object message)
+        private object Payload(dynamic message)
         {
             return new
             {
