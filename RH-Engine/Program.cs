@@ -45,12 +45,20 @@ namespace RH_Engine
 
             int length = BitConverter.ToInt32(lengthBytes);
 
+            Console.WriteLine("length is: " + length);
+
             byte[] buffer = new byte[length];
+            int totalRead = 0;
 
-            int read = stream.Read(buffer, 0, buffer.Length);
+            //read bytes until stream indicates there are no more
+            do
+            {
+                int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
+                totalRead += read;
+                Console.WriteLine("ReadMessage: " + read);
+            } while (totalRead < length);
 
-
-            return Encoding.UTF8.GetString(buffer);
+            return Encoding.UTF8.GetString(buffer, 0, totalRead);
         }
 
         private static void CreateConnection(NetworkStream stream)
@@ -64,7 +72,7 @@ namespace RH_Engine
             WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
             string result = ReadPrefMessage(stream);
             Console.WriteLine(result);
-            JSONParser.Parse(result);
+            //JSONParser.Parse(result);
         }
     }
 
