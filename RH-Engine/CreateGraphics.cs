@@ -8,11 +8,11 @@ namespace RH_Engine
 {
     class CreateGraphics
     {
-        string sessionID;
+        string tunnelID;
 
-        public CreateGraphics(string sessionID)
+        public CreateGraphics(string tunnelID)
         {
-            this.sessionID = sessionID;
+            this.tunnelID = tunnelID;
         }
 
         public string TerrainCommand()
@@ -30,7 +30,7 @@ namespace RH_Engine
                 writer.WritePropertyName("data");
                 writer.WriteStartObject();
                 writer.WritePropertyName("dest");
-                writer.WriteValue("TODO");
+                writer.WriteValue(tunnelID);
                 writer.WritePropertyName("data");
                 writer.WriteStartObject();
                 writer.WritePropertyName("id");
@@ -38,9 +38,17 @@ namespace RH_Engine
                 writer.WritePropertyName("data");
                 writer.WriteStartObject();
                 writer.WritePropertyName("size");
-                writer.WriteValue("[2,2]");
+                writer.WriteStartArray();
+                writer.WriteValue(2);
+                writer.WriteValue(2);
+                writer.WriteEndArray();
                 writer.WritePropertyName("heights");
-                writer.WriteValue("[0,0,0,0]");
+                writer.WriteStartArray();
+                writer.WriteValue(30000000);
+                writer.WriteValue(2);
+                writer.WriteValue(4);
+                writer.WriteValue(7);
+                writer.WriteEndArray();
                 writer.WriteEndObject();
                 writer.WriteEndObject();
                 writer.WriteEndObject();
