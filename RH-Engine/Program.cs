@@ -14,8 +14,8 @@ namespace RH_Engine
         private static PC[] PCs = {
             new PC("DESKTOP-M2CIH87", "Fabian"),
             new PC("T470S", "Shinichi"),
-            new PC("NA", "Sem"),
-            new PC("NA", "Wouter"),
+            new PC("DESKTOP-DHS478C", "Sem"),
+            new PC("DESKTOP-TV73FKO", "Wouter"),
             new PC("NA", "Ralf"),
             new PC("NA", "Bart") };
         private static void Main(string[] args)
@@ -36,7 +36,7 @@ namespace RH_Engine
 
             stream.Write(res);
 
-            //Console.WriteLine("sent message " + message);
+            Console.WriteLine("sent message " + message);
         }
 
         public static string ReadPrefMessage(NetworkStream stream)
@@ -44,6 +44,7 @@ namespace RH_Engine
             byte[] lengthBytes = new byte[4];
 
             stream.Read(lengthBytes, 0, 4);
+            Console.WriteLine("read message..");
 
             int length = BitConverter.ToInt32(lengthBytes);
 
@@ -77,9 +78,14 @@ namespace RH_Engine
             Console.WriteLine(tunnelResponse);
             
             string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
+            if (tunnelID == null)
+            {
+                Console.WriteLine("could not find a valid tunnel id!");
+                return;
+            }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-            string command = createGraphics.TerrainCommand();
+            string command = createGraphics.SkyboxCommand(2);
 
             
             Console.WriteLine("tunnelID is: " + tunnelID);
