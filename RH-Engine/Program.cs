@@ -13,7 +13,7 @@ namespace RH_Engine
 
             WriteTextMessage(client, "{\r\n\"id\" : \"session/list\"\r\n}");
             ReadPrefMessage(client.GetStream());
-            Console.WriteLine("got response " + ReadTextMessage(client));
+            
         }
 
         public static void WriteTextMessage(TcpClient client, string message)
@@ -21,25 +21,12 @@ namespace RH_Engine
             byte[] msg = Encoding.ASCII.GetBytes(message);
             byte[] res = new byte[msg.Length + 4];
 
-            Array.Copy(GetPacketLength(msg.Length), 0, res, 0, 4);
+            Array.Copy(BitConverter.GetBytes(msg.Length), 0, res, 0, 4);
             Array.Copy(msg, 0, res, 4, msg.Length);
 
             client.GetStream().Write(res);
 
             Console.WriteLine("sent message " + message);
-        }
-
-        public static string ReadTextMessage(TcpClient client)
-        {
-            var stream = new StreamReader(client.GetStream(), Encoding.ASCII);
-            {
-                Console.WriteLine("reading...");
-
-                int length = stream.Read();
-                Console.WriteLine(length);
-
-                return "";
-            }
         }
 
         private static byte[] GetPacketLength(int length)
@@ -66,8 +53,6 @@ namespace RH_Engine
 
             byte[] buffer = new byte[length];
             int totalRead = 0;
-
-            //read bytes until stream indicates there are no more
 
             int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
             totalRead += read;
