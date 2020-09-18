@@ -17,11 +17,11 @@ namespace RH_Engine
     {
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
-            //new PC("T470S", "Shinichi"),
-            new PC("DESKTOP-DHS478C", "semme")
+            new PC("T470S", "Shinichi"),
+            //new PC("DESKTOP-DHS478C", "semme")
             //new PC("DESKTOP-TV73FKO", "Wouter"),
             //new PC("DESKTOP-SINMKT1", "Ralf"),
-            //new PC("NA", "Bart") 
+            //new PC("NA", "Bart")
         };
         private static void Main(string[] args)
         {
