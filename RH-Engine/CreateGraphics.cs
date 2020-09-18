@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using LibNoise.Primitive;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace RH_Engine
 {
@@ -148,7 +150,57 @@ namespace RH_Engine
 
         public string RouteCommand()
         {
-            return "";
+            ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
+
+            dynamic payload = new
+            {
+                id = "route/add",
+                data = new
+                {
+                    nodes = new dynamic[]
+                    {
+                        new
+                        {
+                            pos = GetPos(0, improvedPerlin),
+                            dir = GetDir()
+                        },
+                        new
+                        {
+                            pos = GetPos(1, improvedPerlin),
+                            dir = GetDir()
+                        },
+                        new
+                        {
+                            pos = GetPos(2, improvedPerlin),
+                            dir = GetDir()
+                        },
+                        new
+                        {
+                            pos = GetPos(3, improvedPerlin),
+                            dir = GetDir()
+                        },
+                        new
+                        {
+                            pos = GetPos(4, improvedPerlin),
+                            dir = GetDir()
+                        }
+                    }
+                }
+            };
+            Console.WriteLine(JsonConvert.SerializeObject(Payload(payload)));
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        private int[] GetPos(int n, ImprovedPerlin improvedPerlin)
+        {
+            return new int[] { (int)improvedPerlin.GetValue(n) * 50 * n, 0, (int)improvedPerlin.GetValue(n) * 50 };
+        }
+
+        private int[] GetDir()
+        {
+            Random rng = new Random();
+            int[] dir = {rng.Next(5), rng.Next(5), rng.Next(5)};
+            return dir;
         }
 
         public string FollowRouteCommand()
