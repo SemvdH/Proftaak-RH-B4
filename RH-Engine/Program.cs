@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Intrinsics.X86;
@@ -103,18 +104,12 @@ namespace RH_Engine
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
 
-            WriteTextMessage(stream, createGraphics.RouteCommand());
 
-            string routeResponse = ReadPrefMessage(stream);
+            WriteTextMessage(stream, createGraphics.ResetScene());
+            ReadPrefMessage(stream);
+            string routeid = CreateRoute(stream, createGraphics);
 
-            string routeID = JSONParser.GetTunnelID(tunnelResponse);
-            if (routeID == null)
-            {
-                Console.WriteLine("could not find a valid route uuid!");
-                return;
-            }
-
-            WriteTextMessage(stream, createGraphics.RoadCommand(routeID));
+            WriteTextMessage(stream, createGraphics.RoadCommand(routeid));
 
             //string groundId = GetId("GroundPlane", stream, createGraphics);
             //Console.WriteLine("ground id: " + groundId);
