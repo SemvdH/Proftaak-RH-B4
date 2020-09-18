@@ -95,8 +95,8 @@ namespace RH_Engine
 
             //string command = createGraphics.TerrainCommand(new int[] { 256, 256 }, heigths);
 
-            string groundId = GetId("GroundPlane", stream, createGraphics);
-            Console.WriteLine("ground id: " + groundId);
+            string groundId = GetId(CreateGraphics.STANDARD_SUN, stream, createGraphics);
+            Console.WriteLine("id: " + groundId);
             string command = createGraphics.DeleteGroundPaneCommand(groundId);
             //string command = createGraphics.ResetScene();
             Console.WriteLine("tunnelID is: " + tunnelID);
@@ -119,7 +119,7 @@ namespace RH_Engine
                     return child.uuid;
                 }
             }
-
+            Console.WriteLine("Could not find id of " + name);
             return null;
 
         }
