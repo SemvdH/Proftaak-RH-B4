@@ -59,9 +59,9 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "scene/terrain/update",
-                data = new 
+                data = new
                 {
-                    
+
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));
@@ -87,7 +87,7 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string DeleteGroundPaneCommand(string uuid)
+        public string DeleteNode(string uuid)
         {
 
             dynamic payload = new
@@ -106,15 +106,20 @@ namespace RH_Engine
 
         public string AddBikeModel()
         {
-            return AddModel("bike", "data\\NetworkEngine\\models\\bike\\bike.fbx", null);
+            return AddModel("bike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
         }
 
         public string AddModel(string nodeName, string fileLocation)
         {
-            return AddModel(nodeName, fileLocation, null);
+            return AddModel(nodeName, fileLocation, null, new float[]{ 0,0,0} ,1, new float[] { 0, 0, 0 });
         }
 
-        public string AddModel(string nodeName, string fileLocation, string animationLocation)
+        public string AddModel(string nodeName, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
+        {
+            return AddModel(nodeName, fileLocation, null, positionVector, scalar, rotationVector);
+        }
+
+        public string AddModel(string nodeName, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
         {
             string namename = nodeName;
             bool animatedBool = false;
@@ -131,6 +136,13 @@ namespace RH_Engine
                     name = namename,
                     components = new
                     {
+                        transform = new
+                        {
+                            position = positionVector,
+                            scale = scalar,
+                            rotation = rotationVector
+
+                        },
                         model = new
                         {
                             file = fileLocation,
@@ -201,6 +213,7 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
 
         }
+
 
         private object Payload(dynamic message)
         {
