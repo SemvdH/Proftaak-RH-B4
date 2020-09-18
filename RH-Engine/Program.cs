@@ -130,7 +130,7 @@ namespace RH_Engine
                     return child.uuid;
                 }
             }
-
+            Console.WriteLine("Could not find id of " + name);
             return null;
 
         }
