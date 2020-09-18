@@ -111,7 +111,7 @@ namespace RH_Engine
 
         public string AddModel(string nodeName, string fileLocation)
         {
-            return AddModel(nodeName, fileLocation, null, new float[]{ 0,0,0} ,1, new float[] { 0, 0, 0 });
+            return AddModel(nodeName, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
         }
 
         public string AddModel(string nodeName, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
@@ -153,6 +153,31 @@ namespace RH_Engine
                     }
                 }
 
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string MoveTo(string uuid, float[] positionVector, float rotateValue, float speedValue, float timeValue)
+        {
+            return MoveTo(uuid, "idk", positionVector, rotateValue, "linear", false, speedValue, timeValue);
+        }
+
+        private string MoveTo(string uuid, string stopValue, float[] positionVector, float rotateValue, string interpolateValue, bool followHeightValue, float speedValue, float timeValue)
+        {
+            dynamic payload = new
+            {
+                id = "scene/node/moveto",
+                data = new
+                {
+                    id = uuid,
+                    stop = stopValue,
+                    position = positionVector,
+                    rotate = rotateValue,
+                    interpolate = interpolateValue,
+                    followheight = followHeightValue,
+                    speed = speedValue,
+                    time = timeValue
+                }
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
