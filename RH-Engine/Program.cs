@@ -139,6 +139,10 @@ namespace RH_Engine
 
             //Console.WriteLine(ReadPrefMessage(stream));
 
+            //add monkey head
+            //WriteTextMessage(stream, createGraphics.AddModel("Face", "data\\vrlib\\rendermodels\\face\\face.obj", new float[] { 0, 3, 0 }, 10, new float[] { 0, 0, 0 }));
+            //string headUuid = getUUIDFormResponse(ReadPrefMessage(stream));
+
 
 
         }
@@ -199,6 +203,12 @@ namespace RH_Engine
 
             return res;
 
+        }
+
+        public static string getUUIDFromResponse(string response)
+        {
+            dynamic JSON = JsonConvert.DeserializeObject(response);
+            return JSON.data.data.data.uuid;
         }
 
     }
