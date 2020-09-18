@@ -8,8 +8,16 @@ namespace RH_Engine
 {
     class CreateGraphics
     {
-        string tunnelID;
+        public const string STANDARD_HEAD = "Head";
+        public const string STANDARD_GROUND = "GroundPlane";
+        public const string STANDARD_SUN = "SunLight";
+        public const string STANDARD_LEFTHAND = "LeftHand";
+        public const string STANDARD_RIGHTHAND = "RightHand";
 
+
+
+        string tunnelID;                            
+                                                    
         public CreateGraphics(string tunnelID)
         {
             this.tunnelID = tunnelID;
@@ -29,6 +37,7 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
+
 
         public string AddNodeCommand()
         {
@@ -50,14 +59,46 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string DeleteGroundPaneCommand()
+        public string DeleteGroundPaneCommand(string uuid)
         {
-            return "";
+
+            dynamic payload = new
+            {
+                id = "scene/node/delete",
+                data = new
+                {
+                    id = uuid,
+                   
+                }
+
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+           
         }
 
         public string ModelCommand()
         {
-            return "";
+            string namename = "bike";
+            dynamic payload = new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name = namename,
+                    components = new
+                    {
+                        model = new
+                        {
+                            file = "\\data\\NetworkEngine\\models\\bike\\bikee.fbx",
+                            cullbackfaces = true,
+                            animated = false,
+                            animation = "\\data\\NetworkEngine\\models\\bike\\bike_anim.fbx"
+                        },
+                    }
+                }
+
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string RouteCommand()
@@ -73,6 +114,26 @@ namespace RH_Engine
         public string RoadCommand()
         {
             return "";
+        }
+
+        public string GetSceneInfoCommand()
+        {
+            dynamic payload = new
+            {
+                id = "scene/get"
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string ResetScene()
+        {
+            dynamic payload = new
+            {
+                id = "scene/reset"
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string SkyboxCommand(double timeToSet)
@@ -107,5 +168,8 @@ namespace RH_Engine
                 }
             };
         }
+
+       
+        
     }
 }
