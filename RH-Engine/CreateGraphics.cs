@@ -104,9 +104,25 @@ namespace RH_Engine
 
         }
 
-        public string ModelCommand()
+        public string AddBikeModel()
         {
-            string namename = "bike";
+            return AddModel("bike", "data\\NetworkEngine\\models\\bike\\bike.fbx", null);
+        }
+
+        public string AddModel(string nodeName, string fileLocation)
+        {
+            return AddModel(nodeName, fileLocation, null);
+        }
+
+        public string AddModel(string nodeName, string fileLocation, string animationLocation)
+        {
+            string namename = nodeName;
+            bool animatedBool = false;
+            if (animationLocation != null)
+            {
+                animatedBool = true;
+            }
+
             dynamic payload = new
             {
                 id = "scene/node/add",
@@ -117,10 +133,10 @@ namespace RH_Engine
                     {
                         model = new
                         {
-                            file = "data\\NetworkEngine\\models\\bike\\bike.fbx",
+                            file = fileLocation,
                             cullbackfaces = true,
-                            animated = false,
-                            animation = "data\\NetworkEngine\\models\\bike\\bike_anim.fbx"
+                            animated = animatedBool,
+                            animation = animationLocation
                         },
                     }
                 }

@@ -13,15 +13,13 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-
             new PC("DESKTOP-TV73FK0", "woute"),
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
             new PC("NA", "Ralf"),
-            new PC("NA", "Bart") };
-        
 
+            new PC("NA", "Bart") };
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -106,7 +104,13 @@ namespace RH_Engine
             WriteTextMessage(stream, createGraphics.AddNodeCommand());
             Console.WriteLine(ReadPrefMessage(stream));
 
-            command = createGraphics.ModelCommand();
+            command = createGraphics.AddBikeModel();
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
+            command = createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
 
             WriteTextMessage(stream, command);
 
