@@ -30,6 +30,31 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
+        public string DeleteGroundPaneCommand()
+        {
+            return "";
+        }
+
+        public string ModelCommand()
+        {
+            return "";
+        }
+
+        public string RouteCommand()
+        {
+            return "";
+        }
+
+        public string FollowRouteCommand()
+        {
+            return "";
+        }
+
+        public string RoadCommand()
+        {
+            return "";
+        }
+
         public string SkyboxCommand(double timeToSet)
         {
             if (timeToSet < 0 || timeToSet > 24)
