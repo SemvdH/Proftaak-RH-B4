@@ -103,30 +103,40 @@ namespace RH_Engine
                 return;
             }
 
-            CreateGraphics createGraphics = new CreateGraphics(tunnelID);
+            sendCommands(stream, tunnelID);
 
 
-            WriteTextMessage(stream, createGraphics.ResetScene());
+        }
+
+        /// <summary>
+        /// sends all the commands to the server
+        /// </summary>
+        /// <param name="stream">the network stream to use</param>
+        /// <param name="tunnelID">the tunnel id to use</param>
+        private static void sendCommands(NetworkStream stream, string tunnelID)
+        {
+            Command mainCommand = new Command(tunnelID);
+
+
+            WriteTextMessage(stream, mainCommand.ResetScene());
             ReadPrefMessage(stream);
-            string routeid = CreateRoute(stream, createGraphics);
+            string routeid = CreateRoute(stream, mainCommand);
 
-            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, null));
+            WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             Console.WriteLine(ReadPrefMessage(stream));
             string command;
 
-            command = createGraphics.AddBikeModel();
+            command = mainCommand.AddBikeModel();
 
             WriteTextMessage(stream, command);
 
             Console.WriteLine(ReadPrefMessage(stream));
 
-            command = createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
+            command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
 
             WriteTextMessage(stream, command);
 
             Console.WriteLine(ReadPrefMessage(stream));
-
-
 
         }
 
@@ -137,7 +147,7 @@ namespace RH_Engine
         /// <param name="stream">the network stream to send requests to</param>
         /// <param name="createGraphics">the create graphics object to create all the commands</param>
         /// <returns> the uuid of the object with the given name, <c>null</c> otherwise.</returns>
-        public static string GetId(string name, NetworkStream stream, CreateGraphics createGraphics)
+        public static string GetId(string name, NetworkStream stream, Command createGraphics)
         {
             JArray children = GetChildren(stream, createGraphics);
 
@@ -153,7 +163,7 @@ namespace RH_Engine
 
         }
 
-        public static string CreateRoute(NetworkStream stream, CreateGraphics createGraphics)
+        public static string CreateRoute(NetworkStream stream, Command createGraphics)
         {
             WriteTextMessage(stream, createGraphics.RouteCommand());
             dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
@@ -165,7 +175,7 @@ namespace RH_Engine
 
         }
 
-        public static void CreateTerrain(NetworkStream stream, CreateGraphics createGraphics)
+        public static void CreateTerrain(NetworkStream stream, Command createGraphics)
         {
             float x = 0f;
             float[] height = new float[256 * 256];
@@ -189,7 +199,7 @@ namespace RH_Engine
         /// <param name="stream">the network stream to send requests to</param>
         /// <param name="createGraphics">the create graphics object to create all the commands</param>
         /// <returns>all the children objects in the current scene</returns>
-        public static JArray GetChildren(NetworkStream stream, CreateGraphics createGraphics)
+        public static JArray GetChildren(NetworkStream stream, Command createGraphics)
         {
             WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
             dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
@@ -202,7 +212,7 @@ namespace RH_Engine
         /// <param name="stream">the network stream to send requests to</param>
         /// <param name="createGraphics">the create graphics object to create all the commands</param>
         /// <returns>an array of name-uuid tuples for each object</returns>
-        public static (string, string)[] GetObjectsInScene(NetworkStream stream, CreateGraphics createGraphics)
+        public static (string, string)[] GetObjectsInScene(NetworkStream stream, Command createGraphics)
         {
             JArray children = GetChildren(stream, createGraphics);
             (string, string)[] res = new (string, string)[children.Count];
