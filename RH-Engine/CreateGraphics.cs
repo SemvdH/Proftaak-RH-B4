@@ -159,12 +159,12 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string MoveTo(string uuid, float[] positionVector, float rotateValue, float speedValue, float timeValue)
+        public string MoveTo(string uuid, float[] positionVector, string rotateValue, float speedValue, float timeValue)
         {
             return MoveTo(uuid, "idk", positionVector, rotateValue, "linear", false, speedValue, timeValue);
         }
 
-        private string MoveTo(string uuid, string stopValue, float[] positionVector, float rotateValue, string interpolateValue, bool followHeightValue, float speedValue, float timeValue)
+        private string MoveTo(string uuid, string stopValue, float[] positionVector, string rotateValue, string interpolateValue, bool followHeightValue, float speedValue, float timeValue)
         {
             dynamic payload = new
             {
@@ -183,7 +183,6 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
-
 
         public string RouteCommand()
         {
@@ -232,6 +231,37 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
+        public string RouteFollow(string routeID, string nodeID, float speedValue)
+        {
+            return RouteFollow(routeID, nodeID, speedValue, new float[] { 0, 0, 0 });
+        }
+
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float[] positionOffsetVector)
+        {
+            return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, new float[] { 0, 0, 0 }, positionOffsetVector);
+        }
+        private string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        {
+            dynamic payload = new
+            {
+                id = "route/follow",
+                data = new
+                {
+                    route = routeID,
+                    node = nodeID,
+                    speed = speedValue,
+                    offset = offsetValue,
+                    rotate = rotateValue,
+                    smoothing = smoothingValue,
+                    followHeight = followHeightValue,
+                    rotateOffset = rotateOffsetVector,
+                    positionOffset = positionOffsetVector
+
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
         private float[] GetPos(float n, ImprovedPerlin improvedPerlin)
         {
             float[] res = new float[] { improvedPerlin.GetValue(n) * 50, 0, improvedPerlin.GetValue(n) * 50 };
@@ -241,7 +271,7 @@ namespace RH_Engine
         private int[] GetDir()
         {
             Random rng = new Random();
-            int[] dir = {rng.Next(50), 0, rng.Next(50)};
+            int[] dir = { rng.Next(50), 0, rng.Next(50) };
             return dir;
         }
 

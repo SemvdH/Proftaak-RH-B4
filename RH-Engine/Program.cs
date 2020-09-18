@@ -15,11 +15,11 @@ namespace RH_Engine
     {
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
-            //new PC("T470S", "Shinichi"),
-            new PC("DESKTOP-DHS478C", "semme")
+            new PC("T470S", "Shinichi"),
+            //new PC("DESKTOP-DHS478C", "semme")
             //new PC("DESKTOP-TV73FKO", "Wouter"),
             //new PC("DESKTOP-SINMKT1", "Ralf"),
-            //new PC("NA", "Bart") 
+            //new PC("NA", "Bart")
         };
         private static void Main(string[] args)
         {
@@ -103,12 +103,18 @@ namespace RH_Engine
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
 
-            WriteTextMessage(stream, createGraphics.RouteCommand());
-            Console.WriteLine("data: " + ReadPrefMessage(stream));
-            //WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
-            //add monkey head
-            //WriteTextMessage(stream, createGraphics.AddModel("Face", "data\\vrlib\\rendermodels\\face\\face.obj", new float[] { 0, 3, 0 }, 10, new float[] { 0, 0, 0 }));
-            //string headUuid = getUUIDFormResponse(ReadPrefMessage(stream));
+            for (int i = 0; i < 10; i++)
+            {
+                string routeUUID = CreateRoute(stream, createGraphics);
+                //WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
+                //add monkey head
+                WriteTextMessage(stream, createGraphics.AddModel("Face", "data\\vrlib\\rendermodels\\face\\face.obj", new float[] { 0, 3, 0 }, 10, new float[] { 0, 0, 0 }));
+                string headUuid = getUUIDFromResponse(ReadPrefMessage(stream));
+
+                WriteTextMessage(stream, createGraphics.RouteFollow(routeUUID, headUuid, 5, new float[] { 0, 3, 0 }));
+                ReadPrefMessage(stream);
+
+            }
 
 
 
