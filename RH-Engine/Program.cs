@@ -104,11 +104,20 @@ namespace RH_Engine
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
 
             WriteTextMessage(stream, createGraphics.RouteCommand());
-            Console.WriteLine("data: " + ReadPrefMessage(stream));
-            //WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
-            //add monkey head
-            //WriteTextMessage(stream, createGraphics.AddModel("Face", "data\\vrlib\\rendermodels\\face\\face.obj", new float[] { 0, 3, 0 }, 10, new float[] { 0, 0, 0 }));
-            //string headUuid = getUUIDFormResponse(ReadPrefMessage(stream));
+
+            string routeResponse = ReadPrefMessage(stream);
+
+            string routeID = JSONParser.GetTunnelID(tunnelResponse);
+            if (routeID == null)
+            {
+                Console.WriteLine("could not find a valid route uuid!");
+                return;
+            }
+
+            WriteTextMessage(stream, createGraphics.RoadCommand(routeID));
+
+            //string groundId = GetId("GroundPlane", stream, createGraphics);
+            //Console.WriteLine("ground id: " + groundId);
 
 
 
