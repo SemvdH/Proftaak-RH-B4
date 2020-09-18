@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -23,7 +24,7 @@ namespace RH_Engine
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
-            Console.Read();
+            
 
         }
 
@@ -86,14 +87,41 @@ namespace RH_Engine
             }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-            string command = createGraphics.SkyboxCommand(2);
+            //int[] heigths = new int[65536];
+            //for(int i =0; i < heigths.Length; i++)
+            //{
+            //    heigths[i] = 0;
+            //}
 
-            
+            //string command = createGraphics.TerrainCommand(new int[] { 256, 256 }, heigths);
+
+            string groundId = GetId("GroundPlane", stream, createGraphics);
+            Console.WriteLine(groundId);
+            string command = createGraphics.DeleteGroundPaneCommand(groundId);
+            //string command = createGraphics.ResetScene();
             Console.WriteLine("tunnelID is: " + tunnelID);
 
             WriteTextMessage(stream, command);
 
             Console.WriteLine(ReadPrefMessage(stream));
+        }
+
+        public static string GetId(string name, NetworkStream stream, CreateGraphics createGraphics)
+        {
+            WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
+            dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
+            dynamic[] children = response.data.data.data.children;
+
+            foreach (dynamic child in children)
+            {
+                if (child.name == name)
+                {
+                    return child.uuid;
+                }
+            }
+
+            return null;
+
         }
 
     }

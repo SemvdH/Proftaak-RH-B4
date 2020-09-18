@@ -30,9 +30,21 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string DeleteGroundPaneCommand()
+        public string DeleteGroundPaneCommand(string uuid)
         {
-            return "";
+
+            dynamic payload = new
+            {
+                id = "scene/node/delete",
+                data = new
+                {
+                    id = uuid,
+                   
+                }
+
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+           
         }
 
         public string ModelCommand()
@@ -42,6 +54,18 @@ namespace RH_Engine
 
         public string RouteCommand()
         {
+            dynamic payload = new
+            {
+                id = "route/add",
+                data = new
+                {
+                    nodes = new dynamic[]
+                    {
+                        pos = new int[]{ 0,0,0},
+                        dir = new int[]{ 5,0,-5}
+                    }
+                }
+            };
             return "";
         }
 
@@ -53,6 +77,26 @@ namespace RH_Engine
         public string RoadCommand()
         {
             return "";
+        }
+
+        public string GetSceneInfoCommand()
+        {
+            dynamic payload = new
+            {
+                id = "scene/get"
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string ResetScene()
+        {
+            dynamic payload = new
+            {
+                id = "scene/reset"
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string SkyboxCommand(double timeToSet)
