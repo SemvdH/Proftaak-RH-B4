@@ -55,7 +55,27 @@ namespace RH_Engine
 
         public string ModelCommand()
         {
-            return "";
+            string namename = "bike";
+            dynamic payload = new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name = namename,
+                    components = new
+                    {
+                        model = new
+                        {
+                            file = "\\data\\NetworkEngine\\models\\bike\\bikee.fbx",
+                            cullbackfaces = true,
+                            animated = false,
+                            animation = "\\data\\NetworkEngine\\models\\bike\\bike_anim.fbx"
+                        },
+                    }
+                }
+
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string RouteCommand()
