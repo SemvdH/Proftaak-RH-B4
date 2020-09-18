@@ -8,8 +8,16 @@ namespace RH_Engine
 {
     class CreateGraphics
     {
-        string tunnelID;
+        public const string STANDARD_HEAD = "Head";
+        public const string STANDARD_GROUND = "GroundPlane";
+        public const string STANDARD_SUN = "SunLight";
+        public const string STANDARD_LEFTHAND = "LeftHand";
+        public const string STANDARD_RIGHTHAND = "RightHand";
 
+
+
+        string tunnelID;                            
+                                                    
         public CreateGraphics(string tunnelID)
         {
             this.tunnelID = tunnelID;
@@ -60,18 +68,6 @@ namespace RH_Engine
 
         public string RouteCommand()
         {
-            dynamic payload = new
-            {
-                id = "route/add",
-                data = new
-                {
-                    nodes = new dynamic[]
-                    {
-                        pos = new int[]{ 0,0,0},
-                        dir = new int[]{ 5,0,-5}
-                    }
-                }
-            };
             return "";
         }
 
@@ -137,5 +133,8 @@ namespace RH_Engine
                 }
             };
         }
+
+       
+        
     }
 }

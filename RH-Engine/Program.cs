@@ -96,7 +96,7 @@ namespace RH_Engine
             //string command = createGraphics.TerrainCommand(new int[] { 256, 256 }, heigths);
 
             string groundId = GetId("GroundPlane", stream, createGraphics);
-            Console.WriteLine(groundId);
+            Console.WriteLine("ground id: " + groundId);
             string command = createGraphics.DeleteGroundPaneCommand(groundId);
             //string command = createGraphics.ResetScene();
             Console.WriteLine("tunnelID is: " + tunnelID);
@@ -110,7 +110,7 @@ namespace RH_Engine
         {
             WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
             dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
-            dynamic[] children = response.data.data.data.children;
+            JArray children = response.data.data.data.children;
 
             foreach (dynamic child in children)
             {
