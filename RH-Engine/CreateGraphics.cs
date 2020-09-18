@@ -32,7 +32,22 @@ namespace RH_Engine
 
         public string AddNodeCommand()
         {
-            return "";
+            dynamic payload = new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name = "newNode",
+                    components = new
+                    {
+                        terrain = new
+                        {
+                            smoothnormals = true
+                        }
+                    }
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string DeleteGroundPaneCommand()

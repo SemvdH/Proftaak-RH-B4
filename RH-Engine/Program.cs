@@ -12,10 +12,10 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            new PC("DESKTOP-M2CIH87", "Fabian"),
-            new PC("T470S", "Shinichi"),
-            new PC("DESKTOP-DHS478C", "semme"),
-            new PC("DESKTOP-TV73FKO", "Wouter"),
+            new PC("DESKTOP-TV73FK0", "woute"),
+            //new PC("DESKTOP-M2CIH87", "Fabian"),
+            //new PC("T470S", "Shinichi"),
+            //new PC("DESKTOP-DHS478C", "semme"),
             new PC("NA", "Ralf"),
             new PC("NA", "Bart") };
         private static void Main(string[] args)
@@ -86,13 +86,14 @@ namespace RH_Engine
             }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-            string command = createGraphics.SkyboxCommand(2);
 
             
             Console.WriteLine("tunnelID is: " + tunnelID);
 
-            WriteTextMessage(stream, command);
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 2, 2 }, new int[] { 1, 1, 1, 1 }));
 
+            Console.WriteLine(ReadPrefMessage(stream));
+            WriteTextMessage(stream, createGraphics.AddNodeCommand());
             Console.WriteLine(ReadPrefMessage(stream));
         }
 
