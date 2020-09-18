@@ -150,8 +150,8 @@ namespace RH_Engine
 
         public string RouteCommand()
         {
-            ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
-
+            ImprovedPerlin improvedPerlin = new ImprovedPerlin(4325, LibNoise.NoiseQuality.Best);
+            Random r = new Random();
             dynamic payload = new
             {
                 id = "route/add",
@@ -161,45 +161,50 @@ namespace RH_Engine
                     {
                         new
                         {
-                            pos = GetPos(0, improvedPerlin),
-                            dir = GetDir()
+                            /*pos = GetPos(0.6f, improvedPerlin)*/
+                            pos = new int[] {0,0,5 },
+                            dir = new int[] { r.Next(20,100),0,-r.Next(20, 100) }
                         },
                         new
                         {
-                            pos = GetPos(1, improvedPerlin),
-                            dir = GetDir()
+                            //pos = GetPos(1.6f, improvedPerlin),
+                            pos = new int[] {50,0,0 },
+                             dir = new int[] { r.Next(20, 100),0,r.Next(20, 100) }
                         },
                         new
                         {
-                            pos = GetPos(2, improvedPerlin),
-                            dir = GetDir()
+                            //pos = GetPos(2.654f, improvedPerlin),
+                             pos = new int[] {20,0,20 },
+                             dir = new int[] { r.Next(20, 100),0,r.Next(20, 100) }
                         },
                         new
                         {
-                            pos = GetPos(3, improvedPerlin),
-                            dir = GetDir()
+                            //pos = GetPos(3.6543f, improvedPerlin),
+                             pos = new int[] {10,0,50 },
+                             dir = new int[] { -r.Next(3,7),0,r.Next(3,7) }
                         },
                         new
                         {
-                            pos = GetPos(4, improvedPerlin),
-                            dir = GetDir()
+                            pos = new int[] {0,0,50 },
+                             dir = new int[] { -r.Next(20, 50),0,-r.Next(20, 50) }
                         }
                     }
                 }
             };
-            Console.WriteLine(JsonConvert.SerializeObject(Payload(payload)));
+            Console.WriteLine("route command: " + JsonConvert.SerializeObject(Payload(payload)));
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        private int[] GetPos(int n, ImprovedPerlin improvedPerlin)
+        private float[] GetPos(float n, ImprovedPerlin improvedPerlin)
         {
-            return new int[] { (int)improvedPerlin.GetValue(n) * 50 * n, 0, (int)improvedPerlin.GetValue(n) * 50 };
+            float[] res = new float[] { improvedPerlin.GetValue(n) * 50, 0, improvedPerlin.GetValue(n) * 50 };
+            return res;
         }
 
         private int[] GetDir()
         {
             Random rng = new Random();
-            int[] dir = {rng.Next(5), rng.Next(5), rng.Next(5)};
+            int[] dir = {rng.Next(50), 0, rng.Next(50)};
             return dir;
         }
 

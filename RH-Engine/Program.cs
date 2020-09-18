@@ -107,31 +107,31 @@ namespace RH_Engine
             Console.WriteLine(ReadPrefMessage(stream));
 
 
+            WriteTextMessage(stream, createGraphics.RouteCommand());
+            //string groundId = GetId("GroundPlane", stream, createGraphics);
+            //Console.WriteLine("ground id: " + groundId);
 
-            string groundId = GetId("GroundPlane", stream, createGraphics);
-            Console.WriteLine("ground id: " + groundId);
+            //WriteTextMessage(stream, createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24));
 
-            WriteTextMessage(stream, createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24));
-
-            Console.WriteLine(ReadPrefMessage(stream));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
 
-            Console.WriteLine("tunnelID is: " + tunnelID);
+            //Console.WriteLine("tunnelID is: " + tunnelID);
 
-            float[] heights = new float[65536];
-            Random random = new Random();
-            for (int i = 0; i < heights.Length; i++)
-            {
-                heights[i] = (float)random.NextDouble();
-            }
+            //float[] heights = new float[65536];
+            //Random random = new Random();
+            //for (int i = 0; i < heights.Length; i++)
+            //{
+            //    heights[i] = (float)random.NextDouble();
+            //}
 
-            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, heights));
-            Console.WriteLine(ReadPrefMessage(stream));
+            //WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, heights));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
-            WriteTextMessage(stream, createGraphics.AddNodeCommand());
-            Console.WriteLine(ReadPrefMessage(stream));
+            //WriteTextMessage(stream, createGraphics.AddNodeCommand());
+            //Console.WriteLine(ReadPrefMessage(stream));
 
-            WriteTextMessage(stream, createGraphics.AddBikeModel());
+            //WriteTextMessage(stream, createGraphics.AddBikeModel());
 
             //Console.WriteLine(ReadPrefMessage(stream));
 
