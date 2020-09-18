@@ -87,30 +87,26 @@ namespace RH_Engine
             }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-<<<<<<< HEAD
 
-            
-=======
-            //int[] heigths = new int[65536];
-            //for(int i =0; i < heigths.Length; i++)
-            //{
-            //    heigths[i] = 0;
-            //}
-
-            //string command = createGraphics.TerrainCommand(new int[] { 256, 256 }, heigths);
 
             string groundId = GetId("GroundPlane", stream, createGraphics);
             Console.WriteLine("ground id: " + groundId);
             string command = createGraphics.DeleteGroundPaneCommand(groundId);
-            //string command = createGraphics.ResetScene();
->>>>>>> 0e2ee807e147b30f2517a1be463f08da41a799fd
+
             Console.WriteLine("tunnelID is: " + tunnelID);
 
-            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 2, 2 }, new int[] { 1, 1, 1, 1 }));
-
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, null));
             Console.WriteLine(ReadPrefMessage(stream));
+
             WriteTextMessage(stream, createGraphics.AddNodeCommand());
             Console.WriteLine(ReadPrefMessage(stream));
+
+            /*String tempID = GetId("newNode", stream, createGraphics);
+            WriteTextMessage(stream, createGraphics.AddLayer(tempID, ""));
+            Console.WriteLine(ReadPrefMessage(stream));
+
+            WriteTextMessage(stream, createGraphics.UpdateTerrain());
+            Console.WriteLine(ReadPrefMessage(stream));*/
         }
 
         public static string GetId(string name, NetworkStream stream, CreateGraphics createGraphics)

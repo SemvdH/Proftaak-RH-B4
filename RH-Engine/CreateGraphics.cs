@@ -37,7 +37,35 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
-
+        public string AddLayer(string uid, string texture)
+        {
+            dynamic payload = new
+            {
+                id = "scene/node/addlayer",
+                data = new
+                {
+                    id = uid,
+                    diffuse = @"C:\Users\woute\Downloads\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\textures\terrain\adesert_cracks_d.jpg",
+                    normal = @"C:\Users\woute\Downloads\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\textures\terrain\adesert_mntn_d.jpg",
+                    minHeight = 0,
+                    maxHeight = 10,
+                    fadeDist = 1
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+        public string UpdateTerrain()
+        {
+            dynamic payload = new
+            {
+                id = "scene/terrain/update",
+                data = new 
+                {
+                    
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
 
         public string AddNodeCommand()
         {
