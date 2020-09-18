@@ -18,7 +18,6 @@ namespace RH_Engine
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
             new PC("NA", "Ralf"),
-
             new PC("NA", "Bart") };
         private static void Main(string[] args)
         {
@@ -29,6 +28,11 @@ namespace RH_Engine
 
         }
 
+        /// <summary>
+        /// writes a message to the server
+        /// </summary>
+        /// <param name="stream">the network stream to use</param>
+        /// <param name="message">the message to send</param>
         public static void WriteTextMessage(NetworkStream stream, string message)
         {
             byte[] msg = Encoding.ASCII.GetBytes(message);
@@ -42,6 +46,11 @@ namespace RH_Engine
             //Console.WriteLine("sent message " + message);
         }
 
+        /// <summary>
+        /// reads a response from the server
+        /// </summary>
+        /// <param name="stream">the network stream to use</param>
+        /// <returns>the returned message from the server</returns>
         public static string ReadPrefMessage(NetworkStream stream)
         {
             byte[] lengthBytes = new byte[4];
@@ -66,7 +75,10 @@ namespace RH_Engine
 
             return Encoding.UTF8.GetString(buffer, 0, totalRead);
         }
-
+        /// <summary>
+        /// connects to the server and creates the tunnel
+        /// </summary>
+        /// <param name="stream">the network stream to use</param>
         private static void CreateConnection(NetworkStream stream)
         {
             WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
@@ -180,7 +192,9 @@ namespace RH_Engine
 
     }
 
-
+    /// <summary>
+    /// struct used to store the host pc name and user
+    /// </summary>
     public readonly struct PC
     {
         public PC(string host, string user)
