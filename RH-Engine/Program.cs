@@ -108,7 +108,13 @@ namespace RH_Engine
 
             Console.WriteLine(ReadPrefMessage(stream));
 
-            command = createGraphics.ModelCommand();
+            command = createGraphics.AddBikeModel();
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
+            command = createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
 
             WriteTextMessage(stream, command);
 
