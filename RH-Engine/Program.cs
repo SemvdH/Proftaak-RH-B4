@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 
 namespace RH_Engine
 {
@@ -15,10 +16,11 @@ namespace RH_Engine
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
-            new PC("DESKTOP-DHS478C", "semme"),
+            new PC("DESKTOP-DHS478C", "semme")
             //new PC("DESKTOP-TV73FKO", "Wouter"),
-            new PC("DESKTOP-SINMKT1", "Ralf"),
-            new PC("NA", "Bart") };
+            //new PC("DESKTOP-SINMKT1", "Ralf"),
+            //new PC("NA", "Bart") 
+        };
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -101,44 +103,11 @@ namespace RH_Engine
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
 
-
-            WriteTextMessage(stream, createGraphics.ResetScene());
-
-            Console.WriteLine(ReadPrefMessage(stream));
-
-
             WriteTextMessage(stream, createGraphics.RouteCommand());
-            //string groundId = GetId("GroundPlane", stream, createGraphics);
-            //Console.WriteLine("ground id: " + groundId);
+            Console.WriteLine("data: " + ReadPrefMessage(stream));
+            //WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
 
-            //WriteTextMessage(stream, createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24));
-
-            //Console.WriteLine(ReadPrefMessage(stream));
-
-
-            //Console.WriteLine("tunnelID is: " + tunnelID);
-
-            //float[] heights = new float[65536];
-            //Random random = new Random();
-            //for (int i = 0; i < heights.Length; i++)
-            //{
-            //    heights[i] = (float)random.NextDouble();
-            //}
-
-            //WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, heights));
-            //Console.WriteLine(ReadPrefMessage(stream));
-
-            //WriteTextMessage(stream, createGraphics.AddNodeCommand());
-            //Console.WriteLine(ReadPrefMessage(stream));
-
-            //WriteTextMessage(stream, createGraphics.AddBikeModel());
-
-            //Console.WriteLine(ReadPrefMessage(stream));
-
-            //WriteTextMessage(stream, createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx"));
-
-            //Console.WriteLine(ReadPrefMessage(stream));
-
+            //Console.WriteLine("data: " + ReadPrefMessage(stream));
 
 
         }
@@ -162,6 +131,18 @@ namespace RH_Engine
                 }
             }
             Console.WriteLine("Could not find id of " + name);
+            return null;
+
+        }
+
+        public static string CreateRoute(NetworkStream stream, CreateGraphics createGraphics)
+        {
+            WriteTextMessage(stream, createGraphics.RouteCommand());
+            dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
+            if (response.data.data.id == "route/add")
+            {
+                return response.data.data.data.uuid;
+            }
             return null;
 
         }
