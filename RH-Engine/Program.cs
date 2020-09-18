@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using LibNoise.Primitive;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -114,10 +115,23 @@ namespace RH_Engine
                 return;
             }
 
-            WriteTextMessage(stream, createGraphics.RoadCommand(routeID));
+            Console.WriteLine("tunnelID is: " + tunnelID);
 
-            //string groundId = GetId("GroundPlane", stream, createGraphics);
-            //Console.WriteLine("ground id: " + groundId);
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, null));
+            Console.WriteLine(ReadPrefMessage(stream));
+
+
+            command = createGraphics.AddBikeModel();
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
+            command = createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
 
 
 
