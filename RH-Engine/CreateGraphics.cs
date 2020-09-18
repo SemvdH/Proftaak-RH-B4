@@ -280,9 +280,22 @@ namespace RH_Engine
             return "";
         }
 
-        public string RoadCommand()
+        public string RoadCommand(string uuid_route)
         {
-            return "";
+            Console.WriteLine("road");
+            dynamic payload = new
+            {
+                id = "scene/road/add",
+                data = new
+                {
+                    route = uuid_route,
+                    diffuse = "data/NetworkEngine/textures/tarmac_diffuse.png",
+                    normal = "data/NetworkEngine/textures/tarmac_normale.png",
+                    specular = "data/NetworkEngine/textures/tarmac_specular.png",
+                    heightoffset = 1f
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string GetSceneInfoCommand()

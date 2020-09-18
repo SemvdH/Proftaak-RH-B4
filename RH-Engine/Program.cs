@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using LibNoise.Primitive;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Intrinsics.X86;
@@ -103,18 +105,26 @@ namespace RH_Engine
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
 
-            for (int i = 0; i < 10; i++)
-            {
-                string routeUUID = CreateRoute(stream, createGraphics);
-                //WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
-                //add monkey head
-                WriteTextMessage(stream, createGraphics.AddModel("Face", "data\\vrlib\\rendermodels\\face\\face.obj", new float[] { 0, 3, 0 }, 10, new float[] { 0, 0, 0 }));
-                string headUuid = getUUIDFromResponse(ReadPrefMessage(stream));
 
-                WriteTextMessage(stream, createGraphics.RouteFollow(routeUUID, headUuid, 5, new float[] { 0, 3, 0 }));
-                ReadPrefMessage(stream);
+            WriteTextMessage(stream, createGraphics.ResetScene());
+            ReadPrefMessage(stream);
+            string routeid = CreateRoute(stream, createGraphics);
 
-            }
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, null));
+            Console.WriteLine(ReadPrefMessage(stream));
+            string command;
+
+            command = createGraphics.AddBikeModel();
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
+            command = createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
 
 
 
@@ -153,6 +163,24 @@ namespace RH_Engine
             }
             return null;
 
+        }
+
+        public static void CreateTerrain(NetworkStream stream, CreateGraphics createGraphics)
+        {
+            float x = 0f;
+            float[] height = new float[256 * 256];
+            ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
+            for (int i = 0; i < 256 * 256; i++)
+            {
+                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) + 1;
+                x += 0.001f;
+            }
+
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, height));
+            Console.WriteLine(ReadPrefMessage(stream));
+
+            WriteTextMessage(stream, createGraphics.AddNodeCommand());
+            Console.WriteLine(ReadPrefMessage(stream));
         }
 
         /// <summary>

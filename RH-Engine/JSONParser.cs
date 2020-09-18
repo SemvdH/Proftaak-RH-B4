@@ -60,6 +60,15 @@ namespace RH_Engine
             return null;
         }
 
+        public static string GetRouteID(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            if (jsonData.data.status == "ok")
+            {
+                return jsonData.data.uuid;
+            }
+            return null;
+        }
 
     }
 }
