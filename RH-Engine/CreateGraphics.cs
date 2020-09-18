@@ -15,19 +15,24 @@ namespace RH_Engine
             this.tunnelID = tunnelID;
         }
 
-        public string TerrainCommand(int[] sizeAray, int[] heightsArray)
+        public string TerrainCommand(int[] sizeArray, int[] heightsArray)
         {
             dynamic payload = new
             {
                 id = "scene/terrain/add",
                 data = new
                 {
-                    size = sizeAray,
+                    size = sizeArray,
                     heights = heightsArray
                 }
 
             };
             return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string AddNodeCommand()
+        {
+            return "";
         }
 
         public string DeleteGroundPaneCommand()
