@@ -13,19 +13,19 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            new PC("DESKTOP-TV73FK0", "woute"),
+            //new PC("DESKTOP-TV73FK0", "woute"),
             //new PC("DESKTOP-M2CIH87", "Fabian"),
-            //new PC("T470S", "Shinichi"),
+            new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
             new PC("NA", "Ralf"),
-
-            new PC("NA", "Bart") };
+            new PC("NA", "Bart") }
+        ;
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
-            
+
 
         }
 
@@ -79,7 +79,7 @@ namespace RH_Engine
             string tunnelResponse = ReadPrefMessage(stream);
 
             Console.WriteLine(tunnelResponse);
-            
+
             string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
             if (tunnelID == null)
             {
@@ -90,31 +90,42 @@ namespace RH_Engine
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
 
 
+            WriteTextMessage(stream, createGraphics.ResetScene());
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
+
+
             string groundId = GetId("GroundPlane", stream, createGraphics);
             Console.WriteLine("ground id: " + groundId);
 
-            string command;
-            command = createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24);
+            WriteTextMessage(stream, createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24));
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
 
             Console.WriteLine("tunnelID is: " + tunnelID);
 
-            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, null));
+            float[] heights = new float[65536];
+            Random random = new Random();
+            for (int i = 0; i < heights.Length; i++)
+            {
+                heights[i] = (float)random.NextDouble();
+            }
+
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, heights));
             Console.WriteLine(ReadPrefMessage(stream));
 
             WriteTextMessage(stream, createGraphics.AddNodeCommand());
             Console.WriteLine(ReadPrefMessage(stream));
 
-            command = createGraphics.AddBikeModel();
+            WriteTextMessage(stream, createGraphics.AddBikeModel());
 
-            WriteTextMessage(stream, command);
+            //Console.WriteLine(ReadPrefMessage(stream));
 
-            Console.WriteLine(ReadPrefMessage(stream));
+            //WriteTextMessage(stream, createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx"));
 
-            command = createGraphics.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
-
-            WriteTextMessage(stream, command);
-
-            Console.WriteLine(ReadPrefMessage(stream));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
 
 
@@ -162,7 +173,7 @@ namespace RH_Engine
         /// <param name="stream">the network stream to send requests to</param>
         /// <param name="createGraphics">the create graphics object to create all the commands</param>
         /// <returns>an array of name-uuid tuples for each object</returns>
-        public static (string,string)[] GetObjectsInScene(NetworkStream stream, CreateGraphics createGraphics)
+        public static (string, string)[] GetObjectsInScene(NetworkStream stream, CreateGraphics createGraphics)
         {
             JArray children = GetChildren(stream, createGraphics);
             (string, string)[] res = new (string, string)[children.Count];

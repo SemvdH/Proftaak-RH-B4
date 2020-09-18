@@ -23,7 +23,7 @@ namespace RH_Engine
             this.tunnelID = tunnelID;
         }
 
-        public string TerrainCommand(int[] sizeArray, int[] heightsArray)
+        public string TerrainCommand(int[] sizeArray, float[] heightsArray)
         {
             dynamic payload = new
             {
