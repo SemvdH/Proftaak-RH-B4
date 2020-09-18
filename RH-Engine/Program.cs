@@ -106,11 +106,16 @@ namespace RH_Engine
             Console.WriteLine(ReadPrefMessage(stream));
         }
 
+        /// <summary>
+        /// gets the id of the object with the given name
+        /// </summary>
+        /// <param name="name">the name of the object</param>
+        /// <param name="stream">the network stream to send requests to</param>
+        /// <param name="createGraphics">the create graphics object to create all the commands</param>
+        /// <returns> the uuid of the object with the given name, <c>null</c> otherwise.</returns>
         public static string GetId(string name, NetworkStream stream, CreateGraphics createGraphics)
         {
-            WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
-            dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
-            JArray children = response.data.data.data.children;
+            JArray children = GetChildren(stream, createGraphics);
 
             foreach (dynamic child in children)
             {
@@ -121,6 +126,41 @@ namespace RH_Engine
             }
             Console.WriteLine("Could not find id of " + name);
             return null;
+
+        }
+
+        /// <summary>
+        /// gets all the children in the current scene
+        /// </summary>
+        /// <param name="stream">the network stream to send requests to</param>
+        /// <param name="createGraphics">the create graphics object to create all the commands</param>
+        /// <returns>all the children objects in the current scene</returns>
+        public static JArray GetChildren(NetworkStream stream, CreateGraphics createGraphics)
+        {
+            WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
+            dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
+            return response.data.data.data.children;
+        }
+
+        /// <summary>
+        /// returns all objects in the current scene, as name-uuid tuples.
+        /// </summary>
+        /// <param name="stream">the network stream to send requests to</param>
+        /// <param name="createGraphics">the create graphics object to create all the commands</param>
+        /// <returns>an array of name-uuid tuples for each object</returns>
+        public static (string,string)[] GetObjectsInScene(NetworkStream stream, CreateGraphics createGraphics)
+        {
+            JArray children = GetChildren(stream, createGraphics);
+            (string, string)[] res = new (string, string)[children.Count];
+
+            int i = 0;
+            foreach (dynamic child in children)
+            {
+                res[i] = (child.name, child.uuid);
+                i++;
+            }
+
+            return res;
 
         }
 
