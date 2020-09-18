@@ -13,11 +13,11 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            //new PC("DESKTOP-TV73FK0", "woute"),
             //new PC("DESKTOP-M2CIH87", "Fabian"),
-            new PC("T470S", "Shinichi"),
-            //new PC("DESKTOP-DHS478C", "semme"),
-            new PC("NA", "Ralf"),
+            //new PC("T470S", "Shinichi"),
+            new PC("DESKTOP-DHS478C", "semme"),
+            //new PC("DESKTOP-TV73FKO", "Wouter"),
+            new PC("DESKTOP-SINMKT1", "Ralf"),
             new PC("NA", "Bart") };
         private static void Main(string[] args)
         {
@@ -107,31 +107,31 @@ namespace RH_Engine
             Console.WriteLine(ReadPrefMessage(stream));
 
 
+            WriteTextMessage(stream, createGraphics.RouteCommand());
+            //string groundId = GetId("GroundPlane", stream, createGraphics);
+            //Console.WriteLine("ground id: " + groundId);
 
-            string groundId = GetId("GroundPlane", stream, createGraphics);
-            Console.WriteLine("ground id: " + groundId);
+            //WriteTextMessage(stream, createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24));
 
-            WriteTextMessage(stream, createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24));
-
-            Console.WriteLine(ReadPrefMessage(stream));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
 
-            Console.WriteLine("tunnelID is: " + tunnelID);
+            //Console.WriteLine("tunnelID is: " + tunnelID);
 
-            float[] heights = new float[65536];
-            Random random = new Random();
-            for (int i = 0; i < heights.Length; i++)
-            {
-                heights[i] = (float)random.NextDouble();
-            }
+            //float[] heights = new float[65536];
+            //Random random = new Random();
+            //for (int i = 0; i < heights.Length; i++)
+            //{
+            //    heights[i] = (float)random.NextDouble();
+            //}
 
-            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, heights));
-            Console.WriteLine(ReadPrefMessage(stream));
+            //WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, heights));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
-            WriteTextMessage(stream, createGraphics.AddNodeCommand());
-            Console.WriteLine(ReadPrefMessage(stream));
+            //WriteTextMessage(stream, createGraphics.AddNodeCommand());
+            //Console.WriteLine(ReadPrefMessage(stream));
 
-            WriteTextMessage(stream, createGraphics.AddBikeModel());
+            //WriteTextMessage(stream, createGraphics.AddBikeModel());
 
             //Console.WriteLine(ReadPrefMessage(stream));
 

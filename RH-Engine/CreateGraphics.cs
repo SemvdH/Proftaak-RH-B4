@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using LibNoise.Primitive;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace RH_Engine
 {
@@ -185,7 +187,62 @@ namespace RH_Engine
 
         public string RouteCommand()
         {
-            return "";
+            ImprovedPerlin improvedPerlin = new ImprovedPerlin(4325, LibNoise.NoiseQuality.Best);
+            Random r = new Random();
+            dynamic payload = new
+            {
+                id = "route/add",
+                data = new
+                {
+                    nodes = new dynamic[]
+                    {
+                        new
+                        {
+                            /*pos = GetPos(0.6f, improvedPerlin)*/
+                            pos = new int[] {0,0,5 },
+                            dir = new int[] { r.Next(20,100),0,-r.Next(20, 100) }
+                        },
+                        new
+                        {
+                            //pos = GetPos(1.6f, improvedPerlin),
+                            pos = new int[] {50,0,0 },
+                             dir = new int[] { r.Next(20, 100),0,r.Next(20, 100) }
+                        },
+                        new
+                        {
+                            //pos = GetPos(2.654f, improvedPerlin),
+                             pos = new int[] {20,0,20 },
+                             dir = new int[] { r.Next(20, 100),0,r.Next(20, 100) }
+                        },
+                        new
+                        {
+                            //pos = GetPos(3.6543f, improvedPerlin),
+                             pos = new int[] {10,0,50 },
+                             dir = new int[] { -r.Next(3,7),0,r.Next(3,7) }
+                        },
+                        new
+                        {
+                            pos = new int[] {0,0,50 },
+                             dir = new int[] { -r.Next(20, 50),0,-r.Next(20, 50) }
+                        }
+                    }
+                }
+            };
+            Console.WriteLine("route command: " + JsonConvert.SerializeObject(Payload(payload)));
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        private float[] GetPos(float n, ImprovedPerlin improvedPerlin)
+        {
+            float[] res = new float[] { improvedPerlin.GetValue(n) * 50, 0, improvedPerlin.GetValue(n) * 50 };
+            return res;
+        }
+
+        private int[] GetDir()
+        {
+            Random rng = new Random();
+            int[] dir = {rng.Next(50), 0, rng.Next(50)};
+            return dir;
         }
 
         public string FollowRouteCommand()
