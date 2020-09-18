@@ -13,14 +13,12 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-<<<<<<< HEAD
             new PC("DESKTOP-TV73FK0", "woute"),
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
             new PC("NA", "Ralf"),
-            new PC("NA", "Bart") };
-=======
+            new PC("NA", "Bart"),
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             new PC("DESKTOP-DHS478C", "semme"),
@@ -28,7 +26,6 @@ namespace RH_Engine
             //new PC("NA", "Ralf"),
             //new PC("NA", "Bart") 
         };
->>>>>>> 8fd3322c63830c7f5cc7668ffd49e8203dbe1a95
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
