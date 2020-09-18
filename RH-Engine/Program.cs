@@ -13,13 +13,22 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
+<<<<<<< HEAD
+            new PC("DESKTOP-TV73FK0", "woute"),
             //new PC("DESKTOP-M2CIH87", "Fabian"),
-            new PC("T470S", "Shinichi"),
+            //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
+            new PC("NA", "Ralf"),
+            new PC("NA", "Bart") };
+=======
+            //new PC("DESKTOP-M2CIH87", "Fabian"),
+            //new PC("T470S", "Shinichi"),
+            new PC("DESKTOP-DHS478C", "semme"),
             //new PC("DESKTOP-TV73FKO", "Wouter"),
             //new PC("NA", "Ralf"),
             //new PC("NA", "Bart") 
         };
+>>>>>>> 8fd3322c63830c7f5cc7668ffd49e8203dbe1a95
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -88,24 +97,20 @@ namespace RH_Engine
             }
 
             CreateGraphics createGraphics = new CreateGraphics(tunnelID);
-            //int[] heigths = new int[65536];
-            //for(int i =0; i < heigths.Length; i++)
-            //{
-            //    heigths[i] = 0;
-            //}
 
-            //string command = createGraphics.TerrainCommand(new int[] { 256, 256 }, heigths);
 
             string groundId = GetId("GroundPlane", stream, createGraphics);
             Console.WriteLine("ground id: " + groundId);
+
             string command;
-            //command = createGraphics.DeleteGroundPaneCommand(groundId);
-            //string command = createGraphics.ResetScene();
             command = createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24);
+
             Console.WriteLine("tunnelID is: " + tunnelID);
 
-            WriteTextMessage(stream, command);
+            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, null));
+            Console.WriteLine(ReadPrefMessage(stream));
 
+            WriteTextMessage(stream, createGraphics.AddNodeCommand());
             Console.WriteLine(ReadPrefMessage(stream));
 
             command = createGraphics.AddBikeModel();
@@ -119,6 +124,7 @@ namespace RH_Engine
             WriteTextMessage(stream, command);
 
             Console.WriteLine(ReadPrefMessage(stream));
+
 
 
         }
