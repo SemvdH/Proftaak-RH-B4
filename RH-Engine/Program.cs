@@ -13,12 +13,13 @@ namespace RH_Engine
     internal class Program
     {
         private static PC[] PCs = {
-            new PC("DESKTOP-M2CIH87", "Fabian"),
+            //new PC("DESKTOP-M2CIH87", "Fabian"),
             new PC("T470S", "Shinichi"),
-            new PC("DESKTOP-DHS478C", "semme"),
-            new PC("DESKTOP-TV73FKO", "Wouter"),
-            new PC("NA", "Ralf"),
-            new PC("NA", "Bart") };
+            //new PC("DESKTOP-DHS478C", "semme"),
+            //new PC("DESKTOP-TV73FKO", "Wouter"),
+            //new PC("NA", "Ralf"),
+            //new PC("NA", "Bart") 
+        };
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -97,13 +98,23 @@ namespace RH_Engine
 
             string groundId = GetId("GroundPlane", stream, createGraphics);
             Console.WriteLine("ground id: " + groundId);
-            string command = createGraphics.DeleteGroundPaneCommand(groundId);
+            string command;
+            //command = createGraphics.DeleteGroundPaneCommand(groundId);
             //string command = createGraphics.ResetScene();
+            command = createGraphics.SkyboxCommand(DateTime.Now.Millisecond % 24);
             Console.WriteLine("tunnelID is: " + tunnelID);
 
             WriteTextMessage(stream, command);
 
             Console.WriteLine(ReadPrefMessage(stream));
+
+            command = createGraphics.ModelCommand();
+
+            WriteTextMessage(stream, command);
+
+            Console.WriteLine(ReadPrefMessage(stream));
+
+
         }
 
         public static string GetId(string name, NetworkStream stream, CreateGraphics createGraphics)

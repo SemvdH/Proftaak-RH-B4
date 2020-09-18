@@ -16,8 +16,8 @@ namespace RH_Engine
 
 
 
-        string tunnelID;                            
-                                                    
+        string tunnelID;
+
         public CreateGraphics(string tunnelID)
         {
             this.tunnelID = tunnelID;
@@ -53,12 +53,12 @@ namespace RH_Engine
                 data = new
                 {
                     id = uuid,
-                   
+
                 }
 
             };
             return JsonConvert.SerializeObject(Payload(payload));
-           
+
         }
 
         public string ModelCommand()
@@ -74,10 +74,10 @@ namespace RH_Engine
                     {
                         model = new
                         {
-                            file = "\\data\\NetworkEngine\\models\\bike\\bikee.fbx",
+                            file = "data\\NetworkEngine\\models\\bike\\bike.fbx",
                             cullbackfaces = true,
                             animated = false,
-                            animation = "\\data\\NetworkEngine\\models\\bike\\bike_anim.fbx"
+                            animation = "data\\NetworkEngine\\models\\bike\\bike_anim.fbx"
                         },
                     }
                 }
@@ -85,6 +85,7 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
+
 
         public string RouteCommand()
         {
@@ -132,10 +133,11 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "scene/skybox/settime",
-                data = new {
+                data = new
+                {
                     time = timeToSet
                 }
-                
+
             };
             return JsonConvert.SerializeObject(Payload(payload));
 
@@ -154,7 +156,7 @@ namespace RH_Engine
             };
         }
 
-       
-        
+
+
     }
 }
