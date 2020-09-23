@@ -12,18 +12,9 @@ namespace Client
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
         private int bytesReceived;
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-            //connect fiets?
+        private bool connected = false;
 
 
-            Client client = new Client();
-            while (true)
-            {
-            }
-        }
         public Client() : this("localhost", 5555)
         {
 
