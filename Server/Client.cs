@@ -30,52 +30,6 @@ namespace Server
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
-        //private void OnRead(IAsyncResult ar)
-        //{
-        //    try
-        //    {
-        //        int receivedBytes = stream.EndRead(ar);
-        //    }
-        //    catch (IOException)
-        //    {
-        //        communication.Disconnect(this);
-        //        return;
-        //    }
-
-        //    int counter = 0;
-
-        //    while (buffer.Length > counter)
-        //    {
-        //        //Console.WriteLine(buffer.Length);
-        //        byte[] lenghtBytes = new byte[4];
-        //        Array.Copy(buffer, counter, lenghtBytes, 0, 4);
-        //        int length = BitConverter.ToInt32(lenghtBytes);
-        //        Console.WriteLine(buffer[5]);
-        //        if (length == 0)
-        //        {
-        //            break;
-        //        }
-        //        else if(buffer[counter+4]==0x02)
-        //        {
-
-        //        }
-        //        else if(buffer[counter+4]==0x01)
-        //        {
-        //            byte[] packet = new byte[length];
-        //            Console.WriteLine(Encoding.ASCII.GetString(buffer)+" "+length);
-        //            Array.Copy(buffer, counter+5, packet, 0, length);
-        //            Console.WriteLine(Encoding.ASCII.GetString(packet));
-        //            HandleData(Encoding.ASCII.GetString(packet));
-        //        }
-
-        //        counter += length;
-        //    }
-
-        //    Console.WriteLine("Done");
-
-        //    stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
-        //}
-
         private void OnRead(IAsyncResult ar)
         {
             int receivedBytes = this.stream.EndRead(ar);
