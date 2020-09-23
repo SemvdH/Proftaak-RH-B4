@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProftaakRH", "ProftaakRH.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RH-Engine", "..\RH-Engine\RH-Engine.csproj", "{984E295E-47A2-41E7-90E5-50FDB9E67694}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "..\Server\Server.csproj", "{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "..\Client\Client.csproj", "{5759DD20-7A4F-4D8D-B986-A70A7818C112}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{984E295E-47A2-41E7-90E5-50FDB9E67694}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{984E295E-47A2-41E7-90E5-50FDB9E67694}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{984E295E-47A2-41E7-90E5-50FDB9E67694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
