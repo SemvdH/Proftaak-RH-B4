@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProftaakRH
 {
-    interface IDataReceiver
+    public interface IDataReceiver
     {
         void BPM(byte[] bytes);
         void Bike(byte[] bytes);
