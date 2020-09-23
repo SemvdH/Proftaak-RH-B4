@@ -70,5 +70,15 @@ namespace RH_Engine
             return null;
         }
 
+        public static string getPanelID(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            if (jsonData.data.data.data.name == "dashboard")
+            {
+                Console.WriteLine(jsonData.data.data.data.uuid);
+                return jsonData.data.data.data.uuid;
+            }
+            return null;
+        }
     }
 }

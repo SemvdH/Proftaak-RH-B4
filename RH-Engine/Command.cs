@@ -106,6 +106,64 @@ namespace RH_Engine
 
         }
 
+        public string addPanel()
+        {
+            dynamic payload = new
+            {
+                id = "scene/node/add",
+                data = new
+                {
+                    name = "dashboard",
+                    components = new
+                    {
+                        panel = new
+                        {
+                            size = new int[] { 1, 1 },
+                            resolution = new int[] { 256, 256 },
+                            background = new int[] { 1, 1, 1, 1 },
+                            castShadow = true
+
+                        }
+                    }
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string bikeSpeed(string uuidPanel)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/drawtext",
+                data = new
+                {
+                    id = uuidPanel,
+                    text = "Bike speed placeholder",
+                    position = new int[] { 0, 0 },
+                    size = 32.0,
+                    color = new int[] { 0, 0, 0, 1 },
+                    font = "segoeui"
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string ClearPanel(string uuid)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/clear",
+                data = new
+                {
+                    id = uuid
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
         public string AddBikeModel()
         {
             return AddModel("bike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
