@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Hardware.Simulators
 {
-    class BikeSimulator : IHandler
+    public class BikeSimulator : IHandler
     {
         IDataReceiver dataReceiver;
         private int elapsedTime = 0;
@@ -34,6 +34,7 @@ namespace Hardware.Simulators
         {
             this.dataReceiver = dataReceiver;
         }
+
         public void StartSimulation()
         {
             //Example BLE Message

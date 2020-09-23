@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Hardware;
+using Hardware.Simulators;
 using ProftaakRH;
 
 namespace Client
@@ -24,6 +25,11 @@ namespace Client
             BLEHandler bLEHandler = new BLEHandler(client);
 
             bLEHandler.Connect();
+
+            //BikeSimulator bikeSimulator = new BikeSimulator(client);
+
+            //bikeSimulator.StartSimulation();
+
             while (true)
             {
             }

@@ -92,12 +92,13 @@ namespace Client
                     throw new NotImplementedException();
                 }
             }
+            this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+
         }
 
         private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
-            Console.WriteLine("wrote some stuff");
         }
 
         #region interface
