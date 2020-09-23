@@ -7,12 +7,12 @@ using Hardware.Simulators;
 
 namespace ProftaakRH
 {
-    class Program 
+    class Program
     {
         static void Main(string[] agrs)
         {
-            IDataConverter dataConverter = new DataConverter();
-            BLEHandler bLEHandler = new BLEHandler(dataConverter);
+            IDataReceiver dataReceiver = new DataConverter();
+            BLEHandler bLEHandler = new BLEHandler(dataReceiver);
             //BikeSimulator bikeSimulator = new BikeSimulator(dataConverter);
             //bikeSimulator.setResistance(bikeSimulator.GenerateResistance(1f));
             //bikeSimulator.StartSimulation();
@@ -24,7 +24,7 @@ namespace ProftaakRH
                 string input = Console.ReadLine();
                 input.ToLower();
                 input.Trim();
-                if(input == "quit")
+                if (input == "quit")
                 {
                     running = false;
                     break;

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Message\Message.csproj" />
+    <ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
   </ItemGroup>
 
 </Project>

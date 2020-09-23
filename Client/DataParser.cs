@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Client
@@ -54,5 +55,33 @@ namespace Client
             }
             return bytes[5] == 0x02;
         }
+
+        private static byte[] getMessage(byte[] payload, byte messageId)
+        {
+            byte[] res = new byte[payload.Length + 5];
+
+            Array.Copy(BitConverter.GetBytes(payload.Length), 0, res, 0, 4);
+            res[4] = messageId;
+            Array.Copy(payload, 0, res, 5, payload.Length);
+
+            return res;
+        }
+
+        public static byte[] GetRawDataMessage(byte[] payload)
+        {
+            return getMessage(payload, 0x02);
+        }
+
+        public static byte[] getJsonMessage(byte[] payload)
+        {
+            return getMessage(payload, 0x01);
+        }
+
+        public static byte[] getJsonMessage(string message)
+        {
+            return getJsonMessage(Encoding.ASCII.GetBytes(message));
+        }
+
+
     }
 }
