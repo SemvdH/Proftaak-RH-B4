@@ -24,7 +24,6 @@ namespace Hardware
         public BLEHandler(IDataConverter dataConverter)
         {
             this.dataConverter = dataConverter;
-            bool running = false;
         }
 
         /// <summary>
