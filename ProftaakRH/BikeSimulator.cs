@@ -1,4 +1,5 @@
 ﻿using LibNoise.Primitive;
+using ProftaakRH;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Hardware.Simulators
 {
     class BikeSimulator : IHandler
     {
-        IDataConverter dataConverter;
+        IDataReceiver dataReceiver;
         private int elapsedTime = 0;
         private int eventCounter = 0;
         private double distanceTraveled = 0;
@@ -29,9 +30,9 @@ namespace Hardware.Simulators
 
 
 
-        public BikeSimulator(IDataConverter dataConverter)
+        public BikeSimulator(IDataReceiver dataReceiver)
         {
-            this.dataConverter = dataConverter;
+            this.dataReceiver = dataReceiver;
         }
         public void StartSimulation()
         {
@@ -41,16 +42,16 @@ namespace Hardware.Simulators
             float x = 0.0f;
 
             //Perlin for Random values
-            ImprovedPerlin improvedPerlin = new ImprovedPerlin(0,LibNoise.NoiseQuality.Best);
-            
+            ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
+
             while (true)
             {
-                CalculateVariables(improvedPerlin.GetValue(x)+1);
+                CalculateVariables(improvedPerlin.GetValue(x) + 1);
 
                 //Simulate sending data
-                dataConverter.Bike(GenerateBike0x19());
-                dataConverter.Bike(GenerateBike0x10());
-                dataConverter.BPM(GenerateHeart());
+                dataReceiver.Bike(GenerateBike0x19());
+                dataReceiver.Bike(GenerateBike0x10());
+                dataReceiver.BPM(GenerateHeart());
 
                 Thread.Sleep(1000);
 
@@ -65,21 +66,21 @@ namespace Hardware.Simulators
         private byte[] GenerateBike0x19()
         {
             byte statByte = (byte)(powerArray[1] >> 4);
-            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter%256), Convert.ToByte(cadence%254), accPowerArray[0], accPowerArray[1], powerArray[0], statByte, 0x20 };
+            byte[] bikeByte = { 0x19, Convert.ToByte(eventCounter % 256), Convert.ToByte(cadence % 254), accPowerArray[0], accPowerArray[1], powerArray[0], statByte, 0x20 };
             return bikeByte;
         }
 
         //Generate an ANT message for page 0x10
         private byte[] GenerateBike0x10()
         {
-            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime*4%64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
+            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime * 4 % 64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
             return bikeByte;
         }
 
         //Generate an ANT message for BPM
         private byte[] GenerateHeart()
         {
-            byte[] hartByte = { 0x00, Convert.ToByte(BPM)};
+            byte[] hartByte = { 0x00, Convert.ToByte(BPM) };
             return hartByte;
         }
 
@@ -114,13 +115,13 @@ namespace Hardware.Simulators
         //Input perlin value
         private void CalculateVariables(float perlin)
         {
-            this.speed = perlin * 5 / 0.01 ;
+            this.speed = perlin * 5 / 0.01;
             short sped = (short)speed;
             speedArray = BitConverter.GetBytes(sped);
-            this.distanceTraveled = (distanceTraveled+(speed*0.01)) % 256;
-            this.BPM = (int) (perlin * 80);
-            this.cadence = (int)speed/6;
-            this.power = ((1 + resistance) * speed)/14 % 4094;
+            this.distanceTraveled = (distanceTraveled + (speed * 0.01)) % 256;
+            this.BPM = (int)(perlin * 80);
+            this.cadence = (int)speed / 6;
+            this.power = ((1 + resistance) * speed) / 14 % 4094;
             this.accPower = (this.accPower + this.power) % 65536;
             // TO DO power to power LSB & MSN
             powerArray = BitConverter.GetBytes((short)this.power);
@@ -131,9 +132,9 @@ namespace Hardware.Simulators
         public void setResistance(byte[] bytes)
         {
             //TODO check if message is correct
-            if(bytes.Length == 13)
+            if (bytes.Length == 13)
             {
-                this.resistance = Convert.ToDouble(bytes[11])/2;                
+                this.resistance = Convert.ToDouble(bytes[11]) / 2;
             }
         }
     }

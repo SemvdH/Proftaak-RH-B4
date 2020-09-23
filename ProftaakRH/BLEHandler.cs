@@ -4,6 +4,7 @@ using System.Text;
 using Avans.TI.BLE;
 using System.Threading;
 using System.Security.Cryptography;
+using ProftaakRH;
 
 namespace Hardware
 {
@@ -12,7 +13,7 @@ namespace Hardware
     /// </summary>
     class BLEHandler
     {
-        IDataConverter dataConverter;
+        IDataReceiver dataReceiver;
         private BLE bleBike;
         private BLE bleHeart;
         public bool Running { get; set; }
@@ -20,10 +21,10 @@ namespace Hardware
         /// <summary>
         /// Makes a new BLEHandler object
         /// </summary>
-        /// <param name="dataConverter">the dataconverter object</param>
-        public BLEHandler(IDataConverter dataConverter)
+        /// <param name="dataReceiver">the dataconverter object</param>
+        public BLEHandler(IDataReceiver dataReceiver)
         {
-            this.dataConverter = dataConverter;
+            this.dataReceiver = dataReceiver;
         }
 
         /// <summary>
@@ -119,16 +120,16 @@ namespace Hardware
         /// <param name="e">the value changed event</param>
         private void BleBike_SubscriptionValueChanged(object sender, BLESubscriptionValueChangedEventArgs e)
         {
-            
+
             if (e.ServiceName == "6e40fec2-b5a3-f393-e0a9-e50e24dcca9e")
             {
                 byte[] payload = new byte[8];
                 Array.Copy(e.Data, 4, payload, 0, 8);
-                this.dataConverter.Bike(payload);
+                this.dataReceiver.Bike(payload);
             }
             else if (e.ServiceName == "00002a37-0000-1000-8000-00805f9b34fb")
             {
-                this.dataConverter.BPM(e.Data);
+                this.dataReceiver.BPM(e.Data);
             }
             else
             {
@@ -164,7 +165,7 @@ namespace Hardware
                 antMessage[i] = 0xFF;
             }
             antMessage[11] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
-            
+
 
             byte checksum = 0;
             for (int i = 0; i < 12; i++)
