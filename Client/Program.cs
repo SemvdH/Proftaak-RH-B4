@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Hardware;
-using Hardware.Simulators;
-using ProftaakRH;
 
 namespace Client
 {
