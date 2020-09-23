@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Hardware;
+using ProftaakRH;
 
 namespace Client
 {
@@ -13,6 +15,15 @@ namespace Client
 
 
             Client client = new Client();
+
+
+            while (!client.IsConnected())
+            {
+
+            }
+            BLEHandler bLEHandler = new BLEHandler(client);
+
+            bLEHandler.Connect();
             while (true)
             {
             }

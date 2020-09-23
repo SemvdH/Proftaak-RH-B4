@@ -12,7 +12,7 @@ namespace Client
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
         private int bytesReceived;
-        private bool connected = false;
+        private bool connected;
 
 
         public Client() : this("localhost", 5555)
@@ -24,6 +24,7 @@ namespace Client
         {
             this.client = new TcpClient();
             this.bytesReceived = 0;
+            this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
         }
 
@@ -31,6 +32,8 @@ namespace Client
         {
             this.client.EndConnect(ar);
             Console.WriteLine("Verbonden!");
+
+
             this.stream = this.client.GetStream();
 
             //TODO File in lezen
@@ -44,6 +47,9 @@ namespace Client
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+
+            //temp moet eigenlijk een ok bericht ontvangen
+            this.connected = true;
         }
 
         private void OnRead(IAsyncResult ar)
@@ -91,7 +97,7 @@ namespace Client
         private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
-            //stuff idk
+            Console.WriteLine("wrote some stuff");
         }
 
         #region interface
@@ -117,5 +123,10 @@ namespace Client
         }
 
         #endregion
+
+        public bool IsConnected()
+        {
+            return this.connected;
+        }
     }
 }

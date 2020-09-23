@@ -11,7 +11,7 @@ namespace Hardware
     /// <summary>
     /// <c>BLEHandler</c> class that handles connection and traffic to and from the bike
     /// </summary>
-    class BLEHandler
+    public class BLEHandler
     {
         IDataReceiver dataReceiver;
         private BLE bleBike;

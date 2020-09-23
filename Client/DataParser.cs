@@ -60,7 +60,7 @@ namespace Client
         {
             byte[] res = new byte[payload.Length + 5];
 
-            Array.Copy(BitConverter.GetBytes(payload.Length), 0, res, 0, 4);
+            Array.Copy(BitConverter.GetBytes(payload.Length + 5), 0, res, 0, 4);
             res[4] = messageId;
             Array.Copy(payload, 0, res, 5, payload.Length);
 
