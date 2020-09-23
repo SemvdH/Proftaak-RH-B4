@@ -2,10 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
+using ProftaakRH;
 
 namespace Client
 {
-    class Client
+    class Client : IDataReceiver
     {
         private TcpClient client;
         private NetworkStream stream;
@@ -47,14 +48,14 @@ namespace Client
             Console.WriteLine("enter password");
             string password = Console.ReadLine();
 
-            byte[] payload = DataParser.GetLoginJson(username, password);
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
 
-            this.stream.BeginWrite(payload, 0, payload.Length, new AsyncCallback(onWrite), null);
+            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
 
-            this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(onRead), null);
+            this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
-        private void onRead(IAsyncResult ar)
+        private void OnRead(IAsyncResult ar)
         {
             int receivedBytes = this.stream.EndRead(ar);
             byte[] lengthBytes = new byte[4];
@@ -72,7 +73,7 @@ namespace Client
             {
                 //message hasn't completely arrived yet
                 this.bytesReceived += receivedBytes;
-                this.stream.BeginRead(this.buffer, this.bytesReceived, this.buffer.Length - this.bytesReceived, new AsyncCallback(onRead), null);
+                this.stream.BeginRead(this.buffer, this.bytesReceived, this.buffer.Length - this.bytesReceived, new AsyncCallback(OnRead), null);
 
             }
             else
@@ -96,10 +97,34 @@ namespace Client
             }
         }
 
-        private void onWrite(IAsyncResult ar)
+        private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
             //stuff idk
         }
+
+        #region interface
+        //maybe move this to other place
+        public void BPM(byte[] bytes)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException("no bytes");
+            }
+            byte[] message = DataParser.GetRawDataMessage(bytes);
+            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        public void Bike(byte[] bytes)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException("no bytes");
+            }
+            byte[] message = DataParser.GetRawDataMessage(bytes);
+            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        #endregion
     }
 }
