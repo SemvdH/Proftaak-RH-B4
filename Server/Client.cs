@@ -30,51 +30,50 @@ namespace Server
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
-        //private void OnRead(IAsyncResult ar)
-        //{
-        //    try
-        //    {
-        //        int receivedBytes = stream.EndRead(ar);
-        //    }
-        //    catch (IOException)
-        //    {
-        //        communication.Disconnect(this);
-        //        return;
-        //    }
+        /*private void OnRead(IAsyncResult ar)
+        {
+            try
+            {
+                int receivedBytes = stream.EndRead(ar);
+            }
+            catch (IOException)
+            {
+                communication.Disconnect(this);
+                return;
+            }
 
-        //    int counter = 0;
+            int counter = 0;
 
-        //    while (buffer.Length > counter)
-        //    {
-        //        //Console.WriteLine(buffer.Length);
-        //        byte[] lenghtBytes = new byte[4];
-        //        Array.Copy(buffer, counter, lenghtBytes, 0, 4);
-        //        int length = BitConverter.ToInt32(lenghtBytes);
-        //        Console.WriteLine(buffer[5]);
-        //        if (length == 0)
-        //        {
-        //            break;
-        //        }
-        //        else if(buffer[counter+4]==0x02)
-        //        {
+            while (buffer.Length > counter)
+            {
+                //Console.WriteLine(buffer.Length);
+                byte[] lenghtBytes = new byte[4];
+                Array.Copy(buffer, counter, lenghtBytes, 0, 4);
+                int length = BitConverter.ToInt32(lenghtBytes);
+                Console.WriteLine(buffer[5]);
+                if (length == 0)
+                {
+                    break;
+                }
+                else if (buffer[counter + 4] == 0x02)
+                {
+                }
+                else if (buffer[counter + 4] == 0x01)
+                {
+                    byte[] packet = new byte[length];
+                    Console.WriteLine(Encoding.ASCII.GetString(buffer) + " " + length);
+                    Array.Copy(buffer, counter + 5, packet, 0, length);
+                    Console.WriteLine(Encoding.ASCII.GetString(packet));
+                    HandleData(Encoding.ASCII.GetString(packet));
+                }
 
-        //        }
-        //        else if(buffer[counter+4]==0x01)
-        //        {
-        //            byte[] packet = new byte[length];
-        //            Console.WriteLine(Encoding.ASCII.GetString(buffer)+" "+length);
-        //            Array.Copy(buffer, counter+5, packet, 0, length);
-        //            Console.WriteLine(Encoding.ASCII.GetString(packet));
-        //            HandleData(Encoding.ASCII.GetString(packet));
-        //        }
+                counter += length;
+            }
 
-        //        counter += length;
-        //    }
+            Console.WriteLine("Done");
 
-        //    Console.WriteLine("Done");
-
-        //    stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
-        //}
+            stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
+        }*/
 
         private void OnRead(IAsyncResult ar)
         {
@@ -107,13 +106,13 @@ namespace Server
                 }
                 else if (buffer[4] == 0x02)
                 {
-                    Console.WriteLine($"received raw data {BitConverter.ToString(buffer.Skip(5).ToArray(), 16)}");
+                    Console.WriteLine($"received raw data {BitConverter.ToString(buffer.Skip(6).ToArray(), 16)}");
                 }
                 else if (buffer[4] == 0x01)
                 {
                     byte[] packet = new byte[expectedMessageLength];
                     Console.WriteLine(Encoding.ASCII.GetString(buffer) + " " + expectedMessageLength);
-                    Array.Copy(buffer, 5, packet, 0, expectedMessageLength - 5);
+                    Array.Copy(buffer, 6, packet, 0, expectedMessageLength - 6);
                     Console.WriteLine(Encoding.ASCII.GetString(packet));
                     HandleData(Encoding.ASCII.GetString(packet));
                 }
@@ -124,7 +123,13 @@ namespace Server
         private void HandleData(string packet)
         {
             Console.WriteLine("Data " + packet);
-            JsonConvert.DeserializeObject(packet);
+            dynamic json = JsonConvert.DeserializeObject(packet);
+            //json.
+        }
+
+        private void Write(string data)
+        {
+
         }
     }
 }

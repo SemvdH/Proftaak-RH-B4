@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Client
 {
-    class DataParser
+    public class DataParser
     {
         public static byte[] GetLoginJson(string mUsername, string mPassword)
         {
