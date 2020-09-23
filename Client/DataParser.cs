@@ -56,13 +56,13 @@ namespace Client
             return bytes[5] == 0x02;
         }
 
-        private static byte[] getMessage(byte[] payload, byte messageId)
+        public static byte[] getMessage(byte[] payload, byte messageId)
         {
-            byte[] res = new byte[payload.Length + 5];
+            byte[] res = new byte[payload.Length + 6];
 
-            Array.Copy(BitConverter.GetBytes(payload.Length + 5), 0, res, 0, 4);
+            Array.Copy(BitConverter.GetBytes(payload.Length + 6), 0, res, 0, 4);
             res[4] = messageId;
-            Array.Copy(payload, 0, res, 5, payload.Length);
+            Array.Copy(payload, 0, res, 6, payload.Length);
 
             return res;
         }

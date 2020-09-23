@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Client;
 using Newtonsoft;
 using Newtonsoft.Json;
 
@@ -124,12 +125,25 @@ namespace Server
         {
             Console.WriteLine("Data " + packet);
             dynamic json = JsonConvert.DeserializeObject(packet);
-            //json.
+            if (json.data.name == json.data.password)
+            {
+                dynamic payload = new
+                {
+                    data = new
+                    {
+                        status = "ok"
+                    }
+                };
+                Message.Message message = new Message.Message(Message.Identifier.LOGIN, JsonConvert.SerializeObject(payload));
+                Write(message.Serialize());
+            }
         }
 
         private void Write(string data)
         {
-
+            byte[] bytes = DataParser.getMessage(Encoding.ASCII.GetBytes(data), 0x01);
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Flush();
         }
     }
 }
