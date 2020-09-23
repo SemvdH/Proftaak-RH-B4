@@ -11,7 +11,7 @@ namespace Message
         /// <summary>
         /// identifier for the message
         /// </summary>
-        public string Identifier
+        public Identifier Identifier
         {
             get;set;
         }
@@ -29,7 +29,7 @@ namespace Message
         /// </summary>
         /// <param name="identifier">the identifier</param>
         /// <param name="payload">the payload</param>
-        public Message(string identifier, string payload)
+        public Message(Identifier identifier, string payload)
         {
             this.Identifier = identifier;
             this.Payload = payload;
@@ -55,5 +55,9 @@ namespace Message
         }
     }
 
-    
+    public enum Identifier
+    {
+        LOGIN,
+        CHAT,
+    }
 }
