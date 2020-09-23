@@ -32,7 +32,6 @@ namespace Server
             try
             {
                 int receivedBytes = stream.EndRead(ar);
-              
             }
             catch (IOException)
             {
@@ -46,9 +45,9 @@ namespace Server
             {
                 byte[] lenghtBytes = new byte[4];
                 Array.Copy(buffer, counter, lenghtBytes, 0, 4);
-                int length = Convert.ToInt32(lenghtBytes);
+                int length = BitConverter.ToInt32(lenghtBytes);
                 byte[] packet = new byte[length];
-                Array.Copy(buffer, counter + 4, packet, 0, length-4);
+                Array.Copy(buffer, counter + 4, packet, 0, length - 4);
                 HandleData(Encoding.Default.GetString(packet));
                 counter += length;
             }

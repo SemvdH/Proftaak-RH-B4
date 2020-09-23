@@ -19,9 +19,10 @@ namespace Client
 
 
             Client client = new Client();
-
+            while (true)
+            {
+            }
         }
-
         public Client() : this("localhost", 5555)
         {
 
