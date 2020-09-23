@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Client;
@@ -94,6 +91,7 @@ namespace Server
             {
                 //message hasn't completely arrived yet
                 this.bytesReceived += receivedBytes;
+                Console.WriteLine("segmented message, {0} arrived", receivedBytes);
                 this.stream.BeginRead(this.buffer, this.bytesReceived, this.buffer.Length - this.bytesReceived, new AsyncCallback(OnRead), null);
 
             }
@@ -104,6 +102,8 @@ namespace Server
                 {
                     Console.WriteLine("something has gone completely wrong");
                     Console.WriteLine($"expected: {expectedMessageLength} bytesReceive: {bytesReceived} receivedBytes: {receivedBytes}");
+                    Console.WriteLine($"received WEIRD data {BitConverter.ToString(buffer.Take(receivedBytes).ToArray())} string {Encoding.ASCII.GetString(buffer.Take(receivedBytes).ToArray())}");
+
                 }
                 else if (buffer[4] == 0x02)
                 {
@@ -117,8 +117,12 @@ namespace Server
                     Console.WriteLine(Encoding.ASCII.GetString(packet));
                     HandleData(Encoding.ASCII.GetString(packet));
                 }
+                this.bytesReceived = 0;
 
             }
+
+            this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+
         }
 
         private void HandleData(string packet)
