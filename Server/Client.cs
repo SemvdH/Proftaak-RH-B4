@@ -43,21 +43,39 @@ namespace Server
 
             while (buffer.Length > counter)
             {
+                //Console.WriteLine(buffer.Length);
                 byte[] lenghtBytes = new byte[4];
                 Array.Copy(buffer, counter, lenghtBytes, 0, 4);
                 int length = BitConverter.ToInt32(lenghtBytes);
-                byte[] packet = new byte[length];
-                Array.Copy(buffer, counter + 4, packet, 0, length - 4);
-                HandleData(Encoding.Default.GetString(packet));
+                Console.WriteLine(buffer[5]);
+                if (length == 0)
+                {
+                    break;
+                }
+                else if(buffer[counter+4]==0x02)
+                {
+
+                }
+                else if(buffer[counter+4]==0x01)
+                {
+                    byte[] packet = new byte[length];
+                    Console.WriteLine(Encoding.ASCII.GetString(buffer)+" "+length);
+                    Array.Copy(buffer, counter+5, packet, 0, length);
+                    Console.WriteLine(Encoding.ASCII.GetString(packet));
+                    HandleData(Encoding.ASCII.GetString(packet));
+                }
+                
                 counter += length;
             }
+
+            Console.WriteLine("Done");
 
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
         private void HandleData(string packet)
         {
-            Console.WriteLine(packet);
+            Console.WriteLine("Data "+packet);
             JsonConvert.DeserializeObject(packet);
         }
     }
