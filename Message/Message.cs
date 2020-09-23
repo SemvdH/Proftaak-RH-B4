@@ -55,6 +55,9 @@ namespace Message
         }
     }
 
+    /// <summary>
+    /// Identifier enum for the Message objects
+    /// </summary>
     public enum Identifier
     {
         LOGIN,
