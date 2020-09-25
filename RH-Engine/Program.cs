@@ -263,12 +263,6 @@ namespace RH_Engine
 
         }
 
-        public static string getUUIDFromResponse(string response)
-        {
-            dynamic JSON = JsonConvert.DeserializeObject(response);
-            return JSON.data.data.data.uuid;
-        }
-
     }
 
     /// <summary>
