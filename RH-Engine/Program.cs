@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,7 @@ using System.Threading;
 namespace RH_Engine
 {
 
-    public delegate void HandleSerial(string uuid);
+    public delegate void HandleSerial(string message);
     internal class Program
     {
         private static PC[] PCs = {
@@ -30,6 +31,8 @@ namespace RH_Engine
         private static ServerResponseReader serverResponseReader;
         private static string sessionId = string.Empty;
         private static string tunnelId = string.Empty;
+        private static string routeId = string.Empty;
+        private static string panelId = string.Empty;
 
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
 
@@ -37,16 +40,9 @@ namespace RH_Engine
         private static void Main(string[] args)
         {
 
-            serialResponses.Add("route",handleRouteSerial);
-
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
-        }
-
-        private static void handleRouteSerial(string uuid)
-        {
-
         }
 
         private static void initReader(NetworkStream stream)
@@ -78,12 +74,20 @@ namespace RH_Engine
 
             if (message.Contains("serial"))
             {
+                //Console.WriteLine("GOT MESSAGE WITH SERIAL: " + message + "\n\n\n");
                 string serial = JSONParser.GetSerial(message);
-                Console.WriteLine("Got serial " + serial);
-                serialResponses[serial].Invoke();
+                //Console.WriteLine("Got serial " + serial);
+                if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
+
             }
 
 
+        }
+
+        public static void SendMessageAndOnResponse(NetworkStream stream, string message, string serial, HandleSerial action)
+        {
+            serialResponses.Add(serial,action);
+            WriteTextMessage(stream, message);
         }
 
         /// <summary>
@@ -140,16 +144,14 @@ namespace RH_Engine
 
 
             WriteTextMessage(stream, mainCommand.ResetScene());
-            string routeid = CreateRoute(stream, mainCommand);
+            SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
 
             //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             //string command;
 
+            //WriteTextMessage(stream, mainCommand.AddBikeModel());
 
-
-            //command = mainCommand.AddBikeModel();
-
-            //WriteTextMessage(stream, command);
+            SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID"), "panelID", (message) => panelId = JSONParser.GetResponseUuid(message));
 
             //Console.WriteLine(ReadPrefMessage(stream));
 
@@ -160,17 +162,21 @@ namespace RH_Engine
             //Console.WriteLine(ReadPrefMessage(stream));
 
 
-            //command = mainCommand.addPanel();
-            //WriteTextMessage(stream, command);
-            //string response = ReadPrefMessage(stream);
-            //Console.WriteLine("add Panel response: \n\r" + response);
-            //string uuidPanel = JSONParser.getPanelID(response);
-            //WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
-            //Console.WriteLine(ReadPrefMessage(stream));
-            //WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel));
-            //Console.WriteLine(ReadPrefMessage(stream));
 
-            //WriteTextMessage(stream, mainCommand.SwapPanelCommand(uuidPanel));
+            //command = mainCommand.addPanel();
+            //  WriteTextMessage(stream, command);
+            //  string response = ReadPrefMessage(stream);
+            //  Console.WriteLine("add Panel response: \n\r" + response);
+            //  string uuidPanel = JSONParser.getPanelID(response);
+            //  WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
+            //  Console.WriteLine(ReadPrefMessage(stream));
+            //  WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel, 2.42));
+            //  Console.WriteLine(ReadPrefMessage(stream));
+            //  WriteTextMessage(stream, mainCommand.ColorPanel(uuidPanel));
+            //  Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
+            //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
+            //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
+
         }
 
         /// <summary>
@@ -192,20 +198,6 @@ namespace RH_Engine
                 }
             }
             Console.WriteLine("Could not find id of " + name);
-            return null;
-
-        }
-
-        public static string CreateRoute(NetworkStream stream, Command createGraphics)
-        {
-            //=============================================================================================================TODO change  
-            WriteTextMessage(stream, createGraphics.RouteCommand());
-            //dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
-            //dynamic response = null;
-            //if (response.data.data.id == "route/add")
-            //{
-            //    return response.data.data.data.uuid;
-            //}
             return null;
 
         }

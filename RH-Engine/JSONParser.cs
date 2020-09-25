@@ -81,9 +81,9 @@ namespace RH_Engine
         public static string GetResponseUuid(string json)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(json);
-            if (jsonData.data.status == "ok")
+            if (jsonData.data.data.status == "ok")
             {
-                return jsonData.data.uuid;
+                return jsonData.data.data.data.uuid;
             }
             return null;
         }

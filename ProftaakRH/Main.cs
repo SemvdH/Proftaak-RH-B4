@@ -13,9 +13,9 @@ namespace ProftaakRH
         {
             IDataReceiver dataReceiver = new DataConverter();
             BLEHandler bLEHandler = new BLEHandler(dataReceiver);
-            //BikeSimulator bikeSimulator = new BikeSimulator(dataConverter);
-            //bikeSimulator.setResistance(bikeSimulator.GenerateResistance(1f));
-            //bikeSimulator.StartSimulation();
+            BikeSimulator bikeSimulator = new BikeSimulator(dataReceiver);
+            bikeSimulator.setResistance(bikeSimulator.GenerateResistance(1f));
+            bikeSimulator.StartSimulation();
 
 
             bool running = true;

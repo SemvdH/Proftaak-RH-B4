@@ -74,6 +74,7 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "scene/node/add",
+                serial = "needResponse",
                 data = new
                 {
                     name = "newNode",
@@ -106,11 +107,12 @@ namespace RH_Engine
 
         }
 
-        public string addPanel()
+        public string addPanel(string serialToSend)
         {
             dynamic payload = new
             {
                 id = "scene/node/add",
+                serial = serialToSend,
                 data = new
                 {
                     name = "dashboard",
@@ -131,7 +133,36 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string bikeSpeed(string uuidPanel)
+        public string ColorPanel(string uuidPanel)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/setclearcolor",
+                data = new
+                {
+                    id = uuidPanel,
+                    color = new int[] { 1, 1, 1, 1 }
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string SwapPanel(string uuid)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/swap",
+                data = new
+                {
+                    id = uuid
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string bikeSpeed(string uuidPanel, double speed)
         {
             dynamic payload = new
             {
@@ -140,7 +171,7 @@ namespace RH_Engine
                 {
                     id = uuidPanel,
                     text = "Bike speed placeholder",
-                    position = new int[] { 100, 100 },
+                    position = new int[] { 0, 0 },
                     size = 32.0,
                     color = new int[] { 0, 0, 0, 1 },
                     font = "segoeui"
@@ -180,20 +211,20 @@ namespace RH_Engine
 
         public string AddBikeModel()
         {
-            return AddModel("bike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
+            return AddModel("bike","addbike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
         }
 
-        public string AddModel(string nodeName, string fileLocation)
+        public string AddModel(string nodeName,string serial, string fileLocation)
         {
-            return AddModel(nodeName, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
+            return AddModel(nodeName,serial, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
         }
 
-        public string AddModel(string nodeName, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
+        public string AddModel(string nodeName,string serial, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
         {
-            return AddModel(nodeName, fileLocation, null, positionVector, scalar, rotationVector);
+            return AddModel(nodeName,serial, fileLocation, null, positionVector, scalar, rotationVector);
         }
 
-        public string AddModel(string nodeName, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
+        public string AddModel(string nodeName,string serialToSend, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
         {
             string namename = nodeName;
             bool animatedBool = false;
@@ -205,6 +236,7 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "scene/node/add",
+                serial = serialToSend,
                 data = new
                 {
                     name = namename,
@@ -257,14 +289,14 @@ namespace RH_Engine
         }
 
 
-        public string RouteCommand()
+        public string RouteCommand(string serialToSend)
         {
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(4325, LibNoise.NoiseQuality.Best);
             Random r = new Random();
             dynamic payload = new
             {
                 id = "route/add",
-                serial = "route",
+                serial = serialToSend,
                 data = new
                 {
                     nodes = new dynamic[]
