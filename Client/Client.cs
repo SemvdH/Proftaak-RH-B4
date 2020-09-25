@@ -11,7 +11,6 @@ namespace Client
         private byte[] buffer = new byte[1024];
         private int bytesReceived;
         private bool connected;
-        private byte clientId = 0;
 
 
         public Client() : this("localhost", 5555)
@@ -41,7 +40,7 @@ namespace Client
             Console.WriteLine("enter password");
             string password = Console.ReadLine();
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password), this.clientId);
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
 
@@ -109,7 +108,7 @@ namespace Client
             {
                 throw new ArgumentNullException("no bytes");
             }
-            byte[] message = DataParser.GetRawDataMessage(bytes, clientId);
+            byte[] message = DataParser.GetRawDataMessage(bytes);
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
@@ -119,7 +118,7 @@ namespace Client
             {
                 throw new ArgumentNullException("no bytes");
             }
-            byte[] message = DataParser.GetRawDataMessage(bytes, clientId);
+            byte[] message = DataParser.GetRawDataMessage(bytes);
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
