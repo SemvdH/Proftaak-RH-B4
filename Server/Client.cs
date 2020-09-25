@@ -37,30 +37,28 @@ namespace Server
             Array.Copy(buffer, 0, totalBuffer, totalBufferReceived, receivedBytes);
             totalBufferReceived += receivedBytes;
 
-
             int expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             while (totalBufferReceived >= expectedMessageLength)
             {
                 //volledig packet binnen
-                byte[] packetBytes = new byte[expectedMessageLength];
-                Array.Copy(totalBuffer, 5, packetBytes, 0, expectedMessageLength - 5);
+                byte[] messageBytes = new byte[expectedMessageLength];
+                Array.Copy(totalBuffer, 0, messageBytes, 0, expectedMessageLength);
+                HandleData(messageBytes);
 
+                //Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk 
+                totalBuffer = totalBuffer.Skip(expectedMessageLength).ToArray();
 
-                Console.WriteLine(Encoding.ASCII.GetString(packetBytes) + " " + expectedMessageLength);
-
-
-
-                Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength));
                 totalBufferReceived -= expectedMessageLength;
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             }
 
-
-
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }
-
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="message">including message length and messageId (can be changed)</param>
         private void HandleData(byte[] message)
         {
             //Console.WriteLine("Data " + packet);
