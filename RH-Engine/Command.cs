@@ -1,10 +1,6 @@
 ﻿using LibNoise.Primitive;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading;
 
 namespace RH_Engine
 {
@@ -16,9 +12,7 @@ namespace RH_Engine
         public const string STANDARD_LEFTHAND = "LeftHand";
         public const string STANDARD_RIGHTHAND = "RightHand";
 
-
-
-        string tunnelID;
+        private string tunnelID;
 
         public Command(string tunnelID)
         {
@@ -35,10 +29,10 @@ namespace RH_Engine
                     size = sizeArray,
                     heights = heightsArray
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
+
         public string AddLayer(string uid, string texture)
         {
             dynamic payload = new
@@ -56,6 +50,7 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
+
         public string UpdateTerrain()
         {
             dynamic payload = new
@@ -63,7 +58,6 @@ namespace RH_Engine
                 id = "scene/terrain/update",
                 data = new
                 {
-
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));
@@ -91,37 +85,135 @@ namespace RH_Engine
 
         public string DeleteNode(string uuid)
         {
-
             dynamic payload = new
             {
                 id = "scene/node/delete",
                 data = new
                 {
                     id = uuid,
-
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
-
         }
 
-        public string AddBikeModel()
+        public string addPanel(string serialToSend, string uuidBike)
         {
-            return AddModel("bike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
+            dynamic payload = new
+            {
+                id = "scene/node/add",
+                serial = serialToSend,
+                data = new
+                {
+                    name = "dashboard",
+                    parent = uuidBike,
+                    components = new
+                    {
+                        panel = new
+                        {
+                            size = new int[] { 1, 1 },
+                            resolution = new int[] { 512, 512 },
+                            background = new int[] { 1, 0, 0, 0 },
+                            castShadow = false
+                        }
+                    }
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddModel(string nodeName, string fileLocation)
+        public string ColorPanel(string uuidPanel)
         {
-            return AddModel(nodeName, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
+            dynamic payload = new
+            {
+                id = "scene/panel/setclearcolor",
+                data = new
+                {
+                    id = uuidPanel,
+                    color = new int[] { 1, 1, 1, 1 }
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddModel(string nodeName, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
+        public string SwapPanel(string uuid)
         {
-            return AddModel(nodeName, fileLocation, null, positionVector, scalar, rotationVector);
+            dynamic payload = new
+            {
+                id = "scene/panel/swap",
+                data = new
+                {
+                    id = uuid
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddModel(string nodeName, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
+        public string bikeSpeed(string uuidPanel, double speed)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/drawtext",
+                data = new
+                {
+                    id = uuidPanel,
+                    text = "Bike speed placeholder",
+                    position = new int[] { 0, 0 },
+                    size = 32.0,
+                    color = new int[] { 0, 0, 0, 1 },
+                    font = "segoeui"
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string SwapPanelCommand(string uuid)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/swap",
+                data = new
+                {
+                    id = uuid
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string ClearPanel(string uuid)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/clear",
+                data = new
+                {
+                    id = uuid
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string AddBikeModel(string serial)
+        {
+            return AddModel("bike", serial, "data\\NetworkEngine\\models\\bike\\bike.fbx");
+        }
+
+        public string AddModel(string nodeName, string serial, string fileLocation)
+        {
+            return AddModel(nodeName, serial, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
+        }
+
+        public string AddModel(string nodeName, string serial, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
+        {
+            return AddModel(nodeName, serial, fileLocation, null, positionVector, scalar, rotationVector);
+        }
+
+        public string AddModel(string nodeName, string serialToSend, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
         {
             string namename = nodeName;
             bool animatedBool = false;
@@ -133,6 +225,7 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "scene/node/add",
+                serial = serialToSend,
                 data = new
                 {
                     name = namename,
@@ -143,7 +236,6 @@ namespace RH_Engine
                             position = positionVector,
                             scale = scalar,
                             rotation = rotationVector
-
                         },
                         model = new
                         {
@@ -154,7 +246,6 @@ namespace RH_Engine
                         },
                     }
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
@@ -184,14 +275,14 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-
-        public string RouteCommand()
+        public string RouteCommand(string serialToSend)
         {
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(4325, LibNoise.NoiseQuality.Best);
             Random r = new Random();
             dynamic payload = new
             {
                 id = "route/add",
+                serial = serialToSend,
                 data = new
                 {
                     nodes = new dynamic[]
@@ -241,13 +332,44 @@ namespace RH_Engine
         private int[] GetDir()
         {
             Random rng = new Random();
-            int[] dir = {rng.Next(50), 0, rng.Next(50)};
+            int[] dir = { rng.Next(50), 0, rng.Next(50) };
             return dir;
         }
 
-        public string FollowRouteCommand()
+        public string RouteFollow(string routeID, string nodeID, float speedValue)
         {
-            return "";
+            return RouteFollow(routeID, nodeID, speedValue, new float[] { 0, 0, 0 });
+        }
+
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        {
+            return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, rotateOffsetVector, positionOffsetVector);
+        }
+
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float[] positionOffsetVector)
+        {
+            return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, new float[] { 0, 0, 0 }, positionOffsetVector);
+        }
+        private string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        {
+            dynamic payload = new
+            {
+                id = "route/follow",
+                data = new
+                {
+                    route = routeID,
+                    node = nodeID,
+                    speed = speedValue,
+                    offset = offsetValue,
+                    rotate = rotateValue,
+                    smoothing = smoothingValue,
+                    followHeight = followHeightValue,
+                    rotateOffset = rotateOffsetVector,
+                    positionOffset = positionOffsetVector
+
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string RoadCommand(string uuid_route)
@@ -268,11 +390,12 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string GetSceneInfoCommand()
+        public string GetSceneInfoCommand(string serialToSend)
         {
             dynamic payload = new
             {
-                id = "scene/get"
+                id = "scene/get",
+                serial = serialToSend
             };
 
             return JsonConvert.SerializeObject(Payload(payload));
@@ -282,7 +405,8 @@ namespace RH_Engine
         {
             dynamic payload = new
             {
-                id = "scene/reset"
+                id = "scene/reset",
+                serial = "reset"
             };
 
             return JsonConvert.SerializeObject(Payload(payload));
@@ -295,7 +419,6 @@ namespace RH_Engine
                 throw new Exception("The time must be between 0 and 24!");
             }
 
-
             dynamic payload = new
             {
                 id = "scene/skybox/settime",
@@ -303,12 +426,9 @@ namespace RH_Engine
                 {
                     time = timeToSet
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
-
         }
-
 
         private object Payload(dynamic message)
         {
@@ -322,8 +442,5 @@ namespace RH_Engine
                 }
             };
         }
-
-
-
     }
 }

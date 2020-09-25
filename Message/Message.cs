@@ -8,6 +8,11 @@ namespace Message
     /// </summary>
     public class Message
     {
+
+        public static void Main(string[] args)
+        {
+
+        }
         /// <summary>
         /// identifier for the message
         /// </summary>
