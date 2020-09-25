@@ -96,7 +96,7 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string addPanel(string serialToSend)
+        public string addPanel(string serialToSend, string uuidBike)
         {
             dynamic payload = new
             {
@@ -105,6 +105,7 @@ namespace RH_Engine
                 data = new
                 {
                     name = "dashboard",
+                    parent = uuidBike,
                     components = new
                     {
                         panel = new
@@ -197,9 +198,9 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddBikeModel()
+        public string AddBikeModel(string serial)
         {
-            return AddModel("bike", "addbike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
+            return AddModel("bike", serial, "data\\NetworkEngine\\models\\bike\\bike.fbx");
         }
 
         public string AddModel(string nodeName, string serial, string fileLocation)
@@ -335,9 +336,40 @@ namespace RH_Engine
             return dir;
         }
 
-        public string FollowRouteCommand()
+        public string RouteFollow(string routeID, string nodeID, float speedValue)
         {
-            return "";
+            return RouteFollow(routeID, nodeID, speedValue, new float[] { 0, 0, 0 });
+        }
+
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        {
+            return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, rotateOffsetVector, positionOffsetVector);
+        }
+
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float[] positionOffsetVector)
+        {
+            return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, new float[] { 0, 0, 0 }, positionOffsetVector);
+        }
+        private string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        {
+            dynamic payload = new
+            {
+                id = "route/follow",
+                data = new
+                {
+                    route = routeID,
+                    node = nodeID,
+                    speed = speedValue,
+                    offset = offsetValue,
+                    rotate = rotateValue,
+                    smoothing = smoothingValue,
+                    followHeight = followHeightValue,
+                    rotateOffset = rotateOffsetVector,
+                    positionOffset = positionOffsetVector
+
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
         }
 
         public string RoadCommand(string uuid_route)

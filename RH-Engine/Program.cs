@@ -1,4 +1,4 @@
-﻿using LibNoise.Primitive;
+using LibNoise.Primitive;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -27,6 +27,7 @@ namespace RH_Engine
         private static string tunnelId = string.Empty;
         private static string routeId = string.Empty;
         private static string panelId = string.Empty;
+        private static string bikeId = string.Empty;
 
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
 
@@ -149,7 +150,15 @@ namespace RH_Engine
             //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             //string command;
 
-            SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID"), "panelID", (message) => panelId = JSONParser.GetResponseUuid(message));
+            SendMessageAndOnResponse(stream, mainCommand.AddBikeModel("bikeID"), "bikeID", (message) => bikeId = JSONParser.GetResponseUuid(message));
+
+            SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID", bikeId), "panelID",
+                (message) =>
+                {
+                    panelId = JSONParser.GetResponseUuid(message);
+                    while (bikeId == string.Empty) { }
+                    WriteTextMessage(stream, mainCommand.RouteFollow(routeId, bikeId, 5, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
+                });
 
             Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
 
