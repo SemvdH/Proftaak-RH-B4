@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using ProftaakRH;
 
 namespace Client
@@ -70,14 +72,14 @@ namespace Client
                 Array.Copy(totalBuffer, 0, messageBytes, 0, expectedMessageLength);
 
                 string identifier;
-                bool isJson = DataParser.getJsonIdentifier(this.buffer, out identifier);
+                bool isJson = DataParser.getJsonIdentifier(messageBytes, out identifier);
                 if (isJson)
                 {
-                    throw new NotImplementedException();
+                    Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(messageBytes.Skip(5).ToArray())}");
                 }
-                else if (DataParser.isRawData(this.buffer))
+                else if (DataParser.isRawData(messageBytes))
                 {
-                    throw new NotImplementedException();
+                    Console.WriteLine($"Received data: {BitConverter.ToString(messageBytes.Skip(5).ToArray())}");
                 }
 
                 totalBufferReceived -= expectedMessageLength;
