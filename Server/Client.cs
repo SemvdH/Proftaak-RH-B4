@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -21,7 +22,7 @@ namespace Server
 
         public Client(Communication communication, TcpClient tcpClient)
         {
-            this.saveData = new SaveData();
+            this.saveData = new SaveData(Directory.GetCurrentDirectory()+$"/test");
             this.communication = communication;
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
@@ -77,12 +78,13 @@ namespace Server
                 Array.Copy(message, 5, jsonArray, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonArray));
                 Console.WriteLine(json);
-                saveData.WriteData(Encoding.ASCII.GetString(jsonArray));
+                saveData.WriteDataJSON(Encoding.ASCII.GetString(jsonArray));
 
             }
             else if (message[4] == 0x02)
             {
                 Console.WriteLine(message);
+                saveData.WriteDataRAW(Encoding.ASCII.GetString(message));
             }
 
 
