@@ -63,6 +63,14 @@ namespace Server
         {
             //Console.WriteLine("Data " + packet);
             //JsonConvert.DeserializeObject(packet);
+            if (message[4] == 0x01)
+            {
+
+            }
+            else if (message[4] == 0x02)
+            {
+
+            }
         }
     }
 }

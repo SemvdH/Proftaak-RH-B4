@@ -9,8 +9,9 @@ namespace Client
         private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
-        private int bytesReceived;
         private bool connected;
+        private byte[] totalBuffer = new byte[1024];
+        private int totalBufferReceived = 0;
 
 
         public Client() : this("localhost", 5555)
@@ -21,7 +22,6 @@ namespace Client
         public Client(string adress, int port)
         {
             this.client = new TcpClient();
-            this.bytesReceived = 0;
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
         }
@@ -54,31 +54,20 @@ namespace Client
         private void OnRead(IAsyncResult ar)
         {
             int receivedBytes = this.stream.EndRead(ar);
-            byte[] lengthBytes = new byte[4];
 
-            Array.Copy(this.buffer, 0, lengthBytes, 0, 4);
-
-            int expectedMessageLength = BitConverter.ToInt32(lengthBytes);
-
-            if (expectedMessageLength > this.buffer.Length)
+            if (totalBufferReceived + receivedBytes > 1024)
             {
-                throw new OutOfMemoryException("buffer to small");
+                throw new OutOfMemoryException("buffer too small");
             }
+            Array.Copy(buffer, 0, totalBuffer, totalBufferReceived, receivedBytes);
+            totalBufferReceived += receivedBytes;
 
-            if (expectedMessageLength > this.bytesReceived + receivedBytes)
+            int expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
+            while (totalBufferReceived >= expectedMessageLength)
             {
-                //message hasn't completely arrived yet
-                this.bytesReceived += receivedBytes;
-                this.stream.BeginRead(this.buffer, this.bytesReceived, this.buffer.Length - this.bytesReceived, new AsyncCallback(OnRead), null);
-
-            }
-            else
-            {
-                //message completely arrived
-                if (expectedMessageLength != this.bytesReceived + receivedBytes)
-                {
-                    Console.WriteLine("something has gone completely wrong");
-                }
+                //volledig packet binnen
+                byte[] messageBytes = new byte[expectedMessageLength];
+                Array.Copy(totalBuffer, 0, messageBytes, 0, expectedMessageLength);
 
                 string identifier;
                 bool isJson = DataParser.getJsonIdentifier(this.buffer, out identifier);
@@ -90,7 +79,11 @@ namespace Client
                 {
                     throw new NotImplementedException();
                 }
+
+                totalBufferReceived -= expectedMessageLength;
+                expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             }
+
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }
