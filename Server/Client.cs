@@ -14,12 +14,14 @@ namespace Server
         private byte[] buffer = new byte[1024];
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
+        private SaveData saveData;
 
 
         public string Username { get; set; }
 
         public Client(Communication communication, TcpClient tcpClient)
         {
+            this.saveData = new SaveData();
             this.communication = communication;
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
@@ -75,11 +77,12 @@ namespace Server
                 Array.Copy(message, 5, jsonArray, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonArray));
                 Console.WriteLine(json);
+                saveData.WriteData(Encoding.ASCII.GetString(jsonArray));
 
             }
             else if (message[4] == 0x02)
             {
-
+                Console.WriteLine(message);
             }
 
 
