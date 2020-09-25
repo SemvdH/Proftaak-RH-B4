@@ -119,9 +119,9 @@ namespace RH_Engine
                         panel = new
                         {
                             size = new int[] { 1, 1 },
-                            resolution = new int[] { 256, 256 },
-                            background = new int[] { 1, 1, 1, 1 },
-                            castShadow = true
+                            resolution = new int[] { 512, 512 },
+                            background = new int[] { 1, 0, 0, 0 },
+                            castShadow = false
 
                         }
                     }
@@ -140,10 +140,24 @@ namespace RH_Engine
                 {
                     id = uuidPanel,
                     text = "Bike speed placeholder",
-                    position = new int[] { 0, 0 },
+                    position = new int[] { 100, 100 },
                     size = 32.0,
                     color = new int[] { 0, 0, 0, 1 },
                     font = "segoeui"
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string SwapPanelCommand(string uuid)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/swap",
+                data = new
+                {
+                    id = uuid
                 }
             };
 

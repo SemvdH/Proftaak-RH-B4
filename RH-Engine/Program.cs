@@ -19,16 +19,27 @@ namespace RH_Engine
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
+            new PC("HP-ZBOOK-SEM", "Sem"),
             //new PC("DESKTOP-TV73FKO", "Wouter"),
             new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
         };
+
+        private static ServerResponseReader serverResponseReader;
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
 
+            serverResponseReader = new ServerResponseReader(client.GetStream());
+            serverResponseReader.callback = HandleResponse;
+
+
+        }
+
+        public static void HandleResponse(string message)
+        {
 
         }
 
@@ -146,6 +157,8 @@ namespace RH_Engine
             Console.WriteLine(ReadPrefMessage(stream));
             WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel));
             Console.WriteLine(ReadPrefMessage(stream));
+
+            WriteTextMessage(stream, mainCommand.SwapPanelCommand(uuidPanel));
         }
 
         /// <summary>
