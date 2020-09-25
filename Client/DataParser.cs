@@ -1,12 +1,16 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace Client
 {
-    class DataParser
+    public class DataParser
     {
+        public const string LOGIN = "LOGIN";
+        public const string LOGIN_RESPONSE = "LOGIN_RESPONSE";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
@@ -17,7 +21,7 @@ namespace Client
         {
             dynamic json = new
             {
-                identifier = "LOGIN",
+                identifier = LOGIN,
                 data = new
                 {
                     username = mUsername,
@@ -26,6 +30,38 @@ namespace Client
             };
 
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
+        }
+
+        public static bool GetUsernamePassword(byte[] jsonbytes, out string username, out string password)
+        {
+            dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonbytes));
+            try
+            {
+                username = json.data.username;
+                password = json.data.password;
+                return true;
+            }
+            catch
+            {
+                username = null;
+                password = null;
+                return false;
+            }
+        }
+
+        private static byte[] getJsonMessage(string mIdentifier, dynamic data)
+        {
+            dynamic json = new
+            {
+                identifier = mIdentifier,
+                data
+            };
+            return getMessage(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json)), 0x01);
+        }
+
+        public static byte[] getLoginResponse(string mStatus)
+        {
+            return getJsonMessage(LOGIN_RESPONSE, new { status = mStatus });
         }
 
         /// <summary>

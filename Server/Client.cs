@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using Client;
 using Newtonsoft.Json;
 
 namespace Server
@@ -16,6 +17,8 @@ namespace Server
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
         private SaveData saveData;
+        private string username = null;
+
 
 
         public string Username { get; set; }
@@ -61,6 +64,13 @@ namespace Server
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }
+
+        private void OnWrite(IAsyncResult ar)
+        {
+            this.stream.EndWrite(ar);
+        }
+
+
         /// <summary>
         /// TODO
         /// </summary>
@@ -72,8 +82,44 @@ namespace Server
             //0x01 Json
             //0x01 Raw data
 
-            if (message[4] == 0x01)
+            byte[] payloadbytes = new byte[BitConverter.ToInt32(message, 0) - 5];
+
+            Array.Copy(message, 5, payloadbytes, 0, payloadbytes.Length);
+
+            string identifier;
+            bool isJson = DataParser.getJsonIdentifier(message, out identifier);
+            if (isJson)
             {
+                Console.WriteLine($"received json with identifier {identifier} and expecting {DataParser.LOGIN}");
+                switch (identifier)
+                {
+                    case DataParser.LOGIN:
+                        Console.WriteLine("LOGIN");
+                        string username;
+                        string password;
+                        bool worked = DataParser.GetUsernamePassword(payloadbytes, out username, out password);
+                        if (worked)
+                        {
+                            if (verifyLogin(username, password))
+                            {
+                                this.username = username;
+                                stream.BeginWrite(DataParser.getLoginResponse("OK"), 0, 0, new AsyncCallback(OnWrite), null);
+                            }
+                            else
+                            {
+                                stream.BeginWrite(DataParser.getLoginResponse("wrong username or password"), 0, 0, new AsyncCallback(OnWrite), null);
+                            }
+                        }
+                        else
+                        {
+                            stream.BeginWrite(DataParser.getLoginResponse("invalid json"), 0, 0, new AsyncCallback(OnWrite), null);
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("default");
+                        Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
+                        break;
+                }
                 byte[] jsonArray = new byte[message.Length - 5];
                 Array.Copy(message, 5, jsonArray, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonArray));
@@ -81,13 +127,18 @@ namespace Server
                 saveData.WriteDataJSON(Encoding.ASCII.GetString(jsonArray));
 
             }
-            else if (message[4] == 0x02)
+            else if (DataParser.isRawData(message))
             {
                 Console.WriteLine(message);
                 saveData.WriteDataRAW(Encoding.ASCII.GetString(message));
             }
 
 
+        }
+
+        private bool verifyLogin(string username, string password)
+        {
+            return username == password;
         }
     }
 }

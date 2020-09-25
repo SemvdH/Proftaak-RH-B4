@@ -75,7 +75,15 @@ namespace Client
                 bool isJson = DataParser.getJsonIdentifier(messageBytes, out identifier);
                 if (isJson)
                 {
-                    Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(messageBytes.Skip(5).ToArray())}");
+                    switch (identifier)
+                    {
+                        case DataParser.LOGIN:
+                            Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(messageBytes.Skip(5).ToArray())}");
+                            break;
+                        default:
+                            Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(messageBytes.Skip(5).ToArray())}");
+                            break;
+                    }
                 }
                 else if (DataParser.isRawData(messageBytes))
                 {
