@@ -264,6 +264,7 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "route/add",
+                serial = "route",
                 data = new
                 {
                     nodes = new dynamic[]
@@ -354,7 +355,8 @@ namespace RH_Engine
         {
             dynamic payload = new
             {
-                id = "scene/reset"
+                id = "scene/reset",
+                serial = "reset"
             };
 
             return JsonConvert.SerializeObject(Payload(payload));

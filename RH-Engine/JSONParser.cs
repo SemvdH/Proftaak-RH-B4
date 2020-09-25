@@ -53,7 +53,7 @@ namespace RH_Engine
         public static string GetSerial(string json)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(json);
-            return jsonData.serial;
+            return jsonData.data.data.serial;
         }
 
         public static string GetID(string json)
@@ -73,7 +73,12 @@ namespace RH_Engine
             return null;
         }
 
-        public static string GetRouteID(string json)
+        /// <summary>
+        /// method to get the uuid from requests for adding a node,route or road
+        /// </summary>
+        /// <param name="json">the json response froo the server</param>
+        /// <returns>the uuid of the created object</returns>
+        public static string GetResponseUuid(string json)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(json);
             if (jsonData.data.status == "ok")

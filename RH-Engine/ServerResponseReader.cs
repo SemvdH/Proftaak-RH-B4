@@ -43,6 +43,11 @@ namespace RH_Engine
             t.Start();
         }
 
+        /// <summary>
+        /// reads a response from the server
+        /// </summary>
+        /// <param name="stream">the network stream to use</param>
+        /// <returns>the returned message from the server</returns>
         public static string ReadPrefMessage(NetworkStream stream)
         {
             byte[] lengthBytes = new byte[4];

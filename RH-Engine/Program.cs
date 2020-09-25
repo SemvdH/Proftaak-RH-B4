@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Sockets;
@@ -13,6 +14,7 @@ using System.Threading;
 namespace RH_Engine
 {
 
+    public delegate void HandleSerial(string uuid);
     internal class Program
     {
         private static PC[] PCs = {
@@ -28,11 +30,23 @@ namespace RH_Engine
         private static ServerResponseReader serverResponseReader;
         private static string sessionId = string.Empty;
         private static string tunnelId = string.Empty;
+
+        private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
+
+        
         private static void Main(string[] args)
         {
+
+            serialResponses.Add("route",handleRouteSerial);
+
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
+        }
+
+        private static void handleRouteSerial(string uuid)
+        {
+
         }
 
         private static void initReader(NetworkStream stream)
@@ -44,12 +58,11 @@ namespace RH_Engine
 
         public static void HandleResponse(string message)
         {
-            //Console.WriteLine("GOT MESSAGE FROM CALLBACK!!!!! " + message);
 
             string id = JSONParser.GetID(message);
-            Console.WriteLine("got id : " + id);
 
-            // because the first messages don't have a serial, we need to check on the id
+            // because the first messages doesn't have a serial, we need to check on the id
+
             if (id == "session/list")
             {
                 sessionId = JSONParser.GetSessionID(message,PCs);
@@ -62,6 +75,15 @@ namespace RH_Engine
                     return;
                 }
             }
+
+            if (message.Contains("serial"))
+            {
+                string serial = JSONParser.GetSerial(message);
+                Console.WriteLine("Got serial " + serial);
+                serialResponses[serial].Invoke();
+            }
+
+
         }
 
         /// <summary>
@@ -82,35 +104,7 @@ namespace RH_Engine
             Console.WriteLine("sent message " + message);
         }
 
-        /// <summary>
-        /// reads a response from the server
-        /// </summary>
-        /// <param name="stream">the network stream to use</param>
-        /// <returns>the returned message from the server</returns>
-        public static string ReadPrefMessage(NetworkStream stream)
-        {
-            byte[] lengthBytes = new byte[4];
-
-            stream.Read(lengthBytes, 0, 4);
-            Console.WriteLine("read message..");
-
-            int length = BitConverter.ToInt32(lengthBytes);
-
-            //Console.WriteLine("length is: " + length);
-
-            byte[] buffer = new byte[length];
-            int totalRead = 0;
-
-            //read bytes until stream indicates there are no more
-            do
-            {
-                int read = stream.Read(buffer, totalRead, buffer.Length - totalRead);
-                totalRead += read;
-                //Console.WriteLine("ReadMessage: " + read);
-            } while (totalRead < length);
-
-            return Encoding.UTF8.GetString(buffer, 0, totalRead);
-        }
+        
 
         /// <summary>
         /// connects to the server and creates the tunnel
@@ -132,7 +126,7 @@ namespace RH_Engine
             // wait until we have a tunnel id
             while (tunnelId == string.Empty) { }
             Console.WriteLine("got tunnel id! sending commands...");
-            //sendCommands(stream, tunnelId);
+            sendCommands(stream, tunnelId);
         }
 
         /// <summary>
@@ -146,12 +140,10 @@ namespace RH_Engine
 
 
             WriteTextMessage(stream, mainCommand.ResetScene());
-            ReadPrefMessage(stream);
             string routeid = CreateRoute(stream, mainCommand);
 
-            WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
-            Console.WriteLine(ReadPrefMessage(stream));
-            string command;
+            //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
+            //string command;
 
 
 
@@ -168,17 +160,17 @@ namespace RH_Engine
             //Console.WriteLine(ReadPrefMessage(stream));
 
 
-            command = mainCommand.addPanel();
-            WriteTextMessage(stream, command);
-            string response = ReadPrefMessage(stream);
-            Console.WriteLine("add Panel response: \n\r" + response);
-            string uuidPanel = JSONParser.getPanelID(response);
-            WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
-            Console.WriteLine(ReadPrefMessage(stream));
-            WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel));
-            Console.WriteLine(ReadPrefMessage(stream));
+            //command = mainCommand.addPanel();
+            //WriteTextMessage(stream, command);
+            //string response = ReadPrefMessage(stream);
+            //Console.WriteLine("add Panel response: \n\r" + response);
+            //string uuidPanel = JSONParser.getPanelID(response);
+            //WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
+            //Console.WriteLine(ReadPrefMessage(stream));
+            //WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
-            WriteTextMessage(stream, mainCommand.SwapPanelCommand(uuidPanel));
+            //WriteTextMessage(stream, mainCommand.SwapPanelCommand(uuidPanel));
         }
 
         /// <summary>
@@ -206,12 +198,14 @@ namespace RH_Engine
 
         public static string CreateRoute(NetworkStream stream, Command createGraphics)
         {
+            //=============================================================================================================TODO change  
             WriteTextMessage(stream, createGraphics.RouteCommand());
-            dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
-            if (response.data.data.id == "route/add")
-            {
-                return response.data.data.data.uuid;
-            }
+            //dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
+            //dynamic response = null;
+            //if (response.data.data.id == "route/add")
+            //{
+            //    return response.data.data.data.uuid;
+            //}
             return null;
 
         }
@@ -227,11 +221,12 @@ namespace RH_Engine
                 x += 0.001f;
             }
 
+            //=============================================================================================================TODO change  
             WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, height));
-            Console.WriteLine(ReadPrefMessage(stream));
+            //Console.WriteLine(ReadPrefMessage(stream));
 
             WriteTextMessage(stream, createGraphics.AddNodeCommand());
-            Console.WriteLine(ReadPrefMessage(stream));
+            //Console.WriteLine(ReadPrefMessage(stream));
         }
 
         /// <summary>
@@ -243,8 +238,10 @@ namespace RH_Engine
         public static JArray GetChildren(NetworkStream stream, Command createGraphics)
         {
             WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
-            dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
-            return response.data.data.data.children;
+            //dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
+            //return response.data.data.data.children;
+            //=============================================================================================================TODO change            
+            return null;
         }
 
         /// <summary>
