@@ -45,6 +45,10 @@ namespace RH_Engine
             CreateConnection(client.GetStream());
         }
 
+        /// <summary>
+        /// initializes and starts the reading of the responses from the vr server
+        /// </summary>
+        /// <param name="stream">the networkstream</param>
         private static void initReader(NetworkStream stream)
         {
             serverResponseReader = new ServerResponseReader(stream);
@@ -52,13 +56,16 @@ namespace RH_Engine
             serverResponseReader.StartRead();
         }
 
+        /// <summary>
+        /// callback method that handles responses from the server
+        /// </summary>
+        /// <param name="message">the response message from the server</param>
         public static void HandleResponse(string message)
         {
 
             string id = JSONParser.GetID(message);
 
-            // because the first messages doesn't have a serial, we need to check on the id
-
+            // because the first messages don't have a serial, we need to check on the id
             if (id == "session/list")
             {
                 sessionId = JSONParser.GetSessionID(message,PCs);
@@ -80,10 +87,15 @@ namespace RH_Engine
                 if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
 
             }
-
-
         }
 
+        /// <summary>
+        /// method that sends the speciefied message with the specified serial, and executes the given action upon receivind a reply from the server with this serial.
+        /// </summary>
+        /// <param name="stream">the networkstream to use</param>
+        /// <param name="message">the message to send</param>
+        /// <param name="serial">the serial to check for</param>
+        /// <param name="action">the code to be executed upon reveiving a reply from the server with the specified serial</param>
         public static void SendMessageAndOnResponse(NetworkStream stream, string message, string serial, HandleSerial action)
         {
             serialResponses.Add(serial,action);
@@ -145,23 +157,15 @@ namespace RH_Engine
 
             WriteTextMessage(stream, mainCommand.ResetScene());
             SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
+            
 
             //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             //string command;
 
-            //WriteTextMessage(stream, mainCommand.AddBikeModel());
-
             SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID"), "panelID", (message) => panelId = JSONParser.GetResponseUuid(message));
 
-            //Console.WriteLine(ReadPrefMessage(stream));
-
             //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
-
             //WriteTextMessage(stream, command);
-
-            //Console.WriteLine(ReadPrefMessage(stream));
-
-
 
             //command = mainCommand.addPanel();
             //  WriteTextMessage(stream, command);

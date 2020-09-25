@@ -53,7 +53,7 @@ namespace RH_Engine
             byte[] lengthBytes = new byte[4];
 
             int streamread = stream.Read(lengthBytes, 0, 4);
-            Console.WriteLine("read message.. " + streamread);
+            //Console.WriteLine("read message.. " + streamread);
 
             int length = BitConverter.ToInt32(lengthBytes);
 
