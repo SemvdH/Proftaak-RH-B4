@@ -4,7 +4,7 @@ using System;
 
 namespace RH_Engine
 {
-    internal class Command
+    class Command
     {
         public const string STANDARD_HEAD = "Head";
         public const string STANDARD_GROUND = "GroundPlane";

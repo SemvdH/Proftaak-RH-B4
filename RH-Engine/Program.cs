@@ -10,7 +10,7 @@ namespace RH_Engine
 {
     public delegate void HandleSerial(string message);
 
-    internal class Program
+    class Program
     {
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
