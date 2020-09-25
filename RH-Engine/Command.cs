@@ -74,7 +74,6 @@ namespace RH_Engine
             dynamic payload = new
             {
                 id = "scene/node/add",
-                serial = "needResponse",
                 data = new
                 {
                     name = "newNode",
@@ -373,11 +372,12 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string GetSceneInfoCommand()
+        public string GetSceneInfoCommand(string serialToSend)
         {
             dynamic payload = new
             {
-                id = "scene/get"
+                id = "scene/get",
+                serial = serialToSend
             };
 
             return JsonConvert.SerializeObject(Payload(payload));

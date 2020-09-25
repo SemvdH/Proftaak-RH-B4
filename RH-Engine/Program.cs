@@ -164,6 +164,8 @@ namespace RH_Engine
 
             SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID"), "panelID", (message) => panelId = JSONParser.GetResponseUuid(message));
 
+            Console.WriteLine("id of head " +  GetId(Command.STANDARD_HEAD,stream,mainCommand));
+
             //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
             //WriteTextMessage(stream, command);
 
@@ -216,13 +218,9 @@ namespace RH_Engine
                 height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) + 1;
                 x += 0.001f;
             }
-
-            //=============================================================================================================TODO change  
             WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, height));
-            //Console.WriteLine(ReadPrefMessage(stream));
 
             WriteTextMessage(stream, createGraphics.AddNodeCommand());
-            //Console.WriteLine(ReadPrefMessage(stream));
         }
 
         /// <summary>
@@ -233,11 +231,14 @@ namespace RH_Engine
         /// <returns>all the children objects in the current scene</returns>
         public static JArray GetChildren(NetworkStream stream, Command createGraphics)
         {
-            WriteTextMessage(stream, createGraphics.GetSceneInfoCommand());
-            //dynamic response = JsonConvert.DeserializeObject(ReadPrefMessage(stream));
-            //return response.data.data.data.children;
-            //=============================================================================================================TODO change            
-            return null;
+            JArray res = null;
+            SendMessageAndOnResponse(stream, createGraphics.GetSceneInfoCommand("getChildren"),"getChildren",(message) =>
+            {
+                dynamic response = JsonConvert.DeserializeObject(message);
+                res = response.data.data.data.children;
+            });
+            while (res == null) { }
+            return res;
         }
 
         /// <summary>
