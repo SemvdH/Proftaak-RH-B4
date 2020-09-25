@@ -64,6 +64,11 @@ namespace Client
             return getJsonMessage(LOGIN_RESPONSE, new { status = mStatus });
         }
 
+        public static string getResponseStatus(byte[] json)
+        {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.status;
+        }
+
         /// <summary>
         /// get the identifier from json
         /// </summary>

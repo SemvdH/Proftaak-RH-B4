@@ -36,21 +36,9 @@ namespace Client
 
             this.stream = this.client.GetStream();
 
-            //TODO File in lezen
-            Console.WriteLine("enter username");
-            string username = Console.ReadLine();
-            Console.WriteLine("enter password");
-            string password = Console.ReadLine();
-
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
-
-            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+            tryLogin();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
-
-            //TODO lees OK message
-            //temp moet eigenlijk een ok bericht ontvangen
-            this.connected = true;
         }
 
         private void OnRead(IAsyncResult ar)
@@ -71,23 +59,37 @@ namespace Client
                 byte[] messageBytes = new byte[expectedMessageLength];
                 Array.Copy(totalBuffer, 0, messageBytes, 0, expectedMessageLength);
 
+
+                byte[] payloadbytes = new byte[BitConverter.ToInt32(messageBytes, 0) - 5];
+
+                Array.Copy(messageBytes, 5, payloadbytes, 0, payloadbytes.Length);
+
                 string identifier;
                 bool isJson = DataParser.getJsonIdentifier(messageBytes, out identifier);
                 if (isJson)
                 {
                     switch (identifier)
                     {
-                        case DataParser.LOGIN:
-                            Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(messageBytes.Skip(5).ToArray())}");
+                        case DataParser.LOGIN_RESPONSE:
+                            string responseStatus = DataParser.getResponseStatus(payloadbytes);
+                            if (responseStatus == "OK")
+                            {
+                                this.connected = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"login failed \"{responseStatus}\"");
+                                tryLogin();
+                            }
                             break;
                         default:
-                            Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(messageBytes.Skip(5).ToArray())}");
+                            Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                             break;
                     }
                 }
                 else if (DataParser.isRawData(messageBytes))
                 {
-                    Console.WriteLine($"Received data: {BitConverter.ToString(messageBytes.Skip(5).ToArray())}");
+                    Console.WriteLine($"Received data: {BitConverter.ToString(payloadbytes)}");
                 }
 
                 totalBufferReceived -= expectedMessageLength;
@@ -130,6 +132,18 @@ namespace Client
         public bool IsConnected()
         {
             return this.connected;
+        }
+        private void tryLogin()
+        {
+            //TODO File in lezen
+            Console.WriteLine("enter username");
+            string username = Console.ReadLine();
+            Console.WriteLine("enter password");
+            string password = Console.ReadLine();
+
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
+
+            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
     }
 }

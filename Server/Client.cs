@@ -25,7 +25,7 @@ namespace Server
 
         public Client(Communication communication, TcpClient tcpClient)
         {
-            this.saveData = new SaveData(Directory.GetCurrentDirectory()+$"/test");
+            this.saveData = new SaveData(Directory.GetCurrentDirectory() + $"/test");
             this.communication = communication;
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
@@ -90,11 +90,9 @@ namespace Server
             bool isJson = DataParser.getJsonIdentifier(message, out identifier);
             if (isJson)
             {
-                Console.WriteLine($"received json with identifier {identifier} and expecting {DataParser.LOGIN}");
                 switch (identifier)
                 {
                     case DataParser.LOGIN:
-                        Console.WriteLine("LOGIN");
                         string username;
                         string password;
                         bool worked = DataParser.GetUsernamePassword(payloadbytes, out username, out password);
@@ -103,33 +101,33 @@ namespace Server
                             if (verifyLogin(username, password))
                             {
                                 this.username = username;
-                                stream.BeginWrite(DataParser.getLoginResponse("OK"), 0, 0, new AsyncCallback(OnWrite), null);
+                                byte[] response = DataParser.getLoginResponse("OK");
+                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
                             }
                             else
                             {
-                                stream.BeginWrite(DataParser.getLoginResponse("wrong username or password"), 0, 0, new AsyncCallback(OnWrite), null);
+                                byte[] response = DataParser.getLoginResponse("wrong username or password");
+                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
                             }
                         }
                         else
                         {
-                            stream.BeginWrite(DataParser.getLoginResponse("invalid json"), 0, 0, new AsyncCallback(OnWrite), null);
+                            byte[] response = DataParser.getLoginResponse("invalid json");
+                            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
                         }
                         break;
                     default:
-                        Console.WriteLine("default");
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
                 }
-                byte[] jsonArray = new byte[message.Length - 5];
-                Array.Copy(message, 5, jsonArray, 0, message.Length - 5);
-                dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonArray));
-                Console.WriteLine(json);
-                saveData.WriteDataJSON(Encoding.ASCII.GetString(jsonArray));
+                Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
+                dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
+                saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
 
             }
             else if (DataParser.isRawData(message))
             {
-                Console.WriteLine(message);
+                Console.WriteLine(BitConverter.ToString(message));
                 saveData.WriteDataRAW(Encoding.ASCII.GetString(message));
             }
 
