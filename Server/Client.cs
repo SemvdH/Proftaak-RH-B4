@@ -13,7 +13,6 @@ namespace Server
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
         private byte[] totalBuffer = new byte[1024];
-        private int bytesReceived;
         private int totalBufferReceived = 0;
 
 
@@ -30,7 +29,6 @@ namespace Server
         private void OnRead(IAsyncResult ar)
         {
             int receivedBytes = this.stream.EndRead(ar);
-            byte[] lengthBytes = new byte[4];
 
             if (totalBufferReceived + receivedBytes > 1024)
             {
@@ -45,7 +43,7 @@ namespace Server
             {
                 //volledig packet binnen
                 byte[] packetBytes = new byte[expectedMessageLength];
-                Array.Copy(totalBuffer, 6, packetBytes, 0, expectedMessageLength - 6);
+                Array.Copy(totalBuffer, 5, packetBytes, 0, expectedMessageLength - 5);
 
 
                 Console.WriteLine(Encoding.ASCII.GetString(packetBytes) + " " + expectedMessageLength);
@@ -57,59 +55,16 @@ namespace Server
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             }
 
-            /*
 
-            Array.Copy(this.buffer, 0, lengthBytes, 0, 4);
 
-            int expectedMessageLength = BitConverter.ToInt32(lengthBytes);
-
-            if (expectedMessageLength > this.buffer.Length)
-            {
-                throw new OutOfMemoryException("buffer to small");
-            }
-
-            if (expectedMessageLength > this.bytesReceived + receivedBytes)
-            {
-                //message hasn't completely arrived yet
-                this.bytesReceived += receivedBytes;
-                Console.WriteLine("segmented message, {0} arrived", receivedBytes);
-                this.stream.BeginRead(this.buffer, this.bytesReceived, this.buffer.Length - this.bytesReceived, new AsyncCallback(OnRead), null);
-
-            }
-            else
-            {
-                //message completely arrived
-                if (expectedMessageLength != this.bytesReceived + receivedBytes)
-                {
-                    Console.WriteLine("something has gone completely wrong");
-                    Console.WriteLine($"expected: {expectedMessageLength} bytesReceive: {bytesReceived} receivedBytes: {receivedBytes}");
-                    Console.WriteLine($"received WEIRD data {BitConverter.ToString(buffer.Take(receivedBytes).ToArray())} string {Encoding.ASCII.GetString(buffer.Take(receivedBytes).ToArray())}");
-
-                }
-                else if (buffer[4] == 0x02)
-                {
-                    Console.WriteLine($"received raw data {BitConverter.ToString(buffer.Skip(5).Take(expectedMessageLength).ToArray())}");
-                }
-                else if (buffer[4] == 0x01)
-                {
-                    byte[] packet = new byte[expectedMessageLength];
-                    Console.WriteLine(Encoding.ASCII.GetString(buffer) + " " + expectedMessageLength);
-                    Array.Copy(buffer, 5, packet, 0, expectedMessageLength - 5);
-                    Console.WriteLine(Encoding.ASCII.GetString(packet));
-                    HandleData(Encoding.ASCII.GetString(packet));
-                }
-                this.bytesReceived = 0;
-
-            }
-            */
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }
 
-        private void HandleData(string packet)
+        private void HandleData(byte[] message)
         {
-            Console.WriteLine("Data " + packet);
-            JsonConvert.DeserializeObject(packet);
+            //Console.WriteLine("Data " + packet);
+            //JsonConvert.DeserializeObject(packet);
         }
     }
 }
