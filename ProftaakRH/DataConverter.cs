@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProftaakRH;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace Hardware
     /// <summary>
     /// DataConverter class that handles all conversion of received data from the BLE bike.
     /// </summary>
-    class DataConverter : IDataConverter
+    class DataConverter : IDataReceiver
     {
         /// <summary>
         /// Receives, parses and displays any incoming data from the bike.
@@ -22,7 +23,7 @@ namespace Hardware
             else
             if (bytes.Length == 8)
             {
-                
+
                 switch (bytes[0])
                 {
                     case 0x10:
@@ -37,7 +38,7 @@ namespace Hardware
                         Console.WriteLine($"Speed is : {input * 0.01}m/s (Range 65.534m/4)");
                         if (bytes[6] != 0xFF)
                         {
-                            Console.WriteLine("Heart rate byte: {0}", Convert.ToString(bytes[6],2));
+                            Console.WriteLine("Heart rate byte: {0}", Convert.ToString(bytes[6], 2));
                         }
                         break;
                     case 0x19:
@@ -45,17 +46,17 @@ namespace Hardware
                         if (bytes[2] != 0xFF)
                         {
                             Console.WriteLine($"Instantaneous cadence: {bytes[2]} RPM (Range 0-254)");
-                            
+
                         }
                         int accumPower = bytes[3] | (bytes[4] << 8);
-                        
+
                         Console.WriteLine($"Accumulated power: {accumPower} watt (Rollover 65536)");
 
-                        int instantPower = (bytes[5]) | (bytes[6] & 0b00001111)<<8;
-                        
+                        int instantPower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+
 
                         if (instantPower != 0xFFF)
-                        Console.WriteLine($"Instant power: {instantPower} watt (Range 0-4094)");
+                            Console.WriteLine($"Instant power: {instantPower} watt (Range 0-4094)");
 
                         int trainerStatus = bytes[6] & 0b11110000; // bit 4-7
                         int flags = bytes[7] >> 4;
@@ -102,14 +103,5 @@ namespace Hardware
             }
             Console.WriteLine();
         }
-    }
-
-    /// <summary>
-    /// Dataconverter interface for handling data received from the bike
-    /// </summary>
-    interface IDataConverter
-    {
-        void BPM(byte[] bytes);
-        void Bike(byte[] bytes);
     }
 }

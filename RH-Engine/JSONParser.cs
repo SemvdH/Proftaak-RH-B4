@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace RH_Engine
 {
@@ -27,14 +23,13 @@ namespace RH_Engine
             }
 
             return res;
-
         }
 
         public static string GetSessionID(string msg, PC[] PCs)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(msg);
             Newtonsoft.Json.Linq.JArray data = jsonData.data;
-            for (int i = data.Count-1; i >= 0; i--)
+            for (int i = data.Count - 1; i >= 0; i--)
             {
                 dynamic d = data[i];
                 foreach (PC pc in PCs)
@@ -50,6 +45,18 @@ namespace RH_Engine
             return null;
         }
 
+        public static string GetSerial(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            return jsonData.data.data.serial;
+        }
+
+        public static string GetID(string json)
+        {
+            dynamic d = JsonConvert.DeserializeObject(json);
+            return d.id;
+        }
+
         public static string GetTunnelID(string json)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(json);
@@ -60,15 +67,30 @@ namespace RH_Engine
             return null;
         }
 
-        public static string GetRouteID(string json)
+        /// <summary>
+        /// method to get the uuid from requests for adding a node,route or road
+        /// </summary>
+        /// <param name="json">the json response froo the server</param>
+        /// <returns>the uuid of the created object</returns>
+        public static string GetResponseUuid(string json)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(json);
-            if (jsonData.data.status == "ok")
+            if (jsonData.data.data.status == "ok")
             {
-                return jsonData.data.uuid;
+                return jsonData.data.data.data.uuid;
             }
             return null;
         }
 
+        public static string getPanelID(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            if (jsonData.data.data.data.name == "dashboard")
+            {
+                Console.WriteLine(jsonData.data.data.data.uuid);
+                return jsonData.data.data.data.uuid;
+            }
+            return null;
+        }
     }
 }
