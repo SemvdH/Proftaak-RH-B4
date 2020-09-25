@@ -18,6 +18,7 @@ namespace Server
         private int totalBufferReceived = 0;
         private SaveData saveData;
         private string username = null;
+        private DateTime sessionStart;
 
 
 
@@ -25,7 +26,7 @@ namespace Server
 
         public Client(Communication communication, TcpClient tcpClient)
         {
-            this.saveData = new SaveData(Directory.GetCurrentDirectory() + $"/test");
+            this.sessionStart = DateTime.Now;
             this.communication = communication;
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
@@ -100,9 +101,11 @@ namespace Server
                         {
                             if (verifyLogin(username, password))
                             {
+                                Console.WriteLine("Log in");
                                 this.username = username;
                                 byte[] response = DataParser.getLoginResponse("OK");
                                 stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                                this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + username, sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
                             }
                             else
                             {
@@ -128,7 +131,7 @@ namespace Server
             else if (DataParser.isRawData(message))
             {
                 Console.WriteLine(BitConverter.ToString(message));
-                saveData.WriteDataRAW(Encoding.ASCII.GetString(message));
+                saveData.WriteDataRAW(ByteArrayToString(message));
             }
 
 
@@ -137,6 +140,14 @@ namespace Server
         private bool verifyLogin(string username, string password)
         {
             return username == password;
+        }
+
+        public static string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
         }
     }
 }
