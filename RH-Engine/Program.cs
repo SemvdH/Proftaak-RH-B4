@@ -26,6 +26,8 @@ namespace RH_Engine
         };
 
         private static ServerResponseReader serverResponseReader;
+        private static string sessionId = string.Empty;
+        private static string tunnelId = string.Empty;
         private static void Main(string[] args)
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -42,7 +44,24 @@ namespace RH_Engine
 
         public static void HandleResponse(string message)
         {
-            Console.WriteLine("GOT MESSAGE FROM CALLBACK!!!!! " + message);
+            //Console.WriteLine("GOT MESSAGE FROM CALLBACK!!!!! " + message);
+
+            string id = JSONParser.GetID(message);
+            Console.WriteLine("got id : " + id);
+
+            // because the first messages don't have a serial, we need to check on the id
+            if (id == "session/list")
+            {
+                sessionId = JSONParser.GetSessionID(message,PCs);
+            } else if (id == "tunnel/create")
+            {
+                tunnelId = JSONParser.GetTunnelID(message);
+                if (tunnelId == null)
+                {
+                    Console.WriteLine("could not find a valid tunnel id!");
+                    return;
+                }
+            }
         }
 
         /// <summary>
@@ -92,6 +111,7 @@ namespace RH_Engine
 
             return Encoding.UTF8.GetString(buffer, 0, totalRead);
         }
+
         /// <summary>
         /// connects to the server and creates the tunnel
         /// </summary>
@@ -100,25 +120,19 @@ namespace RH_Engine
         {
             initReader(stream);
 
-            WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
-            //string id = JSONParser.GetSessionID(ReadPrefMessage(stream), PCs);
+            WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\",\r\n\"serial\" : \"list\"\r\n}");
 
-            //string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + id + "\"}}";
+            // wait until we have got a sessionId
+            while (sessionId == string.Empty) { }
+            
+            string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + sessionId + "\"}}";
 
-            //WriteTextMessage(stream, tunnelCreate);
+            WriteTextMessage(stream, tunnelCreate);
 
-            //string tunnelResponse = ReadPrefMessage(stream);
-
-            //Console.WriteLine(tunnelResponse);
-
-            //string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
-            //if (tunnelID == null)
-            //{
-            //    Console.WriteLine("could not find a valid tunnel id!");
-            //    return;
-            //}
-
-            //sendCommands(stream, tunnelID);
+            // wait until we have a tunnel id
+            while (tunnelId == string.Empty) { }
+            Console.WriteLine("got tunnel id! sending commands...");
+            //sendCommands(stream, tunnelId);
         }
 
         /// <summary>
@@ -138,6 +152,8 @@ namespace RH_Engine
             WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             Console.WriteLine(ReadPrefMessage(stream));
             string command;
+
+
 
             //command = mainCommand.AddBikeModel();
 

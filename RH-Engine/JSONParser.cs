@@ -50,6 +50,19 @@ namespace RH_Engine
             return null;
         }
 
+        public static string GetSerial(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            return jsonData.serial;
+        }
+
+        public static string GetID(string json)
+        {
+            dynamic d = JsonConvert.DeserializeObject(json);
+            return d.id;
+
+        }
+
         public static string GetTunnelID(string json)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(json);
