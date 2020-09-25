@@ -31,16 +31,18 @@ namespace RH_Engine
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
+        }
 
-            serverResponseReader = new ServerResponseReader(client.GetStream());
+        private static void initReader(NetworkStream stream)
+        {
+            serverResponseReader = new ServerResponseReader(stream);
             serverResponseReader.callback = HandleResponse;
-
-
+            serverResponseReader.StartRead();
         }
 
         public static void HandleResponse(string message)
         {
-
+            Console.WriteLine("GOT MESSAGE FROM CALLBACK!!!!! " + message);
         }
 
         /// <summary>
@@ -58,7 +60,7 @@ namespace RH_Engine
 
             stream.Write(res);
 
-            //Console.WriteLine("sent message " + message);
+            Console.WriteLine("sent message " + message);
         }
 
         /// <summary>
@@ -96,25 +98,27 @@ namespace RH_Engine
         /// <param name="stream">the network stream to use</param>
         private static void CreateConnection(NetworkStream stream)
         {
+            initReader(stream);
+
             WriteTextMessage(stream, "{\r\n\"id\" : \"session/list\"\r\n}");
-            string id = JSONParser.GetSessionID(ReadPrefMessage(stream), PCs);
+            //string id = JSONParser.GetSessionID(ReadPrefMessage(stream), PCs);
 
-            string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + id + "\"}}";
+            //string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + id + "\"}}";
 
-            WriteTextMessage(stream, tunnelCreate);
+            //WriteTextMessage(stream, tunnelCreate);
 
-            string tunnelResponse = ReadPrefMessage(stream);
+            //string tunnelResponse = ReadPrefMessage(stream);
 
-            Console.WriteLine(tunnelResponse);
+            //Console.WriteLine(tunnelResponse);
 
-            string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
-            if (tunnelID == null)
-            {
-                Console.WriteLine("could not find a valid tunnel id!");
-                return;
-            }
+            //string tunnelID = JSONParser.GetTunnelID(tunnelResponse);
+            //if (tunnelID == null)
+            //{
+            //    Console.WriteLine("could not find a valid tunnel id!");
+            //    return;
+            //}
 
-            sendCommands(stream, tunnelID);
+            //sendCommands(stream, tunnelID);
         }
 
         /// <summary>

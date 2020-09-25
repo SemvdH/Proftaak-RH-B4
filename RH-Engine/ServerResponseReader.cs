@@ -27,21 +27,28 @@ namespace RH_Engine
                 if (this.callback == null)
                 {
                     throw new Exception("Callback not initialized!");
-                } else
-                while (true)
+                }
+                else
                 {
+                    Console.WriteLine("Starting loop for reading");
+                    while (true)
+                    {
                         string res = ReadPrefMessage(Stream);
+                        //Console.WriteLine("[SERVERRESPONSEREADER] got message from server: " + res);
                         this.callback(res);
+                    }
                 }
             });
+
+            t.Start();
         }
 
         public static string ReadPrefMessage(NetworkStream stream)
         {
             byte[] lengthBytes = new byte[4];
 
-            stream.Read(lengthBytes, 0, 4);
-            Console.WriteLine("read message..");
+            int streamread = stream.Read(lengthBytes, 0, 4);
+            Console.WriteLine("read message.. " + streamread);
 
             int length = BitConverter.ToInt32(lengthBytes);
 
