@@ -14,6 +14,7 @@ namespace Server
         private byte[] buffer = new byte[1024];
         private byte[] totalBuffer = new byte[1024];
         private int bytesReceived;
+        private int totalBufferReceived = 0;
 
 
         public string Username { get; set; }
@@ -30,6 +31,33 @@ namespace Server
         {
             int receivedBytes = this.stream.EndRead(ar);
             byte[] lengthBytes = new byte[4];
+
+            if (totalBufferReceived + receivedBytes > 1024)
+            {
+                throw new OutOfMemoryException("buffer too small");
+            }
+            Array.Copy(buffer, 0, totalBuffer, totalBufferReceived, receivedBytes);
+            totalBufferReceived += receivedBytes;
+
+
+            int expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
+            while (totalBufferReceived >= expectedMessageLength)
+            {
+                //volledig packet binnen
+                byte[] packetBytes = new byte[expectedMessageLength];
+                Array.Copy(totalBuffer, 6, packetBytes, 0, expectedMessageLength - 6);
+
+
+                Console.WriteLine(Encoding.ASCII.GetString(packetBytes) + " " + expectedMessageLength);
+
+
+
+                Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength));
+                totalBufferReceived -= expectedMessageLength;
+                expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
+            }
+
+            /*
 
             Array.Copy(this.buffer, 0, lengthBytes, 0, 4);
 
@@ -73,7 +101,7 @@ namespace Server
                 this.bytesReceived = 0;
 
             }
-
+            */
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }
