@@ -129,7 +129,8 @@ namespace Server
         {
             Console.WriteLine("Data " + packet);
             dynamic json = JsonConvert.DeserializeObject(packet);
-            if (json.data.name == json.data.password)
+            Console.WriteLine("Name: "+json.data.username + "Password: "+json.data.password);
+            if (json.data.username == json.data.password)
             {
                 dynamic payload = new
                 {
@@ -145,9 +146,10 @@ namespace Server
 
         private void Write(string data)
         {
-            byte[] bytes = DataParser.getMessage(Encoding.ASCII.GetBytes(data), 0x01);
+            byte[] bytes = DataParser.getMessage(Encoding.ASCII.GetBytes(data), 0x01, 0x01);
             stream.Write(bytes, 0, bytes.Length);
             stream.Flush();
+            Console.WriteLine("Wrote message");
         }
     }
 }

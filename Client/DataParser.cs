@@ -76,7 +76,7 @@ namespace Client
         /// <param name="messageId"></param>
         /// <param name="clientId"></param>
         /// <returns>the message ready for sending</returns>
-        private static byte[] getMessage(byte[] payload, byte messageId, byte clientId)
+        public static byte[] getMessage(byte[] payload, byte messageId, byte clientId)
         {
             byte[] res = new byte[payload.Length + 6];
 

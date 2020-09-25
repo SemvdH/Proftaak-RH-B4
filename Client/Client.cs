@@ -85,6 +85,7 @@ namespace Client
                 bool isJson = DataParser.getJsonIdentifier(this.buffer, out identifier);
                 if (isJson)
                 {
+
                     throw new NotImplementedException();
                 }
                 else if (DataParser.isRawData(this.buffer))
