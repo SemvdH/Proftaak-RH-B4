@@ -41,13 +41,11 @@ namespace Server
             while (totalBufferReceived >= expectedMessageLength)
             {
                 //volledig packet binnen
-                Console.WriteLine(expectedMessageLength);
                 byte[] messageBytes = new byte[expectedMessageLength];
                 Array.Copy(totalBuffer, 0, messageBytes, 0, expectedMessageLength);
                 HandleData(messageBytes);
 
-                //Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk 
-                totalBuffer = totalBuffer.Skip(expectedMessageLength).ToArray();
+                Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk 
 
                 totalBufferReceived -= expectedMessageLength;
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
