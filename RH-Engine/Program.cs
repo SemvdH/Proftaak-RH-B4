@@ -3,19 +3,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Net.Sockets;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading;
 
 namespace RH_Engine
 {
-
     public delegate void HandleSerial(string message);
+
     internal class Program
     {
         private static PC[] PCs = {
@@ -36,10 +30,8 @@ namespace RH_Engine
 
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
 
-        
         private static void Main(string[] args)
         {
-
             TcpClient client = new TcpClient("145.48.6.10", 6666);
 
             CreateConnection(client.GetStream());
@@ -62,14 +54,14 @@ namespace RH_Engine
         /// <param name="message">the response message from the server</param>
         public static void HandleResponse(string message)
         {
-
             string id = JSONParser.GetID(message);
 
             // because the first messages don't have a serial, we need to check on the id
             if (id == "session/list")
             {
-                sessionId = JSONParser.GetSessionID(message,PCs);
-            } else if (id == "tunnel/create")
+                sessionId = JSONParser.GetSessionID(message, PCs);
+            }
+            else if (id == "tunnel/create")
             {
                 tunnelId = JSONParser.GetTunnelID(message);
                 if (tunnelId == null)
@@ -85,7 +77,6 @@ namespace RH_Engine
                 string serial = JSONParser.GetSerial(message);
                 //Console.WriteLine("Got serial " + serial);
                 if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
-
             }
         }
 
@@ -98,7 +89,7 @@ namespace RH_Engine
         /// <param name="action">the code to be executed upon reveiving a reply from the server with the specified serial</param>
         public static void SendMessageAndOnResponse(NetworkStream stream, string message, string serial, HandleSerial action)
         {
-            serialResponses.Add(serial,action);
+            serialResponses.Add(serial, action);
             WriteTextMessage(stream, message);
         }
 
@@ -120,8 +111,6 @@ namespace RH_Engine
             Console.WriteLine("sent message " + message);
         }
 
-        
-
         /// <summary>
         /// connects to the server and creates the tunnel
         /// </summary>
@@ -134,7 +123,7 @@ namespace RH_Engine
 
             // wait until we have got a sessionId
             while (sessionId == string.Empty) { }
-            
+
             string tunnelCreate = "{\"id\" : \"tunnel/create\",	\"data\" :	{\"session\" : \"" + sessionId + "\"}}";
 
             WriteTextMessage(stream, tunnelCreate);
@@ -154,17 +143,15 @@ namespace RH_Engine
         {
             Command mainCommand = new Command(tunnelID);
 
-
             WriteTextMessage(stream, mainCommand.ResetScene());
             SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
-            
 
             //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             //string command;
 
             SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID"), "panelID", (message) => panelId = JSONParser.GetResponseUuid(message));
 
-            Console.WriteLine("id of head " +  GetId(Command.STANDARD_HEAD,stream,mainCommand));
+            Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
 
             //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
             //WriteTextMessage(stream, command);
@@ -182,7 +169,6 @@ namespace RH_Engine
             //  Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
             //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
             //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
-
         }
 
         /// <summary>
@@ -205,7 +191,6 @@ namespace RH_Engine
             }
             Console.WriteLine("Could not find id of " + name);
             return null;
-
         }
 
         public static void CreateTerrain(NetworkStream stream, Command createGraphics)
@@ -232,11 +217,11 @@ namespace RH_Engine
         public static JArray GetChildren(NetworkStream stream, Command createGraphics)
         {
             JArray res = null;
-            SendMessageAndOnResponse(stream, createGraphics.GetSceneInfoCommand("getChildren"),"getChildren",(message) =>
-            {
-                dynamic response = JsonConvert.DeserializeObject(message);
-                res = response.data.data.data.children;
-            });
+            SendMessageAndOnResponse(stream, createGraphics.GetSceneInfoCommand("getChildren"), "getChildren", (message) =>
+              {
+                  dynamic response = JsonConvert.DeserializeObject(message);
+                  res = response.data.data.data.children;
+              });
             while (res == null) { }
             return res;
         }
@@ -260,9 +245,7 @@ namespace RH_Engine
             }
 
             return res;
-
         }
-
     }
 
     /// <summary>
@@ -275,6 +258,7 @@ namespace RH_Engine
             this.host = host;
             this.user = user;
         }
+
         public string host { get; }
         public string user { get; }
 

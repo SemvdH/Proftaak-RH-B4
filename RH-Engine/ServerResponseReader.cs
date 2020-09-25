@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -7,12 +6,14 @@ using System.Threading;
 namespace RH_Engine
 {
     public delegate void OnResponse(string response);
+
     class ServerResponseReader
     {
         public OnResponse callback
         {
-            get;set;
+            get; set;
         }
+
         public NetworkStream Stream { get; }
 
         public ServerResponseReader(NetworkStream stream)

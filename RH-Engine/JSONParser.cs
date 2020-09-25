@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace RH_Engine
 {
@@ -27,14 +23,13 @@ namespace RH_Engine
             }
 
             return res;
-
         }
 
         public static string GetSessionID(string msg, PC[] PCs)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(msg);
             Newtonsoft.Json.Linq.JArray data = jsonData.data;
-            for (int i = data.Count-1; i >= 0; i--)
+            for (int i = data.Count - 1; i >= 0; i--)
             {
                 dynamic d = data[i];
                 foreach (PC pc in PCs)
@@ -60,7 +55,6 @@ namespace RH_Engine
         {
             dynamic d = JsonConvert.DeserializeObject(json);
             return d.id;
-
         }
 
         public static string GetTunnelID(string json)

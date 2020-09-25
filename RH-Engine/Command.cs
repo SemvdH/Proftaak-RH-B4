@@ -1,14 +1,10 @@
 ﻿using LibNoise.Primitive;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading;
 
 namespace RH_Engine
 {
-    class Command
+    internal class Command
     {
         public const string STANDARD_HEAD = "Head";
         public const string STANDARD_GROUND = "GroundPlane";
@@ -16,9 +12,7 @@ namespace RH_Engine
         public const string STANDARD_LEFTHAND = "LeftHand";
         public const string STANDARD_RIGHTHAND = "RightHand";
 
-
-
-        string tunnelID;
+        private string tunnelID;
 
         public Command(string tunnelID)
         {
@@ -35,10 +29,10 @@ namespace RH_Engine
                     size = sizeArray,
                     heights = heightsArray
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
+
         public string AddLayer(string uid, string texture)
         {
             dynamic payload = new
@@ -56,6 +50,7 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
+
         public string UpdateTerrain()
         {
             dynamic payload = new
@@ -63,7 +58,6 @@ namespace RH_Engine
                 id = "scene/terrain/update",
                 data = new
                 {
-
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));
@@ -91,19 +85,15 @@ namespace RH_Engine
 
         public string DeleteNode(string uuid)
         {
-
             dynamic payload = new
             {
                 id = "scene/node/delete",
                 data = new
                 {
                     id = uuid,
-
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
-
         }
 
         public string addPanel(string serialToSend)
@@ -123,7 +113,6 @@ namespace RH_Engine
                             resolution = new int[] { 512, 512 },
                             background = new int[] { 1, 0, 0, 0 },
                             castShadow = false
-
                         }
                     }
                 }
@@ -210,20 +199,20 @@ namespace RH_Engine
 
         public string AddBikeModel()
         {
-            return AddModel("bike","addbike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
+            return AddModel("bike", "addbike", "data\\NetworkEngine\\models\\bike\\bike.fbx");
         }
 
-        public string AddModel(string nodeName,string serial, string fileLocation)
+        public string AddModel(string nodeName, string serial, string fileLocation)
         {
-            return AddModel(nodeName,serial, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
+            return AddModel(nodeName, serial, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });
         }
 
-        public string AddModel(string nodeName,string serial, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
+        public string AddModel(string nodeName, string serial, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
         {
-            return AddModel(nodeName,serial, fileLocation, null, positionVector, scalar, rotationVector);
+            return AddModel(nodeName, serial, fileLocation, null, positionVector, scalar, rotationVector);
         }
 
-        public string AddModel(string nodeName,string serialToSend, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
+        public string AddModel(string nodeName, string serialToSend, string fileLocation, string animationLocation, float[] positionVector, float scalar, float[] rotationVector)
         {
             string namename = nodeName;
             bool animatedBool = false;
@@ -246,7 +235,6 @@ namespace RH_Engine
                             position = positionVector,
                             scale = scalar,
                             rotation = rotationVector
-
                         },
                         model = new
                         {
@@ -257,7 +245,6 @@ namespace RH_Engine
                         },
                     }
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
@@ -286,7 +273,6 @@ namespace RH_Engine
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
-
 
         public string RouteCommand(string serialToSend)
         {
@@ -345,7 +331,7 @@ namespace RH_Engine
         private int[] GetDir()
         {
             Random rng = new Random();
-            int[] dir = {rng.Next(50), 0, rng.Next(50)};
+            int[] dir = { rng.Next(50), 0, rng.Next(50) };
             return dir;
         }
 
@@ -401,7 +387,6 @@ namespace RH_Engine
                 throw new Exception("The time must be between 0 and 24!");
             }
 
-
             dynamic payload = new
             {
                 id = "scene/skybox/settime",
@@ -409,12 +394,9 @@ namespace RH_Engine
                 {
                     time = timeToSet
                 }
-
             };
             return JsonConvert.SerializeObject(Payload(payload));
-
         }
-
 
         private object Payload(dynamic message)
         {
@@ -428,8 +410,5 @@ namespace RH_Engine
                 }
             };
         }
-
-
-
     }
 }
