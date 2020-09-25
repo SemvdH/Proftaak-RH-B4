@@ -41,6 +41,7 @@ namespace Server
             while (totalBufferReceived >= expectedMessageLength)
             {
                 //volledig packet binnen
+                Console.WriteLine(expectedMessageLength);
                 byte[] messageBytes = new byte[expectedMessageLength];
                 Array.Copy(totalBuffer, 0, messageBytes, 0, expectedMessageLength);
                 HandleData(messageBytes);
@@ -50,6 +51,10 @@ namespace Server
 
                 totalBufferReceived -= expectedMessageLength;
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
+                if (expectedMessageLength <= 5)
+                {
+                    break;
+                }
             }
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
@@ -63,14 +68,23 @@ namespace Server
         {
             //Console.WriteLine("Data " + packet);
             //JsonConvert.DeserializeObject(packet);
+            //0x01 Json
+            //0x01 Raw data
+
             if (message[4] == 0x01)
             {
+                byte[] jsonArray = new byte[message.Length - 5];
+                Array.Copy(message, 5, jsonArray, 0, message.Length - 5);
+                dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonArray));
+                Console.WriteLine(json);
 
             }
             else if (message[4] == 0x02)
             {
 
             }
+
+
         }
     }
 }
