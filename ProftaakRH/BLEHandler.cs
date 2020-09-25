@@ -13,7 +13,7 @@ namespace Hardware
     /// </summary>
     public class BLEHandler
     {
-        IDataReceiver dataReceiver;
+        List<IDataReceiver> dataReceivers;
         private BLE bleBike;
         private BLE bleHeart;
         public bool Running { get; set; }
@@ -24,7 +24,17 @@ namespace Hardware
         /// <param name="dataReceiver">the dataconverter object</param>
         public BLEHandler(IDataReceiver dataReceiver)
         {
-            this.dataReceiver = dataReceiver;
+            this.dataReceivers = new List<IDataReceiver> { dataReceiver };
+        }
+
+        public BLEHandler(List<IDataReceiver> dataReceivers)
+        {
+            this.dataReceivers = dataReceivers;
+        }
+
+        public void addDataReceiver(IDataReceiver dataReceiver)
+        {
+            this.dataReceivers.Add(dataReceiver);
         }
 
         /// <summary>
@@ -125,11 +135,17 @@ namespace Hardware
             {
                 byte[] payload = new byte[8];
                 Array.Copy(e.Data, 4, payload, 0, 8);
-                this.dataReceiver.Bike(payload);
+                foreach (IDataReceiver dataReceiver in this.dataReceivers)
+                {
+                    dataReceiver.Bike(payload);
+                }
             }
             else if (e.ServiceName == "00002a37-0000-1000-8000-00805f9b34fb")
             {
-                this.dataReceiver.BPM(e.Data);
+                foreach (IDataReceiver dataReceiver in this.dataReceivers)
+                {
+                    dataReceiver.BPM(e.Data);
+                }
             }
             else
             {

@@ -12,7 +12,7 @@ namespace Hardware.Simulators
 {
     public class BikeSimulator : IHandler
     {
-        IDataReceiver dataReceiver;
+        List<IDataReceiver> dataReceivers;
         private int elapsedTime = 0;
         private int eventCounter = 0;
         private double distanceTraveled = 0;
@@ -32,7 +32,17 @@ namespace Hardware.Simulators
 
         public BikeSimulator(IDataReceiver dataReceiver)
         {
-            this.dataReceiver = dataReceiver;
+            this.dataReceivers = new List<IDataReceiver> { dataReceiver };
+        }
+
+        public BikeSimulator(List<IDataReceiver> dataReceivers)
+        {
+            this.dataReceivers = dataReceivers;
+        }
+
+        public void addDataReceiver(IDataReceiver dataReceiver)
+        {
+            this.dataReceivers.Add(dataReceiver);
         }
 
         public void StartSimulation()
@@ -50,9 +60,12 @@ namespace Hardware.Simulators
                 CalculateVariables(improvedPerlin.GetValue(x) + 1);
 
                 //Simulate sending data
-                dataReceiver.Bike(GenerateBike0x19());
-                dataReceiver.Bike(GenerateBike0x10());
-                dataReceiver.BPM(GenerateHeart());
+                foreach (IDataReceiver dataReceiver in this.dataReceivers)
+                {
+                    dataReceiver.Bike(GenerateBike0x19());
+                    dataReceiver.Bike(GenerateBike0x10());
+                    dataReceiver.BPM(GenerateHeart());
+                }
 
                 Thread.Sleep(1000);
 
