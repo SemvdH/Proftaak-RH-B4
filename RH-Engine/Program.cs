@@ -175,10 +175,12 @@ namespace RH_Engine
             string uuidPanel = JSONParser.getPanelID(response);
             WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
             Console.WriteLine(ReadPrefMessage(stream));
-            WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel));
+            WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel, 2.42));
             Console.WriteLine(ReadPrefMessage(stream));
-
-            WriteTextMessage(stream, mainCommand.SwapPanelCommand(uuidPanel));
+            WriteTextMessage(stream, mainCommand.ColorPanel(uuidPanel));
+            Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
+            WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
+            Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
         }
 
         /// <summary>

@@ -131,7 +131,36 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string bikeSpeed(string uuidPanel)
+        public string ColorPanel(string uuidPanel)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/setclearcolor",
+                data = new
+                {
+                    id = uuidPanel,
+                    color = new int[] { 1, 1, 1, 1 }
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string SwapPanel(string uuid)
+        {
+            dynamic payload = new
+            {
+                id = "scene/panel/swap",
+                data = new
+                {
+                    id = uuid
+                }
+            };
+
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string bikeSpeed(string uuidPanel, double speed)
         {
             dynamic payload = new
             {
@@ -140,7 +169,7 @@ namespace RH_Engine
                 {
                     id = uuidPanel,
                     text = "Bike speed placeholder",
-                    position = new int[] { 100, 100 },
+                    position = new int[] { 0, 0 },
                     size = 32.0,
                     color = new int[] { 0, 0, 0, 1 },
                     font = "segoeui"
