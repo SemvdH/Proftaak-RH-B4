@@ -20,6 +20,9 @@ namespace Server
         public void Start()
         {
             listener.Start();
+            Console.WriteLine($"==========================================================================\n" +
+                $"\tstarted accepting clients at {DateTime.Now}\n" +
+                $"==========================================================================");
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
