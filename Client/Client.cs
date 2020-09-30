@@ -27,14 +27,22 @@ namespace Client
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
-
-            initEngine();
         }
 
         private void initEngine()
         {
             engineConnection = EngineConnection.INSTANCE;
+            engineConnection.OnNoTunnelId = retryEngineConnection;
             if (!engineConnection.Connected) engineConnection.Connect();
+        }
+
+        private void retryEngineConnection()
+        {
+            Console.WriteLine("Could not connect to the VR engine. Please make sure you are running the simulation!");
+            Console.WriteLine("Press any key to retry connection");
+            Console.ReadKey();
+
+            engineConnection.CreateConnection();
         }
 
         private void OnConnect(IAsyncResult ar)
