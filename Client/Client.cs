@@ -28,14 +28,14 @@ namespace Client
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
-            initEngine();
+            
 
         }
 
         private void initEngine()
         {
             engineConnection = EngineConnection.INSTANCE;
-            engineConnection.Connect();
+            if (!engineConnection.Connected) engineConnection.Connect();
 
         }
 
@@ -154,7 +154,9 @@ namespace Client
 
             byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
 
+
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+            initEngine();
         }
     }
 }
