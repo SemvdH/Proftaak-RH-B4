@@ -25,11 +25,13 @@ namespace Hardware
         public BLEHandler(IDataReceiver dataReceiver)
         {
             this.dataReceivers = new List<IDataReceiver> { dataReceiver };
+
         }
 
         public BLEHandler(List<IDataReceiver> dataReceivers)
         {
             this.dataReceivers = dataReceivers;
+
         }
 
         public void addDataReceiver(IDataReceiver dataReceiver)
@@ -43,6 +45,7 @@ namespace Hardware
         public void Connect()
         {
             BLE bleBike = new BLE();
+
             Thread.Sleep(1000); // We need some time to list available devices
 
             // List available devices
@@ -170,6 +173,11 @@ namespace Hardware
         /// <param name="percentage">The precentage of resistance to set</param>
         public void setResistance(float percentage)
         {
+            if (!this.Running)
+            {
+                Console.WriteLine("BLE is not running");
+                return;
+            }
             byte[] antMessage = new byte[13];
             antMessage[0] = 0x4A;
             antMessage[1] = 0x09;

@@ -103,21 +103,17 @@ namespace Server
                             {
                                 Console.WriteLine("Log in");
                                 this.username = username;
-                                byte[] response = DataParser.getLoginResponse("OK");
-                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
-                                byte[] startSession = DataParser.getStartSessionJson();
-                                stream.BeginWrite(startSession, 0, startSession.Length, new AsyncCallback(OnWrite), null);
+                                sendMessage(DataParser.getLoginResponse("OK"));
+                                sendMessage(DataParser.getStartSessionJson());
                             }
                             else
                             {
-                                byte[] response = DataParser.getLoginResponse("wrong username or password");
-                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                                sendMessage(DataParser.getLoginResponse("wrong username or password"));
                             }
                         }
                         else
                         {
-                            byte[] response = DataParser.getLoginResponse("invalid json");
-                            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                            sendMessage(DataParser.getLoginResponse("invalid json"));
                         }
                         break;
                     case DataParser.START_SESSION:
@@ -142,6 +138,7 @@ namespace Server
                 else if (payloadbytes.Length == 2)
                 {
                     saveData?.WriteDataRAWBPM(payloadbytes);
+                    sendMessage(DataParser.getSetResistanceJson(50));
                 }
                 else
                 {
@@ -150,6 +147,11 @@ namespace Server
             }
 
 
+        }
+
+        private void sendMessage(byte[] message)
+        {
+            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
         private bool verifyLogin(string username, string password)

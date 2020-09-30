@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProftaakRH
 {
-    interface IHandler
+    public interface IHandler
     {
         void setResistance(float percentage);
     }

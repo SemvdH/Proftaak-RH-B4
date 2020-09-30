@@ -16,6 +16,7 @@ namespace Client
         private int totalBufferReceived = 0;
         private EngineConnection engineConnection;
         private bool sessionRunning = false;
+        private IHandler handler = null;
 
 
         public Client() : this("localhost", 5555)
@@ -102,6 +103,16 @@ namespace Client
                             byte[] stopSession = DataParser.getStopSessionJson();
                             stream.BeginWrite(stopSession, 0, stopSession.Length, new AsyncCallback(OnWrite), null);
                             break;
+                        case DataParser.SET_RESISTANCE:
+                            if (this.handler == null)
+                            {
+                                Console.WriteLine("handler is null");
+                            }
+                            else
+                            {
+                                this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
+                            }
+                            break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                             break;
@@ -173,6 +184,11 @@ namespace Client
 
             initEngine();
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        public void setHandler(IHandler handler)
+        {
+            this.handler = handler;
         }
     }
 }
