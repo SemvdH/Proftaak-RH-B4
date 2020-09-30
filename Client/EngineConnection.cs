@@ -86,7 +86,10 @@ namespace Client
 
             // wait until we have a tunnel id
             while (tunnelId == string.Empty) { }
-            Write("got tunnel id! " + tunnelId);
+            if (tunnelId != null)
+            {
+                Write("got tunnel id! " + tunnelId);
+            }
             mainCommand = new Command(tunnelId);
 
         }
