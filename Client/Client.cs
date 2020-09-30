@@ -158,7 +158,11 @@ namespace Client
             Console.WriteLine("enter password");
             string password = Console.ReadLine();
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
+            string hashUser = Hashing.Hasher.Encrypt(username);
+            string hashPassword = Hashing.Hasher.Encrypt(password);
+            Console.WriteLine("hashed to " + hashUser +  " " + hashPassword);
+
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
 
             initEngine();
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);

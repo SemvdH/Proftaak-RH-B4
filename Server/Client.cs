@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using Client;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace Server
 {
@@ -19,6 +20,7 @@ namespace Server
         private SaveData saveData;
         private string username = null;
         private DateTime sessionStart;
+        private const string fileName = "userInfo.dat";
 
 
 
@@ -125,6 +127,7 @@ namespace Server
                 }
                 Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
+                
                 saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
 
             }
@@ -139,8 +142,47 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
-            return username == password;
+            Console.WriteLine("got hashes " + username + password);
+            Console.WriteLine(Hashing.Hasher.Decrypt(username) + " " + Hashing.Hasher.Decrypt(password));
+            
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine("file doesnt exist");
+                
+                Console.WriteLine("true");
+                return true;
+            } else
+            {
+                string[] usernamesPasswords = File.ReadAllLines(fileName);
+
+                foreach (string s in usernamesPasswords)
+                {
+                    string[] combo = s.Split(";");
+                    if (combo[0] == username)
+                    {
+                        Console.WriteLine("true");
+                        return combo[1] == password;
+                    }
+                }
+
+            }
+            Console.WriteLine("false");
+            return false;
+
         }
+
+        private void newUsers(string username, string password)
+        {
+            File.Create(fileName);
+            using (StreamWriter sw = File.AppendText(fileName))
+            {
+                sw.WriteLine(username + ";" + password);
+            }
+        }
+
+
+
+       
 
         public static string ByteArrayToString(byte[] ba)
         {
