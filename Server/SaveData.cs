@@ -33,7 +33,7 @@ namespace Server
 
         public void WriteDataRAW(string data)
         {
-            using (StreamWriter sw = File.AppendText(this.path + "/raw" + filename + ".txt"))
+            using (StreamWriter sw = File.AppendText(this.path + "/rawFiets" + filename + ".txt"))
             {
                 sw.WriteLine(data);
             }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,25 +14,13 @@ using System.Windows.Shapes;
 namespace DokterApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for UserControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class UserControl : UserControl
     {
-        public MainWindow()
+        public UserControl()
         {
             InitializeComponent();
-        }
-
-        
-
-        private void Login_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }
