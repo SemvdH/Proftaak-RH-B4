@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,9 +18,26 @@ namespace DokterApp
     /// </summary>
     public partial class WindowTabs : Window
     {
+        public TabControl tbControl;
         public WindowTabs()
         {
             InitializeComponent();
+        }
+
+        private void tabControl_Load(object sender, RoutedEventArgs e)
+        {
+            this.tbControl = (sender as TabControl);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TabItem newTabItem = new TabItem
+            {
+                Header = "Test",
+                
+            };
+            newTabItem.Content = new UserControlForTab();
+            this.tbControl.Items.Add(newTabItem);
         }
     }
 }
