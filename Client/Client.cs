@@ -16,6 +16,7 @@ namespace Client
         private int totalBufferReceived = 0;
         private EngineConnection engineConnection;
         private bool sessionRunning = false;
+        private IHandler handler = null;
 
 
         public Client() : this("localhost", 5555)
@@ -94,13 +95,23 @@ namespace Client
                             break;
                         case DataParser.START_SESSION:
                             this.sessionRunning = true;
-                            byte[] startSession = DataParser.getStartSessionJson();
-                            stream.BeginWrite(startSession, 0, startSession.Length, new AsyncCallback(OnWrite), null);
+                            sendMessage(DataParser.getStartSessionJson());
                             break;
                         case DataParser.STOP_SESSION:
                             this.sessionRunning = false;
-                            byte[] stopSession = DataParser.getStopSessionJson();
-                            stream.BeginWrite(stopSession, 0, stopSession.Length, new AsyncCallback(OnWrite), null);
+                            sendMessage(DataParser.getStopSessionJson());
+                            break;
+                        case DataParser.SET_RESISTANCE:
+                            if (this.handler == null)
+                            {
+                                Console.WriteLine("handler is null");
+                                sendMessage(DataParser.getSetResistanceResponseJson(false));
+                            }
+                            else
+                            {
+                                this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
+                                sendMessage(DataParser.getSetResistanceResponseJson(true));
+                            }
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -118,6 +129,11 @@ namespace Client
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
+        }
+
+        private void sendMessage(byte[] message)
+        {
+            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
         private void OnWrite(IAsyncResult ar)
@@ -173,6 +189,11 @@ namespace Client
 
             initEngine();
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        public void setHandler(IHandler handler)
+        {
+            this.handler = handler;
         }
     }
 }

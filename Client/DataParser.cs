@@ -182,9 +182,23 @@ namespace Client
             return getJsonMessage(SET_RESISTANCE, data);
         }
 
+        public static byte[] getSetResistanceResponseJson(bool mWorked)
+        {
+            dynamic data = new
+            {
+                worked = mWorked
+            };
+            return getJsonMessage(SET_RESISTANCE, data);
+        }
+
         public static float getResistanceFromJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.resistance;
+        }
+
+        public static bool getResistanceFromResponseJson(byte[] json)
+        {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.worked;
         }
 
 
