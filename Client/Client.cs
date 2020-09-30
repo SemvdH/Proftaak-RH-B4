@@ -15,6 +15,7 @@ namespace Client
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
         private EngineConnection engineConnection;
+        private bool sessionRunning = false;
 
 
         public Client() : this("localhost", 5555)
@@ -40,7 +41,7 @@ namespace Client
         private void OnConnect(IAsyncResult ar)
         {
             this.client.EndConnect(ar);
-            Console.WriteLine("Verbonden!");
+            Console.WriteLine("TCP client Verbonden!");
 
 
             this.stream = this.client.GetStream();
@@ -91,6 +92,16 @@ namespace Client
                                 tryLogin();
                             }
                             break;
+                        case DataParser.START_SESSION:
+                            this.sessionRunning = true;
+                            byte[] startSession = DataParser.getStartSessionJson();
+                            stream.BeginWrite(startSession, 0, startSession.Length, new AsyncCallback(OnWrite), null);
+                            break;
+                        case DataParser.STOP_SESSION:
+                            this.sessionRunning = false;
+                            byte[] stopSession = DataParser.getStopSessionJson();
+                            stream.BeginWrite(stopSession, 0, stopSession.Length, new AsyncCallback(OnWrite), null);
+                            break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                             break;
@@ -118,6 +129,10 @@ namespace Client
         //maybe move this to other place
         public void BPM(byte[] bytes)
         {
+            if (!sessionRunning)
+            {
+                return;
+            }
             if (bytes == null)
             {
                 throw new ArgumentNullException("no bytes");
@@ -128,6 +143,10 @@ namespace Client
 
         public void Bike(byte[] bytes)
         {
+            if (!sessionRunning)
+            {
+                return;
+            }
             if (bytes == null)
             {
                 throw new ArgumentNullException("no bytes");

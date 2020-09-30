@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
 namespace Client
@@ -10,7 +11,9 @@ namespace Client
     public class DataParser
     {
         public const string LOGIN = "LOGIN";
-        public const string LOGIN_RESPONSE = "LOGIN_RESPONSE";
+        public const string LOGIN_RESPONSE = "LOGIN RESPONSE";
+        public const string START_SESSION = "START SESSION";
+        public const string STOP_SESSION = "STOP SESSION";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
@@ -159,6 +162,21 @@ namespace Client
         public static byte[] getJsonMessage(string message)
         {
             return getJsonMessage(Encoding.ASCII.GetBytes(message));
+        }
+
+        public static byte[] getStartSessionJson()
+        {
+            return getJsonMessage(START_SESSION, null);
+        }
+
+        public static byte[] getStopSessionJson()
+        {
+            return getJsonMessage(STOP_SESSION, null);
+        }
+
+        public static byte[] getSetResistanceJson()
+        {
+            return null;
         }
 
 

@@ -105,7 +105,8 @@ namespace Server
                                 this.username = username;
                                 byte[] response = DataParser.getLoginResponse("OK");
                                 stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
-                                this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + username, sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                                byte[] startSession = DataParser.getStartSessionJson();
+                                stream.BeginWrite(startSession, 0, startSession.Length, new AsyncCallback(OnWrite), null);
                             }
                             else
                             {
@@ -119,6 +120,12 @@ namespace Server
                             stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
                         }
                         break;
+                    case DataParser.START_SESSION:
+                        this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                        break;
+                    case DataParser.STOP_SESSION:
+                        this.saveData = null;
+                        break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
@@ -130,11 +137,11 @@ namespace Server
                 Console.WriteLine(BitConverter.ToString(payloadbytes));
                 if (payloadbytes.Length == 8)
                 {
-                    saveData.WriteDataRAWBike(payloadbytes);
+                    saveData?.WriteDataRAWBike(payloadbytes);
                 }
                 else if (payloadbytes.Length == 2)
                 {
-                    saveData.WriteDataRAWBPM(payloadbytes);
+                    saveData?.WriteDataRAWBPM(payloadbytes);
                 }
                 else
                 {

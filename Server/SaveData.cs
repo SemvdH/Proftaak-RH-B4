@@ -8,11 +8,9 @@ namespace Server
     class SaveData
     {
         private string path;
-        private string filename;
-        public SaveData(string path, string filename)
+        public SaveData(string path)
         {
             this.path = path;
-            this.filename = filename;
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -25,7 +23,7 @@ namespace Server
 
         public void WriteDataJSON(string data)
         {
-            using (StreamWriter sw = File.AppendText(this.path + "/json" + filename + ".txt"))
+            using (StreamWriter sw = File.AppendText(this.path + "/json" + ".txt"))
             {
                 sw.WriteLine(data);
             }
@@ -37,7 +35,7 @@ namespace Server
             {
                 throw new ArgumentException("data should have length of 2");
             }
-            WriteRawData(data, this.path + "/rawBPM" + filename + ".bin");
+            WriteRawData(data, this.path + "/rawBPM" + ".bin");
         }
 
         public void WriteDataRAWBike(byte[] data)
@@ -46,7 +44,7 @@ namespace Server
             {
                 throw new ArgumentException("data should have length of 8");
             }
-            WriteRawData(data, this.path + "/rawBike" + filename + ".bin");
+            WriteRawData(data, this.path + "/rawBike" + ".bin");
         }
 
         private void WriteRawData(byte[] data, string fileLocation)
