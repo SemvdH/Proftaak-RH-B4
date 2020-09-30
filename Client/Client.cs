@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using ProftaakRH;
 
 namespace Client
@@ -28,15 +27,14 @@ namespace Client
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
-            
 
+            initEngine();
         }
 
         private void initEngine()
         {
             engineConnection = EngineConnection.INSTANCE;
             if (!engineConnection.Connected) engineConnection.Connect();
-
         }
 
         private void OnConnect(IAsyncResult ar)
@@ -154,9 +152,8 @@ namespace Client
 
             byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
 
-
-            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
             initEngine();
+            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
     }
 }
