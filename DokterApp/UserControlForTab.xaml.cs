@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace DokterApp
 {
     /// <summary>
-    /// Interaction logic for UserControl.xaml
+    /// Interaction logic for UserControlForTab.xaml
     /// </summary>
-    public partial class UserControl : UserControl
+    public partial class UserControlForTab : UserControl
     {
-        public UserControl()
+        public UserControlForTab()
         {
             InitializeComponent();
         }

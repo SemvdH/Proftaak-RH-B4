@@ -17,11 +17,12 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Orientation="Vertical">
+            <Label Content="Sensei" Margin="0,0,0,20" HorizontalAlignment="Center"/>
             <Label Content="Username" HorizontalContentAlignment="Center"/>
             <TextBox x:Name="Username" TextWrapping="Wrap" Width="120"/>
             <Label Content="Password" HorizontalContentAlignment="Center"/>
             <TextBox x:Name="Password" TextWrapping="Wrap" Width="120"/>
-            <Button x:Name="Login" Content="Login" Margin="0,20,0,0" />
+            <Button x:Name="Login" Content="Login" Margin="0,20,0,0" Click="Login_Click_1" />
         </StackPanel>
 
     </Grid>

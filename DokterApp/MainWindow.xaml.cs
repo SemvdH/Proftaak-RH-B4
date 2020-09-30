@@ -25,16 +25,16 @@ namespace DokterApp
             InitializeComponent();
         }
 
-        
-
-        private void Login_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void Login_Click_1(object sender, RoutedEventArgs e)
+        {
+            WindowTabs windowTabs = new WindowTabs();
+            windowTabs.Show();
+            this.Close();
         }
     }
 }
