@@ -31,7 +31,7 @@ namespace RH_Engine
                 }
                 else
                 {
-                    Console.WriteLine("Starting loop for reading");
+                    Console.WriteLine("[SERVERRESPONSEREADER] Starting loop for reading");
                     while (true)
                     {
                         string res = ReadPrefMessage(Stream);
