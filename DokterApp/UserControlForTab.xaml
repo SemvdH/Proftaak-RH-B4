@@ -6,37 +6,62 @@
              xmlns:local="clr-namespace:DokterApp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Margin="15,5,15,15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="47*"/>
+            <RowDefinition Height="180*"/>
+            <RowDefinition Height="180*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Label"/>
-            <Label Content="Label"/>
+        <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Margin="0,0,0,22">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="Margin" Value="0,0,20,0"/>
+                </Style>
+            </StackPanel.Resources>
+            <Label Content="UserName" Name="Username_Label"/>
+            <Label Content="Status: " Name="Status_Label"/>
         </StackPanel>
-        <StackPanel Grid.Row="1">
-            <StackPanel Orientation="Horizontal" Height="50">
-                <Label Content="Label"/>
-                <Label Content="Label"/>
-                <Label Content="Label"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="50">
-                <TextBox Text="TextBox" TextWrapping="Wrap" Width="120"/>
-                <TextBox Text="TextBox" TextWrapping="Wrap" Width="120"/>
-                <TextBox Text="TextBox" TextWrapping="Wrap" Width="120"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="50">
-                <Label Content="Label"/>
-                <Label Content="Label"/>
-                <Label Content="Label"/>
-            </StackPanel>
+        <StackPanel Margin="0,10,0,0" Grid.RowSpan="2" Grid.Row="1">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="Margin" Value="0,20,0,0"/>
+                </Style>
+            </StackPanel.Resources>
+            <DockPanel Height="26" LastChildFill="False" HorizontalAlignment="Stretch">
+                <Label Content="Resistance" Width="110" DockPanel.Dock="Right"/>
+                <Label Content="Current Speed" Width="110" DockPanel.Dock="Left"/>
+                <Label Content="Current BPM" Width="110" DockPanel.Dock="Top"/>
+            </DockPanel>
+            <DockPanel Height="26" LastChildFill="False" HorizontalAlignment="Stretch">
+                <TextBox Name="textBox_Resistance" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentSpeed" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentBPM" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
+            </DockPanel>
+            <DockPanel Height="26" LastChildFill="False">
+                <Label Content="Distance Covered" Width="110" DockPanel.Dock="Right"/>
+                <Label Content="Current Power" Width="110" DockPanel.Dock="Left"/>
+                <Label Content="Acc. Power" Width="110" DockPanel.Dock="Top"/>
+            </DockPanel>
+            <DockPanel Height="26" LastChildFill="False">
+                <TextBox Name="textBox_DistanceCovered" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentPower" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
+                <TextBox Name="textBox_AccPower" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
+            </DockPanel>
         </StackPanel>
-
+        <ListBox Name="ChatBox"  Grid.Column="1" Margin="59,41,0,0" SelectionChanged="ListBox_SelectionChanged" Grid.RowSpan="3"/>
+        <TextBox Name="textBox_Chat" Grid.Column="1" HorizontalAlignment="Left" Margin="59,10,0,0" Grid.Row="3" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
+        <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Click="StartSession_Click"/>
+        <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Click="StopSession_Click"/>
+        <TextBox x:Name="textBox_SetResistance" Grid.Column="1" HorizontalAlignment="Left" Margin="69,128,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Width="97"/>
+        <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18" Click="SetResistance_Click"/>
+        <Canvas Grid.Row="3" Background="White" Margin="0,33,0,0"/>
+        <ComboBox Name="DropBox" HorizontalAlignment="Left" Margin="0,6,0,0" Grid.Row="3" VerticalAlignment="Top" Width="190"/>
+        <Button Content="Client Info" Grid.Column="1" HorizontalAlignment="Left" Margin="207,6,0,0" VerticalAlignment="Top" Height="26" Width="82" Click="ClientInfo_Click"/>
     </Grid>
 </UserControl>

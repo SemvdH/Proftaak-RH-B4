@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokterApp"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="WindowTabs" Height="450" Width="800">
     <Grid>
-        <TabControl x:Name="tabControl" Loaded="tabControl_Load">
-        </TabControl>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="400,76,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <TabControl x:Name="tabControl" Loaded="tabControl_Load" TabStripPlacement="Left" Margin="0,23,0,0" />
+        <Button Content="Button" HorizontalAlignment="Left" Margin="578,125,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

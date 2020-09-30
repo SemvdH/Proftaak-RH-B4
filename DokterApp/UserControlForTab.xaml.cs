@@ -21,6 +21,38 @@ namespace DokterApp
         public UserControlForTab()
         {
             InitializeComponent();
+            Username_Label.Content = "Bob";
+            Status_Label.Content = "Status: Dead";
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ChatBox.Items.Add(textBox_Chat.Text);
+        }
+
+        private void StartSession_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StopSession_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SetResistance_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ClientInfo_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("firstname:\tBob\n" +
+                "surname:\t\tde Bouwer");
         }
 
     }

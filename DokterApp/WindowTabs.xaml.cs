@@ -34,7 +34,8 @@ namespace DokterApp
             TabItem newTabItem = new TabItem
             {
                 Header = "Test",
-                
+                Width = 110,
+                Height = 40
             };
             newTabItem.Content = new UserControlForTab();
             this.tbControl.Items.Add(newTabItem);
