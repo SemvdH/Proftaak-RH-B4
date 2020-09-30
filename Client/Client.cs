@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using ProftaakRH;
 
 namespace Client
@@ -27,7 +28,12 @@ namespace Client
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
+            initEngine();
 
+        }
+
+        private void initEngine()
+        {
             engineConnection = EngineConnection.INSTANCE;
             engineConnection.Connect();
 

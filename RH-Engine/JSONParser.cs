@@ -36,7 +36,7 @@ namespace RH_Engine
                 {
                     if (d.clientinfo.host == pc.host && d.clientinfo.user == pc.user)
                     {
-                        Console.WriteLine("connecting to {0}, on {1} with id {2}", pc.user, pc.host, d.id);
+                        Console.WriteLine("[JSONPARSER] connecting to {0}, on {1} with id {2}", pc.user, pc.host, d.id);
                         return d.id;
                     }
                 }
