@@ -7,7 +7,7 @@ namespace RH_Engine
 {
     public delegate void OnResponse(string response);
 
-    class ServerResponseReader
+    public class ServerResponseReader
     {
         public OnResponse callback
         {
