@@ -122,6 +122,11 @@ namespace Server
                     case DataParser.STOP_SESSION:
                         this.saveData = null;
                         break;
+                    case DataParser.SET_RESISTANCE:
+                        worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        Console.WriteLine($"set resistance worked is " + worked);
+                        //set resistance on doctor GUI
+                        break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
@@ -138,7 +143,6 @@ namespace Server
                 else if (payloadbytes.Length == 2)
                 {
                     saveData?.WriteDataRAWBPM(payloadbytes);
-                    sendMessage(DataParser.getSetResistanceJson(50));
                 }
                 else
                 {
