@@ -34,6 +34,7 @@ namespace Client
         private static NetworkStream stream;
 
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
+        private Command mainCommand;
 
         public bool Connected = false;
 
@@ -84,6 +85,7 @@ namespace Client
             // wait until we have a tunnel id
             while (tunnelId == string.Empty) { }
             Write("got tunnel id! " + tunnelId);
+            mainCommand = new Command(tunnelId);
 
         }
         /// <summary>
