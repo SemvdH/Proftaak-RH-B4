@@ -14,6 +14,7 @@ namespace Client
         private bool connected;
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
+        private EngineConnection engineConnection;
 
 
         public Client() : this("localhost", 5555)
@@ -26,6 +27,10 @@ namespace Client
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
+
+            engineConnection = EngineConnection.INSTANCE;
+            engineConnection.Connect();
+
         }
 
         private void OnConnect(IAsyncResult ar)
