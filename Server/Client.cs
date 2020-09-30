@@ -129,8 +129,19 @@ namespace Server
             }
             else if (DataParser.isRawData(message))
             {
-                Console.WriteLine(BitConverter.ToString(message));
-                saveData.WriteDataRAW(message);
+                Console.WriteLine(BitConverter.ToString(payloadbytes));
+                if (payloadbytes.Length == 8)
+                {
+                    saveData.WriteDataRAWBike(payloadbytes);
+                }
+                else if (payloadbytes.Length == 2)
+                {
+                    saveData.WriteDataRAWBPM(payloadbytes);
+                }
+                else
+                {
+                    Console.WriteLine("received raw data with weird lenght " + BitConverter.ToString(payloadbytes));
+                }
             }
 
 

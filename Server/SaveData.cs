@@ -31,22 +31,41 @@ namespace Server
             }
         }
 
-        public void WriteDataRAW(byte[] data)
+        public void WriteDataRAWBPM(byte[] data)
         {
             int length = 0;
             try
             {
-                FileInfo fi = new FileInfo(this.path + "/raw" + filename + ".bin");
+                FileInfo fi = new FileInfo(this.path + "/rawBPM" + filename + ".bin");
                 length = (int)fi.Length;
             }
             catch
             {
-
+                // do nothing
             }
-            using (BinaryWriter sw = new BinaryWriter(File.Open(this.path + "/raw" + filename + ".bin", FileMode.Create)))
+            using (BinaryWriter sw = new BinaryWriter(File.Open(this.path + "/rawBPM" + filename + ".bin", FileMode.Create)))
             {
+                sw.Seek(length, SeekOrigin.End);
+                sw.Write(data);
+                sw.Flush();
+            }
+        }
 
-                Console.WriteLine("head position " + sw.Seek(length, SeekOrigin.End));
+        public void WriteDataRAWBike(byte[] data)
+        {
+            int length = 0;
+            try
+            {
+                FileInfo fi = new FileInfo(this.path + "/rawBike" + filename + ".bin");
+                length = (int)fi.Length;
+            }
+            catch
+            {
+                // do nothing
+            }
+            using (BinaryWriter sw = new BinaryWriter(File.Open(this.path + "/rawBike" + filename + ".bin", FileMode.Create)))
+            {
+                sw.Seek(length, SeekOrigin.End);
                 sw.Write(data);
                 sw.Flush();
             }
