@@ -123,7 +123,6 @@ namespace Server
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
                 }
-                Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
                 saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
 
@@ -131,7 +130,7 @@ namespace Server
             else if (DataParser.isRawData(message))
             {
                 Console.WriteLine(BitConverter.ToString(message));
-                saveData.WriteDataRAW(ByteArrayToString(message));
+                saveData.WriteDataRAW(message);
             }
 
 

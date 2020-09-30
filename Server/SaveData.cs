@@ -22,20 +22,33 @@ namespace Server
         /// <summary>
         ///  Every line is a new data entry
         /// </summary>
-       
+
         public void WriteDataJSON(string data)
         {
-            using (StreamWriter sw = File.AppendText(this.path + "/json"+filename+".txt"))
+            using (StreamWriter sw = File.AppendText(this.path + "/json" + filename + ".txt"))
             {
                 sw.WriteLine(data);
             }
         }
 
-        public void WriteDataRAW(string data)
+        public void WriteDataRAW(byte[] data)
         {
-            using (StreamWriter sw = File.AppendText(this.path + "/raw" + filename + ".txt"))
+            int length = 0;
+            try
             {
-                sw.WriteLine(data);
+                FileInfo fi = new FileInfo(this.path + "/raw" + filename + ".bin");
+                length = (int)fi.Length;
+            }
+            catch
+            {
+
+            }
+            using (BinaryWriter sw = new BinaryWriter(File.Open(this.path + "/raw" + filename + ".bin", FileMode.Create)))
+            {
+
+                Console.WriteLine("head position " + sw.Seek(length, SeekOrigin.End));
+                sw.Write(data);
+                sw.Flush();
             }
         }
     }
