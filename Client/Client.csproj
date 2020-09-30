@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Message\Message.csproj" />
     <ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
+    <ProjectReference Include="..\RH-Engine\RH-Engine.csproj" />
   </ItemGroup>
 
 </Project>

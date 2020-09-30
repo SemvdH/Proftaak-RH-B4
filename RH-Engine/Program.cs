@@ -10,7 +10,7 @@ namespace RH_Engine
 {
     public delegate void HandleSerial(string message);
 
-    class Program
+    public class Program
     {
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
@@ -161,23 +161,6 @@ namespace RH_Engine
                 });
 
             Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
-
-            //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
-            //WriteTextMessage(stream, command);
-
-            //command = mainCommand.addPanel();
-            //  WriteTextMessage(stream, command);
-            //  string response = ReadPrefMessage(stream);
-            //  Console.WriteLine("add Panel response: \n\r" + response);
-            //  string uuidPanel = JSONParser.getPanelID(response);
-            //  WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
-            //  Console.WriteLine(ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel, 2.42));
-            //  Console.WriteLine(ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.ColorPanel(uuidPanel));
-            //  Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
-            //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
         }
 
         /// <summary>

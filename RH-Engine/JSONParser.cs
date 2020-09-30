@@ -3,7 +3,7 @@ using System;
 
 namespace RH_Engine
 {
-    class JSONParser
+    public class JSONParser
     {
         /// <summary>
         /// returns all the users from the given response
