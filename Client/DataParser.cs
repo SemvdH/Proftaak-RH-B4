@@ -14,6 +14,7 @@ namespace Client
         public const string LOGIN_RESPONSE = "LOGIN RESPONSE";
         public const string START_SESSION = "START SESSION";
         public const string STOP_SESSION = "STOP SESSION";
+        public const string SET_RESISTANCE = "SET RESISTANCE";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
@@ -58,6 +59,15 @@ namespace Client
             {
                 identifier = mIdentifier,
                 data
+            };
+            return getMessage(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json)), 0x01);
+        }
+
+        private static byte[] getJsonMessage(string mIdentifier)
+        {
+            dynamic json = new
+            {
+                identifier = mIdentifier,
             };
             return getMessage(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json)), 0x01);
         }
@@ -153,30 +163,28 @@ namespace Client
             return getMessage(payload, 0x01);
         }
 
-        /// <summary>
-        /// constructs a message with the message and clientId
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="clientId"></param>
-        /// <returns>the message ready for sending</returns>
-        public static byte[] getJsonMessage(string message)
-        {
-            return getJsonMessage(Encoding.ASCII.GetBytes(message));
-        }
-
         public static byte[] getStartSessionJson()
         {
-            return getJsonMessage(START_SESSION, null);
+            return getJsonMessage(START_SESSION);
         }
 
         public static byte[] getStopSessionJson()
         {
-            return getJsonMessage(STOP_SESSION, null);
+            return getJsonMessage(STOP_SESSION);
         }
 
-        public static byte[] getSetResistanceJson()
+        public static byte[] getSetResistanceJson(float mResistance)
         {
-            return null;
+            dynamic data = new
+            {
+                resistance = mResistance
+            };
+            return getJsonMessage(SET_RESISTANCE, data);
+        }
+
+        public static float getResistanceFromJson(byte[] json)
+        {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.resistance;
         }
 
 
