@@ -123,15 +123,23 @@ namespace Server
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
                 }
-                Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
-                dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
-                saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
-
+                saveData?.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
             }
             else if (DataParser.isRawData(message))
             {
-                Console.WriteLine(BitConverter.ToString(message));
-                saveData.WriteDataRAW(ByteArrayToString(message));
+                Console.WriteLine(BitConverter.ToString(payloadbytes));
+                if (payloadbytes.Length == 8)
+                {
+                    saveData.WriteDataRAWBike(payloadbytes);
+                }
+                else if (payloadbytes.Length == 2)
+                {
+                    saveData.WriteDataRAWBPM(payloadbytes);
+                }
+                else
+                {
+                    Console.WriteLine("received raw data with weird lenght " + BitConverter.ToString(payloadbytes));
+                }
             }
 
 
