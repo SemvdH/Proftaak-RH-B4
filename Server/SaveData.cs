@@ -33,17 +33,35 @@ namespace Server
 
         public void WriteDataRAWBPM(byte[] data)
         {
+            if (data.Length != 2)
+            {
+                throw new ArgumentException("data should have length of 2");
+            }
+            WriteRawData(data, this.path + "/rawBPM" + filename + ".bin");
+        }
+
+        public void WriteDataRAWBike(byte[] data)
+        {
+            if (data.Length != 8)
+            {
+                throw new ArgumentException("data should have length of 8");
+            }
+            WriteRawData(data, this.path + "/rawBike" + filename + ".bin");
+        }
+
+        private void WriteRawData(byte[] data, string fileLocation)
+        {
             int length = 0;
             try
             {
-                FileInfo fi = new FileInfo(this.path + "/rawBPM" + filename + ".bin");
+                FileInfo fi = new FileInfo(fileLocation);
                 length = (int)fi.Length;
             }
             catch
             {
                 // do nothing
             }
-            using (BinaryWriter sw = new BinaryWriter(File.Open(this.path + "/rawBPM" + filename + ".bin", FileMode.Create)))
+            using (BinaryWriter sw = new BinaryWriter(File.Open(fileLocation, FileMode.Create)))
             {
                 sw.Seek(length, SeekOrigin.End);
                 sw.Write(data);
@@ -51,24 +69,6 @@ namespace Server
             }
         }
 
-        public void WriteDataRAWBike(byte[] data)
-        {
-            int length = 0;
-            try
-            {
-                FileInfo fi = new FileInfo(this.path + "/rawBike" + filename + ".bin");
-                length = (int)fi.Length;
-            }
-            catch
-            {
-                // do nothing
-            }
-            using (BinaryWriter sw = new BinaryWriter(File.Open(this.path + "/rawBike" + filename + ".bin", FileMode.Create)))
-            {
-                sw.Seek(length, SeekOrigin.End);
-                sw.Write(data);
-                sw.Flush();
-            }
-        }
+
     }
 }
