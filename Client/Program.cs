@@ -1,7 +1,6 @@
 ﻿using System;
 using Hardware;
 using Hardware.Simulators;
-using RH_Engine;
 
 namespace Client
 {
@@ -20,13 +19,18 @@ namespace Client
             {
 
             }
-            //BLEHandler bLEHandler = new BLEHandler(client);
+            BLEHandler bLEHandler = new BLEHandler(client);
 
-            //bLEHandler.Connect();
+            bLEHandler.Connect();
 
-            BikeSimulator bikeSimulator = new BikeSimulator(client);
+            client.setHandler(bLEHandler);
 
-            bikeSimulator.StartSimulation();
+
+            //BikeSimulator bikeSimulator = new BikeSimulator(client);
+
+            //bikeSimulator.StartSimulation();
+
+            //client.setHandler(bikeSimulator);
 
             while (true)
             {

@@ -15,6 +15,8 @@ namespace Client
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
         private EngineConnection engineConnection;
+        private bool sessionRunning = false;
+        private IHandler handler = null;
 
 
         public Client() : this("localhost", 5555)
@@ -48,7 +50,7 @@ namespace Client
         private void OnConnect(IAsyncResult ar)
         {
             this.client.EndConnect(ar);
-            Console.WriteLine("Verbonden!");
+            Console.WriteLine("TCP client Verbonden!");
 
 
             this.stream = this.client.GetStream();
@@ -100,6 +102,26 @@ namespace Client
                                 tryLogin();
                             }
                             break;
+                        case DataParser.START_SESSION:
+                            this.sessionRunning = true;
+                            sendMessage(DataParser.getStartSessionJson());
+                            break;
+                        case DataParser.STOP_SESSION:
+                            this.sessionRunning = false;
+                            sendMessage(DataParser.getStopSessionJson());
+                            break;
+                        case DataParser.SET_RESISTANCE:
+                            if (this.handler == null)
+                            {
+                                Console.WriteLine("handler is null");
+                                sendMessage(DataParser.getSetResistanceResponseJson(false));
+                            }
+                            else
+                            {
+                                this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
+                                sendMessage(DataParser.getSetResistanceResponseJson(true));
+                            }
+                            break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                             break;
@@ -118,6 +140,11 @@ namespace Client
 
         }
 
+        private void sendMessage(byte[] message)
+        {
+            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
         private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
@@ -127,6 +154,10 @@ namespace Client
         //maybe move this to other place
         public void BPM(byte[] bytes)
         {
+            if (!sessionRunning)
+            {
+                return;
+            }
             if (bytes == null)
             {
                 throw new ArgumentNullException("no bytes");
@@ -137,6 +168,10 @@ namespace Client
 
         public void Bike(byte[] bytes)
         {
+            if (!sessionRunning)
+            {
+                return;
+            }
             if (bytes == null)
             {
                 throw new ArgumentNullException("no bytes");
@@ -166,6 +201,11 @@ namespace Client
 
            
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        public void setHandler(IHandler handler)
+        {
+            this.handler = handler;
         }
     }
 }

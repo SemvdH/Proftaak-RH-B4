@@ -103,38 +103,59 @@ namespace Server
                             {
                                 Console.WriteLine("Log in");
                                 this.username = username;
-                                byte[] response = DataParser.getLoginResponse("OK");
-                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
-                                this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + username, sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                                sendMessage(DataParser.getLoginResponse("OK"));
+                                sendMessage(DataParser.getStartSessionJson());
                             }
                             else
                             {
-                                byte[] response = DataParser.getLoginResponse("wrong username or password");
-                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                                sendMessage(DataParser.getLoginResponse("wrong username or password"));
                             }
                         }
                         else
                         {
-                            byte[] response = DataParser.getLoginResponse("invalid json");
-                            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                            sendMessage(DataParser.getLoginResponse("invalid json"));
                         }
+                        break;
+                    case DataParser.START_SESSION:
+                        this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                        break;
+                    case DataParser.STOP_SESSION:
+                        this.saveData = null;
+                        break;
+                    case DataParser.SET_RESISTANCE:
+                        worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        Console.WriteLine($"set resistance worked is " + worked);
+                        //set resistance on doctor GUI
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
                 }
-                Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
-                dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
-                saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
-
+                saveData?.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
             }
             else if (DataParser.isRawData(message))
             {
-                Console.WriteLine(BitConverter.ToString(message));
-                saveData.WriteDataRAW(ByteArrayToString(message));
+                Console.WriteLine(BitConverter.ToString(payloadbytes));
+                if (payloadbytes.Length == 8)
+                {
+                    saveData?.WriteDataRAWBike(payloadbytes);
+                }
+                else if (payloadbytes.Length == 2)
+                {
+                    saveData?.WriteDataRAWBPM(payloadbytes);
+                }
+                else
+                {
+                    Console.WriteLine("received raw data with weird lenght " + BitConverter.ToString(payloadbytes));
+                }
             }
 
 
+        }
+
+        private void sendMessage(byte[] message)
+        {
+            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
         private bool verifyLogin(string username, string password)
