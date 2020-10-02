@@ -21,6 +21,7 @@ namespace Server
         private string username = null;
         private DateTime sessionStart;
         private string fileName;
+        private int temp;
 
 
 
@@ -150,6 +151,12 @@ namespace Server
                 else if (payloadbytes.Length == 2)
                 {
                     saveData?.WriteDataRAWBPM(payloadbytes);
+                    temp++;
+                    if (temp > 50)
+                    {
+                        Console.WriteLine(BitConverter.ToString(this.saveData?.getBPMgraphData(100, 1)));
+                        temp = 0;
+                    }
                 }
                 else
                 {

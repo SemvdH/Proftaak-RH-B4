@@ -86,6 +86,7 @@ namespace Server
             {
                 FileInfo fi = new FileInfo(this.path + rawBPMFilename);
                 int length = (int)fi.Length;
+                Console.WriteLine("length " + length);
 
                 byte[] output = new byte[outputSize];
 
@@ -95,13 +96,14 @@ namespace Server
 
                 using (FileStream fileStream = new FileStream(this.path + rawBPMFilename, FileMode.Open, FileAccess.Read))
                 {
-                    for (int i = 1; i >= outputSize; i++)
+                    for (int i = 1; i <= outputSize; i++)
                     {
                         if (length - (i * readSize) < 0)
                         {
                             break;
                         }
-                        fileStream.Read(readBuffer, length - (i * readSize), readSize);
+                        Console.WriteLine("reading " + (length - (i * readSize) - 1) + " and size " + readSize);
+                        fileStream.Read(readBuffer, length - (i * readSize) - 1, readSize);
 
                         //handling data
                         int total = 0;
