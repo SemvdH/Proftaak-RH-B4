@@ -29,14 +29,22 @@ namespace Client
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
-
-            initEngine();
         }
 
         private void initEngine()
         {
             engineConnection = EngineConnection.INSTANCE;
+            engineConnection.OnNoTunnelId = retryEngineConnection;
             if (!engineConnection.Connected) engineConnection.Connect();
+        }
+
+        private void retryEngineConnection()
+        {
+            Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
+            Console.WriteLine("-- Press any key to retry connecting to the VR engine.");
+            Console.ReadKey();
+
+            engineConnection.CreateConnection();
         }
 
         private void OnConnect(IAsyncResult ar)
@@ -86,6 +94,7 @@ namespace Client
                             if (responseStatus == "OK")
                             {
                                 this.connected = true;
+                                initEngine();
                             }
                             else
                             {
@@ -185,9 +194,12 @@ namespace Client
             Console.WriteLine("enter password");
             string password = Console.ReadLine();
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
+            string hashUser = Hashing.Hasher.HashString(username);
+            string hashPassword = Hashing.Hasher.HashString(password);
 
-            initEngine();
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
+
+           
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 

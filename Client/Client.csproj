@@ -15,4 +15,6 @@
     <ProjectReference Include="..\RH-Engine\RH-Engine.csproj" />
   </ItemGroup>
 
+  <Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
+
 </Project>

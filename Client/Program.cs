@@ -1,6 +1,9 @@
 ﻿using System;
 using Hardware;
 using Hardware.Simulators;
+using RH_Engine;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Client
 {
@@ -10,7 +13,6 @@ namespace Client
         {
             Console.WriteLine("Hello World!");
             //connect fiets?
-
 
             Client client = new Client();
 
