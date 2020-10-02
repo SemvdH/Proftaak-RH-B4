@@ -20,7 +20,7 @@ namespace Server
         private SaveData saveData;
         private string username = null;
         private DateTime sessionStart;
-        private const string fileName = "userInfo.dat";
+        private string fileName;
 
 
 
@@ -32,6 +32,7 @@ namespace Server
             this.communication = communication;
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
+            this.fileName = Directory.GetCurrentDirectory() + "/userInfo.dat";
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
@@ -137,7 +138,7 @@ namespace Server
 
                 Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
-                
+
             }
             else if (DataParser.isRawData(message))
             {
@@ -167,8 +168,8 @@ namespace Server
         private bool verifyLogin(string username, string password)
         {
             Console.WriteLine("got hashes " + username + "\n" + password);
-            
-            
+
+
             if (!File.Exists(fileName))
             {
                 File.Create(fileName);
@@ -176,7 +177,8 @@ namespace Server
                 newUsers(username, password);
                 Console.WriteLine("true");
                 return true;
-            } else
+            }
+            else
             {
                 Console.WriteLine("file exists, located at " + Path.GetFullPath(fileName));
                 string[] usernamesPasswords = File.ReadAllLines(fileName);
@@ -206,7 +208,7 @@ namespace Server
 
         private void newUsers(string username, string password)
         {
-            
+
             Console.WriteLine("creating new entry in file");
             using (StreamWriter sw = File.AppendText(fileName))
             {
@@ -216,7 +218,7 @@ namespace Server
 
 
 
-       
+
 
         public static string ByteArrayToString(byte[] ba)
         {
