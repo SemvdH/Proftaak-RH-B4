@@ -7,20 +7,22 @@ using System.Net.Sockets;
 namespace Client
 {
     public delegate void HandleSerial(string message);
+    public delegate void HandleNoTunnelId();
 
     public sealed class EngineConnection
     {
         private static EngineConnection instance = null;
         private static readonly object padlock = new object();
+        public HandleNoTunnelId OnNoTunnelId;
 
 
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
-            new PC("HP-ZBOOK-SEM", "Sem"),
+            new PC("HP-ZBOOK-SEM", "Sem")
             //new PC("DESKTOP-TV73FKO", "Wouter"),
-            new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
+            //new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
         };
 
@@ -62,6 +64,7 @@ namespace Client
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
             stream = client.GetStream();
+            initReader();
             CreateConnection();
         }
 
@@ -69,9 +72,8 @@ namespace Client
         /// connects to the server and creates the tunnel
         /// </summary>
         /// <param name="stream">the network stream to use</param>
-        private void CreateConnection()
+        public void CreateConnection()
         {
-            initReader();
 
             WriteTextMessage( "{\r\n\"id\" : \"session/list\",\r\n\"serial\" : \"list\"\r\n}");
 
@@ -84,7 +86,10 @@ namespace Client
 
             // wait until we have a tunnel id
             while (tunnelId == string.Empty) { }
-            Write("got tunnel id! " + tunnelId);
+            if (tunnelId != null)
+            {
+                Write("got tunnel id! " + tunnelId);
+            }
             mainCommand = new Command(tunnelId);
 
         }
@@ -119,6 +124,8 @@ namespace Client
                 if (tunnelId == null)
                 {
                     Write("could not find a valid tunnel id!");
+                    OnNoTunnelId?.Invoke();
+                    Connected = false;
                     return;
                 }
             }
@@ -160,7 +167,7 @@ namespace Client
 
             stream.Write(res);
 
-            Write("sent message " + message);
+            //Write("sent message " + message);
         }
         public void Write(string msg)
         {
