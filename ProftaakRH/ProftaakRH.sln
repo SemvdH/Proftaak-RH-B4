@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "..\Client\Client.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message", "..\Message\Message.csproj", "{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokterApp", "..\DokterApp\DokterApp.csproj", "{B150F08B-13DA-4D17-BD96-7E89F52727C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DokterApp", "..\DokterApp\DokterApp.csproj", "{B150F08B-13DA-4D17-BD96-7E89F52727C6}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hashing", "..\Hashing\Hashing.shproj", "{70277749-D423-4871-B692-2EFC5A6ED932}"
 EndProject
