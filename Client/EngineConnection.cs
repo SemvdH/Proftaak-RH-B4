@@ -167,7 +167,7 @@ namespace Client
 
             stream.Write(res);
 
-            Write("sent message " + message);
+            //Write("sent message " + message);
         }
         public void Write(string msg)
         {

@@ -38,8 +38,8 @@ namespace Client
 
         private void retryEngineConnection()
         {
-            Console.WriteLine("Could not connect to the VR engine. Please make sure you are running the simulation!");
-            Console.WriteLine("Press any key to retry connection");
+            Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
+            Console.WriteLine("-- Press any key to retry connecting to the VR engine.");
             Console.ReadKey();
 
             engineConnection.CreateConnection();
@@ -92,6 +92,7 @@ namespace Client
                             if (responseStatus == "OK")
                             {
                                 this.connected = true;
+                                initEngine();
                             }
                             else
                             {
@@ -158,13 +159,12 @@ namespace Client
             Console.WriteLine("enter password");
             string password = Console.ReadLine();
 
-            string hashUser = Hashing.Hasher.Encrypt(username);
-            string hashPassword = Hashing.Hasher.Encrypt(password);
-            Console.WriteLine("hashed to " + hashUser +  " " + hashPassword);
+            string hashUser = Hashing.Hasher.HashString(username);
+            string hashPassword = Hashing.Hasher.HashString(password);
 
             byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
 
-            initEngine();
+           
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
     }

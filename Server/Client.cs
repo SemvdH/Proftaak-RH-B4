@@ -128,7 +128,7 @@ namespace Server
                 Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
                 
-                saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
+                //saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
 
             }
             else if (DataParser.isRawData(message))
@@ -142,28 +142,37 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
-            Console.WriteLine("got hashes " + username + password);
-            Console.WriteLine(Hashing.Hasher.Decrypt(username) + " " + Hashing.Hasher.Decrypt(password));
+            Console.WriteLine("got hashes " + username + "\n" + password);
+            
             
             if (!File.Exists(fileName))
             {
+                File.Create(fileName);
                 Console.WriteLine("file doesnt exist");
-                
+                newUsers(username, password);
                 Console.WriteLine("true");
                 return true;
             } else
             {
+                Console.WriteLine("file exists, located at " + Path.GetFullPath(fileName));
                 string[] usernamesPasswords = File.ReadAllLines(fileName);
+                if (usernamesPasswords.Length == 0)
+                {
+                    newUsers(username, password);
+                    return true;
+                }
 
                 foreach (string s in usernamesPasswords)
                 {
-                    string[] combo = s.Split(";");
+                    string[] combo = s.Split(" ");
                     if (combo[0] == username)
                     {
-                        Console.WriteLine("true");
+                        Console.WriteLine("correct info");
                         return combo[1] == password;
                     }
+
                 }
+                Console.WriteLine("combo was not found in file");
 
             }
             Console.WriteLine("false");
@@ -173,10 +182,11 @@ namespace Server
 
         private void newUsers(string username, string password)
         {
-            File.Create(fileName);
+            
+            Console.WriteLine("creating new entry in file");
             using (StreamWriter sw = File.AppendText(fileName))
             {
-                sw.WriteLine(username + ";" + password);
+                sw.WriteLine(username + " " + password);
             }
         }
 
