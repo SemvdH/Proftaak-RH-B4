@@ -13,4 +13,6 @@
 		<ProjectReference Include="..\Client\Client.csproj" />
 	</ItemGroup>
 
+	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
+
 </Project>

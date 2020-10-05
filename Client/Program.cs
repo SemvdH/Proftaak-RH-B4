@@ -1,6 +1,9 @@
 ﻿using System;
 using Hardware;
 using Hardware.Simulators;
+using RH_Engine;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Client
 {
@@ -11,7 +14,6 @@ namespace Client
             Console.WriteLine("Hello World!");
             //connect fiets?
 
-
             Client client = new Client();
 
 
@@ -19,13 +21,18 @@ namespace Client
             {
 
             }
-            //BLEHandler bLEHandler = new BLEHandler(client);
+            BLEHandler bLEHandler = new BLEHandler(client);
 
-            //bLEHandler.Connect();
+            bLEHandler.Connect();
 
-            BikeSimulator bikeSimulator = new BikeSimulator(client);
+            client.setHandler(bLEHandler);
 
-            bikeSimulator.StartSimulation();
+
+            //BikeSimulator bikeSimulator = new BikeSimulator(client);
+
+            //bikeSimulator.StartSimulation();
+
+            //client.setHandler(bikeSimulator);
 
             while (true)
             {
