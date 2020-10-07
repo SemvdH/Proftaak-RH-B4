@@ -208,6 +208,14 @@ namespace Client
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
+
+            if (engineConnection.Connected && engineConnection.FollowingRoute)
+            {
+                engineConnection.BikeBPM = bytes[1];
+                engineConnection.UpdateInfoPanel();
+            }
+
+
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
@@ -226,6 +234,19 @@ namespace Client
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
+            switch (bytes[0])
+            {
+                case 0x10:
+                    
+                    engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
+                    break;
+                case 0x19:
+                    engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+                    break;
+            }
+            if (engineConnection.Connected && engineConnection.FollowingRoute)
+                engineConnection.UpdateInfoPanel();
+
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 

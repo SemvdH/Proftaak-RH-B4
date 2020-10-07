@@ -424,6 +424,20 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
+        public string RouteSpeed(float speedValue,string nodeID)
+        {
+            dynamic payload = new
+            {
+                id = "route/follow/speed",
+                data = new
+                {
+                    node = nodeID,
+                    speed = speedValue
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
         public string RoadCommand(string uuid_route)
         {
             Console.WriteLine("road");
