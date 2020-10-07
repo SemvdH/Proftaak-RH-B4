@@ -154,7 +154,7 @@ namespace Server
                     temp++;
                     if (temp > 50)
                     {
-                        Console.WriteLine(BitConverter.ToString(this.saveData?.getBPMgraphData(100, 1)));
+                        Console.WriteLine(BitConverter.ToString(this.saveData?.getBPMgraphData(10, 2)));
                         temp = 0;
                     }
                 }
