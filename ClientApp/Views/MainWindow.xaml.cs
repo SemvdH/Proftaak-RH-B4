@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClientApp.Utils;
+using Hardware.Simulators;
+using Client;
 
 namespace ClientApp
 {
@@ -25,6 +28,24 @@ namespace ClientApp
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
+
+            Client client = new Client();
+            while (!client.IsConnected())
+            {
+
+            }
+            //BLEHandler bLEHandler = new BLEHandler(client);
+
+            //bLEHandler.Connect();
+
+            //client.setHandler(bLEHandler);
+
+
+            BikeSimulator bikeSimulator = new BikeSimulator(client);
+
+            bikeSimulator.StartSimulation();
+
+            client.setHandler(bikeSimulator);
         }
     }
 }
