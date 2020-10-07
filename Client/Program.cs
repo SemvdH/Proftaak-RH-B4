@@ -4,6 +4,7 @@ using Hardware.Simulators;
 using RH_Engine;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
 namespace Client
 {
@@ -14,6 +15,7 @@ namespace Client
             Console.WriteLine("Hello World!");
             //connect fiets?
 
+            Thread.Sleep(20000);
             Client client = new Client();
 
 

@@ -18,10 +18,12 @@ namespace DokterApp
         private IHandler handler = null;
         private string username;
         private string password;
+        private Del callback;
 
         
-        public Client(string adress, int port, string username, string password)
+        public Client(string adress, int port, string username, string password, Del callback)
         {
+            this.callback = callback;
             this.username = username;
             this.password = password;
             this.client = new TcpClient();
@@ -82,8 +84,9 @@ namespace DokterApp
                             }
                             else
                             {
+                                callback("yeet");
                                 Console.WriteLine($"login failed \"{responseStatus}\"");
-                                tryLogin();
+                                //tryLogin();
                             }
                             break;
                         case DataParser.START_SESSION:
@@ -173,14 +176,6 @@ namespace DokterApp
         private void tryLogin()
         {
             //TODO File in lezen
-            /*Console.WriteLine("enter username");
-            string username = Console.ReadLine();
-            Console.WriteLine("enter password");
-            string password = Console.ReadLine();*/
-
-
-
-
 
             string hashUser = Hashing.Hasher.HashString(username);
             string hashPassword = Hashing.Hasher.HashString(password);

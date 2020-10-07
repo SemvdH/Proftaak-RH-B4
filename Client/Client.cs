@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -55,7 +55,7 @@ namespace Client
 
             this.stream = this.client.GetStream();
 
-            tryLoginDoctor("hi","hi");
+            tryLogin();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
@@ -94,7 +94,7 @@ namespace Client
                             if (responseStatus == "OK")
                             {
                                 this.connected = true;
-                                initEngine();
+                                //initEngine();
                             }
                             else
                             {

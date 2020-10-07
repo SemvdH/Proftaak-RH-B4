@@ -31,14 +31,23 @@ namespace DokterApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            TabItem newTabItem = new TabItem
-            {
-                Header = "Test",
-                Width = 110,
-                Height = 40
-            };
-            newTabItem.Content = new UserControlForTab();
-            this.tbControl.Items.Add(newTabItem);
+            NewTab("Test");
+        }
+
+        public void NewTab(string username)
+        {
+            Application.Current.Dispatcher.Invoke((Action)delegate {
+                // your code
+                TabItem newTabItem = new TabItem
+                {
+                    Header = username,
+                    Width = 110,
+                    Height = 40
+                };
+                newTabItem.Content = new UserControlForTab();
+                this.tbControl.Items.Add(newTabItem);
+            });
+            
         }
     }
 }

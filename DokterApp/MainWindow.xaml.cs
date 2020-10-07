@@ -20,6 +20,7 @@ namespace DokterApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        Del handler;
         Client client;
         public MainWindow()
         {
@@ -27,18 +28,27 @@ namespace DokterApp
    
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
+        
 
         private void Login_Click_1(object sender, RoutedEventArgs e)
         {
             WindowTabs windowTabs = new WindowTabs();
+            handler = windowTabs.NewTab;
+
+            this.Label.Content = "Waiting";
+            this.client = new Client("localhost", 5555, this.Username.Text, this.Password.Text, handler);
+            while (!client.IsConnected())
+            {
+            }
+            
+            
             windowTabs.Show();
-            this.client = new Client("localhost", 5555, this.Username.Text, this.Password.Text);
+            
             this.Close();
+            
         }
 
     }
+
+    public delegate void Del(string message);
 }
