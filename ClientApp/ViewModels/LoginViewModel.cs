@@ -28,7 +28,7 @@ namespace ClientApp.ViewModels
 
         internal void setLoginStatus(bool status)
         {
-            this.mainWindowViewModel.infoModel.ConnectedToServer = true;
+            this.mainWindowViewModel.InfoModel.ConnectedToServer = true;
             if (status)
             {
                 this.mainWindowViewModel.SelectedViewModel = new MainViewModel(mainWindowViewModel);

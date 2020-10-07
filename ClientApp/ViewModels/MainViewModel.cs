@@ -18,12 +18,12 @@ namespace ClientApp.ViewModels
             this.RetryServerCommand = new RelayCommand(() =>
             {
                 //try connect server
-                this.MainWindowViewModel.infoModel.ConnectedToServer = true;
+                this.MainWindowViewModel.InfoModel.ConnectedToServer = true;
             });
             this.RetryVREngineCommand = new RelayCommand(() =>
             {
                 //try connect vr-engine
-                this.MainWindowViewModel.infoModel.ConnectedToVREngine = true;
+                this.MainWindowViewModel.InfoModel.ConnectedToVREngine = true;
             });
         }
     }
