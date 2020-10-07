@@ -38,6 +38,7 @@ namespace Client
         {
             engineConnection = EngineConnection.INSTANCE;
             engineConnection.OnNoTunnelId = retryEngineConnection;
+            engineConnection.OnSuccessFullConnection = engineConnected;
             if (!engineConnection.Connected) engineConnection.Connect();
         }
 
@@ -51,6 +52,12 @@ namespace Client
             Console.ReadKey();
 
             engineConnection.CreateConnection();
+        }
+
+        private void engineConnected()
+        {
+            engineConnection.initScene();
+            if (this.sessionRunning) engineConnection.StartRouteFollow();
         }
 
         /// <summary>
@@ -193,7 +200,6 @@ namespace Client
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
-            Console.WriteLine("got bpm message: " + message);
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
@@ -212,7 +218,6 @@ namespace Client
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
-            Console.WriteLine("got bike message: " + message);
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 

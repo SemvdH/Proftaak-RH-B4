@@ -8,12 +8,14 @@ namespace Client
 {
     public delegate void HandleSerial(string message);
     public delegate void HandleNoTunnelId();
+    public delegate void OnSuccessfullConnection();
 
     public sealed class EngineConnection
     {
         private static EngineConnection instance = null;
         private static readonly object padlock = new object();
         public HandleNoTunnelId OnNoTunnelId;
+        public OnSuccessfullConnection OnSuccessFullConnection;
 
 
         private static PC[] PCs = {
@@ -29,9 +31,11 @@ namespace Client
         private static ServerResponseReader serverResponseReader;
         private static string sessionId = string.Empty;
         private static string tunnelId = string.Empty;
+        private static string cameraId = string.Empty;
         private static string routeId = string.Empty;
         private static string panelId = string.Empty;
         private static string bikeId = string.Empty;
+        private static string headId = string.Empty;
 
         private static NetworkStream stream;
 
@@ -45,6 +49,9 @@ namespace Client
 
         }
 
+        /// <summary>
+        /// Singleton constructor
+        /// </summary>
         public static EngineConnection INSTANCE
         {
             get
@@ -60,6 +67,11 @@ namespace Client
             }
         }
 
+       
+
+        /// <summary>
+        /// connects to the vr engine and initalizes the serverResponseReader
+        /// </summary>
         public void Connect()
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -68,6 +80,19 @@ namespace Client
             CreateConnection();
         }
 
+        /// <summary>
+        /// initializes and starts the reading of the responses from the vr server
+        /// </summary>
+        /// <param name="stream">the networkstream</param>
+        private void initReader()
+        {
+            serverResponseReader = new ServerResponseReader(stream);
+            serverResponseReader.callback = HandleResponse;
+            serverResponseReader.StartRead();
+            Connected = true;
+        }
+
+        #region VR Message traffic
         /// <summary>
         /// connects to the server and creates the tunnel
         /// </summary>
@@ -89,20 +114,10 @@ namespace Client
             if (tunnelId != null)
             {
                 Write("got tunnel id! " + tunnelId);
+                OnSuccessFullConnection?.Invoke();
             }
-            mainCommand = new Command(tunnelId);
 
-        }
-        /// <summary>
-        /// initializes and starts the reading of the responses from the vr server
-        /// </summary>
-        /// <param name="stream">the networkstream</param>
-        private void initReader()
-        {
-            serverResponseReader = new ServerResponseReader(stream);
-            serverResponseReader.callback = HandleResponse;
-            serverResponseReader.StartRead();
-            Connected = true;
+
         }
 
         /// <summary>
@@ -117,6 +132,7 @@ namespace Client
             if (id == "session/list")
             {
                 sessionId = JSONParser.GetSessionID(message, PCs);
+                Write("got session id");
             }
             else if (id == "tunnel/create")
             {
@@ -138,6 +154,39 @@ namespace Client
                 if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
             }
         }
+
+        public void initScene()
+        {
+            mainCommand = new Command(tunnelId);
+
+            // reset the scene
+            WriteTextMessage(mainCommand.ResetScene());
+
+            //Get sceneinfo and set the id's
+            SendMessageAndOnResponse(mainCommand.GetSceneInfoCommand("sceneinfo"), "sceneinfo",
+                (message) =>
+                {
+                    //Console.WriteLine("\r\n\r\n\r\nscene info" + message);
+                    cameraId = JSONParser.GetIdSceneInfoChild(message, "Camera");
+                    string headId = JSONParser.GetIdSceneInfoChild(message, "Head");
+                    string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
+                    string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
+
+                    //Force(stream, mainCommand.DeleteNode(handLeftId, "deleteHandL"), "deleteHandL", (message) => Console.WriteLine("Left hand deleted"));
+                    //Force(stream, mainCommand.DeleteNode(handRightId, "deleteHandR"), "deleteHandR", (message) => Console.WriteLine("Right hand deleted"));
+                });
+            // add the route and set the route id
+            SendMessageAndOnResponse(mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
+        }
+
+        internal void StartRouteFollow()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region message send/receive
 
         /// <summary>
         /// method that sends the speciefied message with the specified serial, and executes the given action upon receivind a reply from the server with this serial.
@@ -169,6 +218,8 @@ namespace Client
 
             //Write("sent message " + message);
         }
+
+        #endregion
         public void Write(string msg)
         {
             Console.WriteLine( "[ENGINECONNECT] " + msg);

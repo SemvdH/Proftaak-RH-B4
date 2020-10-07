@@ -11,7 +11,7 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("// Connecting... //");
             //connect fiets?
 
             Client client = new Client();
