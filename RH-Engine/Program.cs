@@ -81,7 +81,11 @@ namespace RH_Engine
                 //Console.WriteLine("GOT MESSAGE WITH SERIAL: " + message + "\n\n\n");
                 string serial = JSONParser.GetSerial(message);
                 //Console.WriteLine("Got serial " + serial);
-                if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
+                if (serialResponses.ContainsKey(serial))
+                {
+                    serialResponses[serial].Invoke(message);
+                    serialResponses.Remove(serial);
+                }
             }
         }
 
@@ -181,19 +185,9 @@ namespace RH_Engine
                                 panelId = JSONParser.getPanelID(message);
                                 WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
                                 WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
-                                
 
-                                SendMessageAndOnResponse(stream, mainCommand.MoveTo(panelId, "panelMove", new float[] { 0f, 0f, 0f }, "Z", 1, 5), "panelMove",
-                                    (message) =>
-                                    {
-                                        Console.WriteLine(message);
-                                        
-                                        SendMessageAndOnResponse(stream, mainCommand.bikeSpeed(panelId, "bikeSpeed", 5.0), "bikeSpeed",
-                                            (message) =>
-                                                {
-                                                    WriteTextMessage(stream, mainCommand.SwapPanel(panelId));
-                                                });
-                                    });
+
+                                showPanel(stream, mainCommand, 5.3, 83, 52, 53);
 
 
                                 //while (!(speedReplied && moveReplied)) { }
@@ -323,6 +317,35 @@ namespace RH_Engine
             }
 
             return res;
+        }
+
+        
+        private static void showPanel(NetworkStream stream, Command mainCommand, double bikeSpeed, int bpm, int power, int resistance)
+        {
+            SendMessageAndOnResponse(stream, mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showHeartrate(panelId, "bpm", bpm), "bpm",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showPower(panelId, "power", power), "power",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+
+            // Check if every text is drawn!
+
+            WriteTextMessage(stream, mainCommand.SwapPanel(panelId));
         }
 
         private static void SetFollowSpeed(float speed, NetworkStream stream, Command mainCommand)
