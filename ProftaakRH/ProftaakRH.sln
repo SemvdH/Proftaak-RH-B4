@@ -9,17 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RH-Engine", "..\RH-Engine\R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "..\Server\Server.csproj", "{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "..\Client\Client.csproj", "{5759DD20-7A4F-4D8D-B986-A70A7818C112}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message", "..\Message\Message.csproj", "{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DokterApp", "..\DokterApp\DokterApp.csproj", "{B150F08B-13DA-4D17-BD96-7E89F52727C6}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hashing", "..\Hashing\Hashing.shproj", "{70277749-D423-4871-B692-2EFC5A6ED932}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "..\ClientApp\ClientApp.csproj", "{013AADBA-1D27-4A52-81D8-217697E91039}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Hashing\Hashing.projitems*{5759dd20-7a4f-4d8d-b986-a70a7818c112}*SharedItemsImports = 5
+		..\Hashing\Hashing.projitems*{013aadba-1d27-4a52-81d8-217697e91039}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{70277749-d423-4871-b692-2efc5a6ed932}*SharedItemsImports = 13
 		..\Hashing\Hashing.projitems*{b1ab6f51-a20d-4162-9a7f-b3350b7510fd}*SharedItemsImports = 5
 	EndGlobalSection
@@ -40,10 +40,6 @@ Global
 		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,6 +48,10 @@ Global
 		{B150F08B-13DA-4D17-BD96-7E89F52727C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B150F08B-13DA-4D17-BD96-7E89F52727C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B150F08B-13DA-4D17-BD96-7E89F52727C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{013AADBA-1D27-4A52-81D8-217697E91039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{013AADBA-1D27-4A52-81D8-217697E91039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{013AADBA-1D27-4A52-81D8-217697E91039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{013AADBA-1D27-4A52-81D8-217697E91039}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
