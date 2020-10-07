@@ -110,16 +110,6 @@ namespace Client
 
             WriteTextMessage(tunnelCreate);
 
-            // wait until we have a tunnel id
-            //while (tunnelId == string.Empty) { }
-            //if (tunnelId != null)
-            //{
-            //    Write("got tunnel id! " + tunnelId);
-            //    Connected = true;
-            //    OnSuccessFullConnection?.Invoke();
-
-            //} 
-
 
         }
 
@@ -201,31 +191,46 @@ namespace Client
                     SendMessageAndOnResponse(mainCommand.addPanel("panelAdd", bikeId), "panelAdd",
                         (message) =>
                         {
-                           
+
                             panelId = JSONParser.getPanelID(message);
                             WriteTextMessage(mainCommand.ColorPanel(panelId));
                             WriteTextMessage(mainCommand.ClearPanel(panelId));
 
 
-                            SendMessageAndOnResponse(mainCommand.MoveTo(panelId, "panelMove", new float[] { 0f, 0f, 0f }, "Z", 1, 5), "panelMove",
-                                (message) =>
-                                {
-                                    Console.WriteLine(message);
-
-                                    SendMessageAndOnResponse(mainCommand.bikeSpeed(panelId, "bikeSpeed", 5.0), "bikeSpeed",
-                                        (message) =>
-                                        {
-                                            WriteTextMessage(mainCommand.SwapPanel(panelId));
-                                        });
-                                });
-
-
-                            //while (!(speedReplied && moveReplied)) { }
+                            showPanel(mainCommand, 5.3, 83, 52, 53);
 
                             while (cameraId == string.Empty) { }
                             SetFollowSpeed(5.0f);
                         });
                 });
+        }
+
+        private void showPanel(Command mainCommand, double bikeSpeed, int bpm, int power, int resistance)
+        {
+            SendMessageAndOnResponse(mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showHeartrate(panelId, "bpm", bpm), "bpm",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showPower(panelId, "power", power), "power",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+
+            // Check if every text is drawn!
+
+            WriteTextMessage(mainCommand.SwapPanel(panelId));
         }
 
         private void SetFollowSpeed(float speed)
@@ -270,6 +275,12 @@ namespace Client
         }
 
         #endregion
+
+        public void Stop()
+        {
+            serverResponseReader.Stop();
+            
+        }
         public void Write(string msg)
         {
             Console.WriteLine( "[ENGINECONNECT] " + msg);
