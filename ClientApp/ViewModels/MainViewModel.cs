@@ -7,22 +7,23 @@ namespace ClientApp.ViewModels
 {
     class MainViewModel : ObservableObject
     {
-        public Info infoModel { get; set; }
         public ICommand RetryServerCommand { get; set; }
         public ICommand RetryVREngineCommand { get; set; }
+        public MainWindowViewModel MainWindowViewModel;
 
-        public MainViewModel()
+
+        public MainViewModel(MainWindowViewModel mainWindowViewModel)
         {
-            this.infoModel = new Info();
+            this.MainWindowViewModel = mainWindowViewModel;
             this.RetryServerCommand = new RelayCommand(() =>
             {
                 //try connect server
-                this.infoModel.ConnectedToServer = true;
+                this.MainWindowViewModel.infoModel.ConnectedToServer = true;
             });
             this.RetryVREngineCommand = new RelayCommand(() =>
             {
                 //try connect vr-engine
-                this.infoModel.ConnectedToVREngine = true;
+                this.MainWindowViewModel.infoModel.ConnectedToVREngine = true;
             });
         }
     }

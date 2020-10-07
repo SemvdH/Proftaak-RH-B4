@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using ClientApp.ViewModels;
 using ProftaakRH;
 
 namespace ClientApp.Utils
@@ -17,6 +18,7 @@ namespace ClientApp.Utils
         private EngineConnection engineConnection;
         private bool sessionRunning = false;
         private IHandler handler = null;
+        private LoginViewModel LoginViewModel;
 
 
         public Client() : this("localhost", 5555)
@@ -120,13 +122,13 @@ namespace ClientApp.Utils
                             if (responseStatus == "OK")
                             {
                                 Console.WriteLine("Username and password correct!");
+                                this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
                                 initEngine();
                             }
                             else
                             {
                                 Console.WriteLine($"login failed \"{responseStatus}\"");
-                                tryLogin();
                             }
                             break;
                         case DataParser.START_SESSION:
@@ -261,14 +263,8 @@ namespace ClientApp.Utils
         /// <summary>
         /// tries to log in to the server by asking for a username and password
         /// </summary>
-        private void tryLogin()
+        public void tryLogin(string username, string password)
         {
-            //TODO File in lezen
-            Console.WriteLine("enter username");
-            string username = Console.ReadLine();
-            Console.WriteLine("enter password");
-            string password = Console.ReadLine();
-
             string hashUser = Hashing.Hasher.HashString(username);
             string hashPassword = Hashing.Hasher.HashString(password);
 
@@ -282,9 +278,14 @@ namespace ClientApp.Utils
         /// sets the handler for the client, so either the bike simulator or the bluetooth bike handler
         /// </summary>
         /// <param name="handler"></param>
-        public void setHandler(IHandler handler)
+        public void SetHandler(IHandler handler)
         {
             this.handler = handler;
+        }
+
+        internal void SetLoginViewModel(LoginViewModel loginViewModel)
+        {
+            this.LoginViewModel = loginViewModel;
         }
     }
 }

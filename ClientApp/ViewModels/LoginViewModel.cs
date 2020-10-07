@@ -19,12 +19,20 @@ namespace ClientApp.ViewModels
             this.mainWindowViewModel = mainWindowViewModel;
             LoginCommand = new RelayCommand<object>((parameter) =>
             {
-                Debug.WriteLine($"username {Username} password {((PasswordBox)parameter).Password}");
                 //TODO send username and password to server
-                this.mainWindowViewModel.SelectedViewModel = new MainViewModel();
+                this.mainWindowViewModel.client.tryLogin(Username, ((PasswordBox)parameter).Password);
             });
         }
 
         public ICommand LoginCommand { get; set; }
+
+        internal void setLoginStatus(bool status)
+        {
+            this.mainWindowViewModel.infoModel.ConnectedToServer = true;
+            if (status)
+            {
+                this.mainWindowViewModel.SelectedViewModel = new MainViewModel(mainWindowViewModel);
+            }
+        }
     }
 }

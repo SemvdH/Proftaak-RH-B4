@@ -25,17 +25,12 @@ namespace ClientApp
     public partial class MainWindow : Window
     {
         public MainWindow()
-
         {
-            System.Diagnostics.Debug.WriteLine("derp1");
-
             Client client = new Client();
-            System.Diagnostics.Debug.WriteLine("derp2");
 
 
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
-            System.Diagnostics.Debug.WriteLine("derp3");
+            DataContext = new MainWindowViewModel(client);
 
 
             //BLEHandler bLEHandler = new BLEHandler(client);
@@ -46,16 +41,12 @@ namespace ClientApp
 
 
             BikeSimulator bikeSimulator = new BikeSimulator(client);
-            System.Diagnostics.Debug.WriteLine("derp4");
 
             Thread newThread = new Thread(new ThreadStart(bikeSimulator.StartSimulation));
             newThread.Start();
-            //bikeSimulator.StartSimulation();
-            System.Diagnostics.Debug.WriteLine("derp5");
 
 
-            client.setHandler(bikeSimulator);
-            System.Diagnostics.Debug.WriteLine("derp6");
+            client.SetHandler(bikeSimulator);
 
 
         }
