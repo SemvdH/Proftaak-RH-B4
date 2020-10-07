@@ -31,6 +31,9 @@ namespace Client
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
         }
 
+        /// <summary>
+        /// initializes the VR engine and sets the callbacks
+        /// </summary>
         private void initEngine()
         {
             engineConnection = EngineConnection.INSTANCE;
@@ -38,6 +41,9 @@ namespace Client
             if (!engineConnection.Connected) engineConnection.Connect();
         }
 
+        /// <summary>
+        /// retries to connect to the VR engine if no tunnel id was found
+        /// </summary>
         private void retryEngineConnection()
         {
             Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
@@ -47,6 +53,10 @@ namespace Client
             engineConnection.CreateConnection();
         }
 
+        /// <summary>
+        /// callback method for when the TCP client is connected
+        /// </summary>
+        /// <param name="ar">the result of the async read</param>
         private void OnConnect(IAsyncResult ar)
         {
             this.client.EndConnect(ar);
@@ -60,6 +70,10 @@ namespace Client
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
+        /// <summary>
+        /// callback method for when there is a message read
+        /// </summary>
+        /// <param name="ar">the result of the async read</param>
         private void OnRead(IAsyncResult ar)
         {
             int receivedBytes = this.stream.EndRead(ar);
@@ -93,6 +107,7 @@ namespace Client
                             string responseStatus = DataParser.getResponseStatus(payloadbytes);
                             if (responseStatus == "OK")
                             {
+                                Console.WriteLine("Username and password correct!");
                                 this.connected = true;
                                 initEngine();
                             }
@@ -103,7 +118,7 @@ namespace Client
                             }
                             break;
                         case DataParser.START_SESSION:
-                            Console.WriteLine("Start session identifier");
+                            Console.WriteLine("Session started!");
                             this.sessionRunning = true;
                             sendMessage(DataParser.getStartSessionJson());
                             break;
@@ -143,11 +158,19 @@ namespace Client
 
         }
 
+        /// <summary>
+        /// starts sending a message to the server
+        /// </summary>
+        /// <param name="message">the message to send</param>
         private void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
+        /// <summary>
+        /// callback method for when a message is fully written to the server
+        /// </summary>
+        /// <param name="ar">the async result representing the asynchronous call</param>
         private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
@@ -155,6 +178,10 @@ namespace Client
 
         #region interface
         //maybe move this to other place
+        /// <summary>
+        /// bpm method for receiving the BPM value from the bluetooth bike or the simulation
+        /// </summary>
+        /// <param name="bytes">the message</param>
         public void BPM(byte[] bytes)
         {
             if (!sessionRunning)
@@ -166,9 +193,14 @@ namespace Client
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
+            Console.WriteLine("got bpm message: " + message);
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
+        /// <summary>
+        /// method for receiving the bike message from the bluetooth bike or the simulation
+        /// </summary>
+        /// <param name="bytes">the message</param>
         public void Bike(byte[] bytes)
         {
             if (!sessionRunning)
@@ -180,15 +212,23 @@ namespace Client
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
+            Console.WriteLine("got bike message: " + message);
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
         #endregion
 
+        /// <summary>
+        /// wether or not the client stream is connected
+        /// </summary>
+        /// <returns>true if it's connected, false if not</returns>
         public bool IsConnected()
         {
             return this.connected;
         }
+        /// <summary>
+        /// tries to log in to the server by asking for a username and password
+        /// </summary>
         private void tryLogin()
         {
             //TODO File in lezen
@@ -206,6 +246,10 @@ namespace Client
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
+        /// <summary>
+        /// sets the handler for the client, so either the bike simulator or the bluetooth bike handler
+        /// </summary>
+        /// <param name="handler"></param>
         public void setHandler(IHandler handler)
         {
             this.handler = handler;

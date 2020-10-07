@@ -47,6 +47,7 @@ namespace Hardware.Simulators
 
         public void StartSimulation()
         {
+            Console.WriteLine("simulating bike...");
             //Example BLE Message
             //4A-09-4E-05-19-16-00-FF-28-00-00-20-F0
 

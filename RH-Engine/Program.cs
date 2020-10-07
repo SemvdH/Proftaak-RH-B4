@@ -17,9 +17,9 @@ namespace RH_Engine
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
-            //new PC("HP-ZBOOK-SEM", "Sem"),
+            new PC("HP-ZBOOK-SEM", "Sem"),
             //new PC("DESKTOP-TV73FKO", "Wouter"),
-            new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
+            //new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
         };
 
@@ -179,6 +179,7 @@ namespace RH_Engine
                                 bool speedReplied = false;
                                 bool moveReplied = true;
                                 panelId = JSONParser.getPanelID(message);
+                                WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
                                 WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
                                 
 
@@ -186,6 +187,7 @@ namespace RH_Engine
                                     (message) =>
                                     {
                                         Console.WriteLine(message);
+                                        
                                         SendMessageAndOnResponse(stream, mainCommand.bikeSpeed(panelId, "bikeSpeed", 5.0), "bikeSpeed",
                                             (message) =>
                                                 {
@@ -245,7 +247,6 @@ namespace RH_Engine
             //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
             //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
             Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
-
         }
 
         /// <summary>
@@ -328,7 +329,7 @@ namespace RH_Engine
         {
             WriteTextMessage(stream, mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
             WriteTextMessage(stream, mainCommand.RouteFollow(routeId, cameraId, speed));
-            WriteTextMessage(stream, mainCommand.RouteFollow(routeId, panelId, speed, 0, "XYZ", 1, false, new float[] { 0, 0, 0 }, new float[] { 0f, 0f, 150f }));
+            //WriteTextMessage(stream, mainCommand.RouteFollow(routeId, panelId, speed, 1f, "XYZ", 1, false, new float[] { 0, 0, 0 }, new float[] { 0f, 5f, 5f }));
         }
         //string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
         private static void Force(NetworkStream stream, string message, string serial, HandleSerial action)

@@ -167,7 +167,6 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
-            Console.WriteLine("got hashes " + username + "\n" + password);
 
 
             if (!File.Exists(fileName))

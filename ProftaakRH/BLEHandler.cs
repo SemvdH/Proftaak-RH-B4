@@ -44,6 +44,7 @@ namespace Hardware
         /// </summary>
         public void Connect()
         {
+            
             BLE bleBike = new BLE();
 
             Thread.Sleep(1000); // We need some time to list available devices
