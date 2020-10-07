@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:ClientApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel VerticalAlignment="Center">
-            <Label Content="Username" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name="Username" TextWrapping="Wrap" Width="120"/>
+    <DockPanel>
+        <StackPanel VerticalAlignment="Center" Width="auto">
+            <Label Content="Username" HorizontalContentAlignment="Center" />
+            <TextBox x:Name="Username" Text="{Binding Username}" TextWrapping="Wrap" Width="120"/>
             <Label Content="Password" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name="Password" TextWrapping="Wrap" Width="120"/>
-            <Button x:Name="Login" Content="Login" Margin="0,20,0,0" Width="120"/>
+            <PasswordBox x:Name="Password" Width="120"/>
+            <Button x:Name="Login" Content="Login" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=Password}" Margin="0,20,0,0" Width="120"/>
         </StackPanel>
-    </Grid>
+    </DockPanel>
 </UserControl>
