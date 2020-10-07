@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RH-Engine": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

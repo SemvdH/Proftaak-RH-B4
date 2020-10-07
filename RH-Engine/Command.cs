@@ -83,11 +83,12 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string DeleteNode(string uuid)
+        public string DeleteNode(string uuid, string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/node/delete",
+                serial = serialCode,
                 data = new
                 {
                     id = uuid,
@@ -105,14 +106,13 @@ namespace RH_Engine
                 data = new
                 {
                     name = "dashboard",
-                    parent = uuidBike,
                     components = new
                     {
                         panel = new
                         {
                             size = new int[] { 1, 1 },
                             resolution = new int[] { 512, 512 },
-                            background = new int[] { 1, 0, 0, 0 },
+                            background = new int[] { 1, 1, 1, 1 },
                             castShadow = false
                         }
                     }
@@ -151,17 +151,18 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string bikeSpeed(string uuidPanel, double speed)
+        public string bikeSpeed(string uuidPanel, string serialCode, double speed)
         {
             dynamic payload = new
             {
                 id = "scene/panel/drawtext",
+                serial = serialCode,
                 data = new
                 {
                     id = uuidPanel,
-                    text = "Bike speed placeholder",
-                    position = new int[] { 0, 0 },
-                    size = 32.0,
+                    text = "Speed: " + speed.ToString(),
+                    position = new int[] { 4, 24 },
+                    size = 36.0,
                     color = new int[] { 0, 0, 0, 1 },
                     font = "segoeui"
                 }
@@ -250,16 +251,17 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string MoveTo(string uuid, float[] positionVector, float rotateValue, float speedValue, float timeValue)
+        public string MoveTo(string uuid, string serial, float[] positionVector, string rotateValue, int speedValue, int timeValue)
         {
-            return MoveTo(uuid, "idk", positionVector, rotateValue, "linear", false, speedValue, timeValue);
+            return MoveTo(uuid, serial, "stop", positionVector, rotateValue, "linear", false, speedValue, timeValue);
         }
 
-        private string MoveTo(string uuid, string stopValue, float[] positionVector, float rotateValue, string interpolateValue, bool followHeightValue, float speedValue, float timeValue)
+        private string MoveTo(string uuid, string serialCode, string stopValue, float[] positionVector, string rotateValue, string interpolateValue, bool followHeightValue, int speedValue, int timeValue)
         {
             dynamic payload = new
             {
                 id = "scene/node/moveto",
+                serial = serialCode,
                 data = new
                 {
                     id = uuid,
@@ -319,7 +321,7 @@ namespace RH_Engine
                     }
                 }
             };
-            Console.WriteLine("route command: " + JsonConvert.SerializeObject(Payload(payload)));
+            //Console.WriteLine("route command: " + JsonConvert.SerializeObject(Payload(payload)));
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
@@ -350,7 +352,7 @@ namespace RH_Engine
         {
             return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, new float[] { 0, 0, 0 }, positionOffsetVector);
         }
-        private string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
         {
             dynamic payload = new
             {

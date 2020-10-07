@@ -5,8 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DokterApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        WindowState="Maximized"
+        Title="Dokter App" >
+    <Grid RenderTransformOrigin="0.499,0.49">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="23*"/>
+            <RowDefinition Height="31*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Orientation="Vertical">
+            <Label Content="Sensei" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+            <Label Content="Username" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name="Username" TextWrapping="Wrap" Width="120"/>
+            <Label Content="Password" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name="Password" TextWrapping="Wrap" Width="120"/>
+            <Button x:Name="Login" Content="Login" Margin="0,20,0,0" Click="Login_Click_1" />
+        </StackPanel>
 
     </Grid>
 </Window>
