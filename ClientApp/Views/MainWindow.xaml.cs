@@ -24,7 +24,7 @@ namespace ClientApp
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

@@ -7,12 +7,11 @@ namespace ClientApp.ViewModels
 {
     class MainViewModel : ObservableObject
     {
-
-        public ObservableObject SelectedViewModel { get; set; }
+        public string StatusLabelText { get; set; }
 
         public MainViewModel()
         {
-            SelectedViewModel = new LoginViewModel();
+            StatusLabelText = "Status: not running";
         }
     }
 }

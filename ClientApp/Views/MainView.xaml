@@ -6,8 +6,15 @@
              xmlns:local="clr-namespace:ClientApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Label Content="Main"/>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label>
+                <Label.Content>
+                    <AccessText TextWrapping="Wrap" Text="{Binding StatusLabelText}"/>
+                </Label.Content>
+            </Label>
 
-    </Grid>
+        </StackPanel>
+
+    </DockPanel>
 </UserControl>

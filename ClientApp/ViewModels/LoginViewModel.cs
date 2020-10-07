@@ -12,12 +12,15 @@ namespace ClientApp.ViewModels
     class LoginViewModel : ObservableObject
     {
         public string Username { get; set; }
-        public LoginViewModel()
+        //private MainWindowViewModel mainWindowViewModel;
+        public LoginViewModel(MainWindowViewModel mainWindowViewModel)
         {
+            //this.mainWindowViewModel = mainWindowViewModel;
             LoginCommand = new RelayCommand<object>((parameter) =>
             {
                 Debug.WriteLine($"username {Username} password {((PasswordBox)parameter).Password}");
                 //TODO send username and password to server
+                mainWindowViewModel.SelectedViewModel = new MainViewModel();
             });
         }
 
