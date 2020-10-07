@@ -37,6 +37,11 @@ namespace Client
         private static string bikeId = string.Empty;
         private static string headId = string.Empty;
 
+        public float BikeSpeed { get; set; }
+        public float BikePower { get; set; }
+        public float BikeBPM { get; set; }
+        public float BikeResistance { get; set; }
+
         public bool FollowingRoute = false;
 
         private static NetworkStream stream;
@@ -48,7 +53,10 @@ namespace Client
 
         EngineConnection()
         {
-
+            BikeSpeed = 0;
+            BikePower = 0;
+            BikeBPM = 0;
+            BikeResistance = 50;
         }
 
         /// <summary>
@@ -193,11 +201,9 @@ namespace Client
                         {
 
                             panelId = JSONParser.getPanelID(message);
+
                             WriteTextMessage(mainCommand.ColorPanel(panelId));
-                            WriteTextMessage(mainCommand.ClearPanel(panelId));
-
-
-                            showPanel(mainCommand, 5.3, 83, 52, 53);
+                            UpdateInfoPanel();
 
                             while (cameraId == string.Empty) { }
                             SetFollowSpeed(5.0f);
@@ -205,8 +211,17 @@ namespace Client
                 });
         }
 
-        private void showPanel(Command mainCommand, double bikeSpeed, int bpm, int power, int resistance)
+        public void UpdateInfoPanel()
         {
+            ShowPanel(BikeSpeed, (int)BikeBPM, (int)BikePower, (int)BikeResistance);
+            WriteTextMessage(mainCommand.RouteSpeed(BikeSpeed, bikeId));
+            WriteTextMessage(mainCommand.RouteSpeed(BikeSpeed, cameraId));
+        }
+
+        public void ShowPanel(double bikeSpeed, int bpm, int power, int resistance)
+        {
+            WriteTextMessage(mainCommand.ClearPanel(panelId));
+
             SendMessageAndOnResponse(mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
                 (message) =>
                 {
@@ -252,7 +267,13 @@ namespace Client
         /// <param name="action">the code to be executed upon reveiving a reply from the server with the specified serial</param>
         public void SendMessageAndOnResponse(string message, string serial, HandleSerial action)
         {
-            serialResponses.Add(serial, action);
+            if (serialResponses.ContainsKey(serial))
+            {
+                serialResponses[serial] = action;
+            } else
+            {
+                serialResponses.Add(serial, action);
+            }
             WriteTextMessage(message);
         }
 
