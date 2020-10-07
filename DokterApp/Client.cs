@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using ProftaakRH;
 
-namespace Client
+namespace DokterApp
 {
     public class Client : IDataReceiver
     {
@@ -14,48 +14,33 @@ namespace Client
         private bool connected;
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
-        private EngineConnection engineConnection;
         private bool sessionRunning = false;
         private IHandler handler = null;
+        private string username;
+        private string password;
 
-
-        public Client() : this("localhost", 5555)
+        
+        public Client(string adress, int port, string username, string password)
         {
-
-        }
-
-        public Client(string adress, int port)
-        {
+            this.username = username;
+            this.password = password;
             this.client = new TcpClient();
             this.connected = false;
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
         }
 
-        private void initEngine()
-        {
-            engineConnection = EngineConnection.INSTANCE;
-            engineConnection.OnNoTunnelId = retryEngineConnection;
-            if (!engineConnection.Connected) engineConnection.Connect();
-        }
+       
 
-        private void retryEngineConnection()
-        {
-            Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
-            Console.WriteLine("-- Press any key to retry connecting to the VR engine.");
-            Console.ReadKey();
-
-            engineConnection.CreateConnection();
-        }
+       
 
         private void OnConnect(IAsyncResult ar)
         {
             this.client.EndConnect(ar);
             Console.WriteLine("TCP client Verbonden!");
 
-
             this.stream = this.client.GetStream();
 
-            tryLoginDoctor("hi","hi");
+            tryLogin();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
@@ -94,7 +79,6 @@ namespace Client
                             if (responseStatus == "OK")
                             {
                                 this.connected = true;
-                                initEngine();
                             }
                             else
                             {
@@ -189,10 +173,14 @@ namespace Client
         private void tryLogin()
         {
             //TODO File in lezen
-            Console.WriteLine("enter username");
+            /*Console.WriteLine("enter username");
             string username = Console.ReadLine();
             Console.WriteLine("enter password");
-            string password = Console.ReadLine();
+            string password = Console.ReadLine();*/
+
+
+
+
 
             string hashUser = Hashing.Hasher.HashString(username);
             string hashPassword = Hashing.Hasher.HashString(password);
@@ -203,16 +191,7 @@ namespace Client
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
-        public void tryLoginDoctor(string username, string password)
-        {
-            string hashUser = Hashing.Hasher.HashString(username);
-            string hashPassword = Hashing.Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
-
-
-            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
-        }
 
         public void setHandler(IHandler handler)
         {

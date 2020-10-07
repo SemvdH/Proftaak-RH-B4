@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
 namespace DokterApp
 {
     /// <summary>
@@ -20,9 +20,11 @@ namespace DokterApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        Client client;
         public MainWindow()
         {
             InitializeComponent();
+   
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -34,7 +36,9 @@ namespace DokterApp
         {
             WindowTabs windowTabs = new WindowTabs();
             windowTabs.Show();
+            this.client = new Client("localhost", 5555, this.Username.Text, this.Password.Text);
             this.Close();
         }
+
     }
 }

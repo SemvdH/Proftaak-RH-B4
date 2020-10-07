@@ -6,4 +6,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
+  </ItemGroup>
+
 </Project>
