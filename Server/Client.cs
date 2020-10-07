@@ -75,7 +75,7 @@ namespace Server
 
 
         /// <summary>
-        /// TODO
+        /// handles all incoming data from the client
         /// </summary>
         /// <param name="message">including message length and messageId (can be changed)</param>
         private void HandleData(byte[] message)
@@ -213,10 +213,6 @@ namespace Server
                 sw.WriteLine(username + " " + password);
             }
         }
-
-
-
-       
 
         public static string ByteArrayToString(byte[] ba)
         {
