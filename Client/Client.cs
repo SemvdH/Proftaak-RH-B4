@@ -48,8 +48,9 @@ namespace Client
         private void retryEngineConnection()
         {
             Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
-            Console.WriteLine("-- Press any key to retry connecting to the VR engine.");
-            Console.ReadKey();
+            Console.WriteLine("-- Press ENTER to retry connecting to the VR engine.");
+            Console.WriteLine("-- Press 'q' and then ENTER to not connect to the VR engine");
+            Console.WriteLine(Console.Read());
 
             engineConnection.CreateConnection();
         }
