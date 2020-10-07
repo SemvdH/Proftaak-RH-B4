@@ -329,7 +329,6 @@ namespace RH_Engine
         {
             WriteTextMessage(stream, mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
             WriteTextMessage(stream, mainCommand.RouteFollow(routeId, cameraId, speed));
-            //WriteTextMessage(stream, mainCommand.RouteFollow(routeId, panelId, speed, 1f, "XYZ", 1, false, new float[] { 0, 0, 0 }, new float[] { 0f, 5f, 5f }));
         }
         //string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
         private static void Force(NetworkStream stream, string message, string serial, HandleSerial action)

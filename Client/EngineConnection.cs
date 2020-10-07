@@ -37,6 +37,8 @@ namespace Client
         private static string bikeId = string.Empty;
         private static string headId = string.Empty;
 
+        public bool FollowingRoute = false;
+
         private static NetworkStream stream;
 
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
@@ -89,7 +91,6 @@ namespace Client
             serverResponseReader = new ServerResponseReader(stream);
             serverResponseReader.callback = HandleResponse;
             serverResponseReader.StartRead();
-            Connected = true;
         }
 
         #region VR Message traffic
@@ -110,12 +111,14 @@ namespace Client
             WriteTextMessage(tunnelCreate);
 
             // wait until we have a tunnel id
-            while (tunnelId == string.Empty) { }
-            if (tunnelId != null)
-            {
-                Write("got tunnel id! " + tunnelId);
-                OnSuccessFullConnection?.Invoke();
-            }
+            //while (tunnelId == string.Empty) { }
+            //if (tunnelId != null)
+            //{
+            //    Write("got tunnel id! " + tunnelId);
+            //    Connected = true;
+            //    OnSuccessFullConnection?.Invoke();
+
+            //} 
 
 
         }
@@ -132,17 +135,23 @@ namespace Client
             if (id == "session/list")
             {
                 sessionId = JSONParser.GetSessionID(message, PCs);
-                Write("got session id");
             }
             else if (id == "tunnel/create")
             {
                 tunnelId = JSONParser.GetTunnelID(message);
+                Console.WriteLine("set tunnel id to " + tunnelId);
                 if (tunnelId == null)
                 {
                     Write("could not find a valid tunnel id!");
                     OnNoTunnelId?.Invoke();
                     Connected = false;
+                    FollowingRoute = false;
                     return;
+                } else
+                {
+                    Write("got tunnel id! " + tunnelId);
+                    Connected = true;
+                    OnSuccessFullConnection?.Invoke();
                 }
             }
 
@@ -157,6 +166,7 @@ namespace Client
 
         public void initScene()
         {
+            Write("initializing scene...");
             mainCommand = new Command(tunnelId);
 
             // reset the scene
@@ -181,7 +191,47 @@ namespace Client
 
         internal void StartRouteFollow()
         {
-            throw new NotImplementedException();
+            Write("Starting route follow...");
+            FollowingRoute = true;
+
+            SendMessageAndOnResponse(mainCommand.AddBikeModel("bikeID"), "bikeID",
+                (message) =>
+                {
+                    bikeId = JSONParser.GetResponseUuid(message);
+                    SendMessageAndOnResponse(mainCommand.addPanel("panelAdd", bikeId), "panelAdd",
+                        (message) =>
+                        {
+                           
+                            panelId = JSONParser.getPanelID(message);
+                            WriteTextMessage(mainCommand.ColorPanel(panelId));
+                            WriteTextMessage(mainCommand.ClearPanel(panelId));
+
+
+                            SendMessageAndOnResponse(mainCommand.MoveTo(panelId, "panelMove", new float[] { 0f, 0f, 0f }, "Z", 1, 5), "panelMove",
+                                (message) =>
+                                {
+                                    Console.WriteLine(message);
+
+                                    SendMessageAndOnResponse(mainCommand.bikeSpeed(panelId, "bikeSpeed", 5.0), "bikeSpeed",
+                                        (message) =>
+                                        {
+                                            WriteTextMessage(mainCommand.SwapPanel(panelId));
+                                        });
+                                });
+
+
+                            //while (!(speedReplied && moveReplied)) { }
+
+                            while (cameraId == string.Empty) { }
+                            SetFollowSpeed(5.0f);
+                        });
+                });
+        }
+
+        private void SetFollowSpeed(float speed)
+        {
+            WriteTextMessage(mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
+            WriteTextMessage(mainCommand.RouteFollow(routeId, cameraId, speed));
         }
 
         #endregion

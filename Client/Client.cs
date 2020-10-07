@@ -56,8 +56,9 @@ namespace Client
 
         private void engineConnected()
         {
+            Console.WriteLine("successfully connected to VR engine");
             engineConnection.initScene();
-            if (this.sessionRunning) engineConnection.StartRouteFollow();
+            if (engineConnection.Connected && sessionRunning && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
         }
 
         /// <summary>
@@ -127,6 +128,7 @@ namespace Client
                         case DataParser.START_SESSION:
                             Console.WriteLine("Session started!");
                             this.sessionRunning = true;
+                            if (engineConnection.Connected && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
                             sendMessage(DataParser.getStartSessionJson());
                             break;
                         case DataParser.STOP_SESSION:
