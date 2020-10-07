@@ -5,7 +5,7 @@ using RH_Engine;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Client
+namespace ClientApp.Utils
 {
     class Program
     {

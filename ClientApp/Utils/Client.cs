@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using ProftaakRH;
 
-namespace Client
+namespace ClientApp.Utils
 {
     public class Client : IDataReceiver
     {
@@ -78,8 +78,6 @@ namespace Client
 
 
             this.stream = this.client.GetStream();
-
-            tryLogin();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }

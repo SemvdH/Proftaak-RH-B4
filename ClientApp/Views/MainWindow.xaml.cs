@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientApp.Utils;
 using Hardware.Simulators;
-using Client;
+using System.Threading;
 
 namespace ClientApp
 {
@@ -25,15 +25,19 @@ namespace ClientApp
     public partial class MainWindow : Window
     {
         public MainWindow()
+
         {
-            InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            System.Diagnostics.Debug.WriteLine("derp1");
 
             Client client = new Client();
-            while (!client.IsConnected())
-            {
+            System.Diagnostics.Debug.WriteLine("derp2");
 
-            }
+
+            InitializeComponent();
+            DataContext = new MainWindowViewModel();
+            System.Diagnostics.Debug.WriteLine("derp3");
+
+
             //BLEHandler bLEHandler = new BLEHandler(client);
 
             //bLEHandler.Connect();
@@ -42,10 +46,18 @@ namespace ClientApp
 
 
             BikeSimulator bikeSimulator = new BikeSimulator(client);
+            System.Diagnostics.Debug.WriteLine("derp4");
 
-            bikeSimulator.StartSimulation();
+            Thread newThread = new Thread(new ThreadStart(bikeSimulator.StartSimulation));
+            newThread.Start();
+            //bikeSimulator.StartSimulation();
+            System.Diagnostics.Debug.WriteLine("derp5");
+
 
             client.setHandler(bikeSimulator);
+            System.Diagnostics.Debug.WriteLine("derp6");
+
+
         }
     }
 }

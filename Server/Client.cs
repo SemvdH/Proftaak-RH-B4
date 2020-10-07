@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using Client;
 using Newtonsoft.Json;
-using System.Security.Cryptography;
+using ClientApp.Utils;
 
 namespace Server
 {
