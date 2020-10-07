@@ -15,7 +15,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message", "..\Message\Messa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DokterApp", "..\DokterApp\DokterApp.csproj", "{B150F08B-13DA-4D17-BD96-7E89F52727C6}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hashing", "..\Hashing\Hashing.shproj", "{70277749-D423-4871-B692-2EFC5A6ED932}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Hashing\Hashing.projitems*{5759dd20-7a4f-4d8d-b986-a70a7818c112}*SharedItemsImports = 5
+		..\Hashing\Hashing.projitems*{70277749-d423-4871-b692-2efc5a6ed932}*SharedItemsImports = 13
+		..\Hashing\Hashing.projitems*{b1ab6f51-a20d-4162-9a7f-b3350b7510fd}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

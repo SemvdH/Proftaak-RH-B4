@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using Client;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace Server
 {
@@ -19,6 +20,7 @@ namespace Server
         private SaveData saveData;
         private string username = null;
         private DateTime sessionStart;
+        private string fileName;
 
 
 
@@ -30,6 +32,7 @@ namespace Server
             this.communication = communication;
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
+            this.fileName = Directory.GetCurrentDirectory() + "/userInfo.dat";
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
@@ -103,44 +106,119 @@ namespace Server
                             {
                                 Console.WriteLine("Log in");
                                 this.username = username;
-                                byte[] response = DataParser.getLoginResponse("OK");
-                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
-                                this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + username, sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                                sendMessage(DataParser.getLoginResponse("OK"));
+                                sendMessage(DataParser.getStartSessionJson());
                             }
                             else
                             {
-                                byte[] response = DataParser.getLoginResponse("wrong username or password");
-                                stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                                sendMessage(DataParser.getLoginResponse("wrong username or password"));
                             }
                         }
                         else
                         {
-                            byte[] response = DataParser.getLoginResponse("invalid json");
-                            stream.BeginWrite(response, 0, response.Length, new AsyncCallback(OnWrite), null);
+                            sendMessage(DataParser.getLoginResponse("invalid json"));
                         }
+                        break;
+                    case DataParser.START_SESSION:
+                        this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                        break;
+                    case DataParser.STOP_SESSION:
+                        this.saveData = null;
+                        break;
+                    case DataParser.SET_RESISTANCE:
+                        worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        Console.WriteLine($"set resistance worked is " + worked);
+                        //set resistance on doctor GUI
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
                 }
+                saveData?.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
+
                 Array.Copy(message, 5, payloadbytes, 0, message.Length - 5);
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
-                saveData.WriteDataJSON(Encoding.ASCII.GetString(payloadbytes));
 
             }
             else if (DataParser.isRawData(message))
             {
-                Console.WriteLine(BitConverter.ToString(message));
-                saveData.WriteDataRAW(ByteArrayToString(message));
+                Console.WriteLine(BitConverter.ToString(payloadbytes));
+                if (payloadbytes.Length == 8)
+                {
+                    saveData?.WriteDataRAWBike(payloadbytes);
+                }
+                else if (payloadbytes.Length == 2)
+                {
+                    saveData?.WriteDataRAWBPM(payloadbytes);
+                }
+                else
+                {
+                    Console.WriteLine("received raw data with weird lenght " + BitConverter.ToString(payloadbytes));
+                }
             }
 
 
         }
 
+        private void sendMessage(byte[] message)
+        {
+            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
         private bool verifyLogin(string username, string password)
         {
-            return username == password;
+            Console.WriteLine("got hashes " + username + "\n" + password);
+
+
+            if (!File.Exists(fileName))
+            {
+                File.Create(fileName);
+                Console.WriteLine("file doesnt exist");
+                newUsers(username, password);
+                Console.WriteLine("true");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("file exists, located at " + Path.GetFullPath(fileName));
+                string[] usernamesPasswords = File.ReadAllLines(fileName);
+                if (usernamesPasswords.Length == 0)
+                {
+                    newUsers(username, password);
+                    return true;
+                }
+
+                foreach (string s in usernamesPasswords)
+                {
+                    string[] combo = s.Split(" ");
+                    if (combo[0] == username)
+                    {
+                        Console.WriteLine("correct info");
+                        return combo[1] == password;
+                    }
+
+                }
+                Console.WriteLine("combo was not found in file");
+
+            }
+            Console.WriteLine("false");
+            return false;
+
         }
+
+        private void newUsers(string username, string password)
+        {
+
+            Console.WriteLine("creating new entry in file");
+            using (StreamWriter sw = File.AppendText(fileName))
+            {
+                sw.WriteLine(username + " " + password);
+            }
+        }
+
+
+
+
 
         public static string ByteArrayToString(byte[] ba)
         {

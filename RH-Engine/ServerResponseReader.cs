@@ -7,7 +7,7 @@ namespace RH_Engine
 {
     public delegate void OnResponse(string response);
 
-    class ServerResponseReader
+    public class ServerResponseReader
     {
         public OnResponse callback
         {
@@ -31,7 +31,7 @@ namespace RH_Engine
                 }
                 else
                 {
-                    Console.WriteLine("Starting loop for reading");
+                    Console.WriteLine("[SERVERRESPONSEREADER] Starting loop for reading");
                     while (true)
                     {
                         string res = ReadPrefMessage(Stream);

@@ -14,6 +14,9 @@ namespace Client
         private bool connected;
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
+        private EngineConnection engineConnection;
+        private bool sessionRunning = false;
+        private IHandler handler = null;
 
 
         public Client() : this("localhost", 5555)
@@ -28,10 +31,26 @@ namespace Client
             client.BeginConnect(adress, port, new AsyncCallback(OnConnect), null);
         }
 
+        private void initEngine()
+        {
+            engineConnection = EngineConnection.INSTANCE;
+            engineConnection.OnNoTunnelId = retryEngineConnection;
+            if (!engineConnection.Connected) engineConnection.Connect();
+        }
+
+        private void retryEngineConnection()
+        {
+            Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
+            Console.WriteLine("-- Press any key to retry connecting to the VR engine.");
+            Console.ReadKey();
+
+            engineConnection.CreateConnection();
+        }
+
         private void OnConnect(IAsyncResult ar)
         {
             this.client.EndConnect(ar);
-            Console.WriteLine("Verbonden!");
+            Console.WriteLine("TCP client Verbonden!");
 
 
             this.stream = this.client.GetStream();
@@ -75,11 +94,32 @@ namespace Client
                             if (responseStatus == "OK")
                             {
                                 this.connected = true;
+                                initEngine();
                             }
                             else
                             {
                                 Console.WriteLine($"login failed \"{responseStatus}\"");
                                 tryLogin();
+                            }
+                            break;
+                        case DataParser.START_SESSION:
+                            this.sessionRunning = true;
+                            sendMessage(DataParser.getStartSessionJson());
+                            break;
+                        case DataParser.STOP_SESSION:
+                            this.sessionRunning = false;
+                            sendMessage(DataParser.getStopSessionJson());
+                            break;
+                        case DataParser.SET_RESISTANCE:
+                            if (this.handler == null)
+                            {
+                                Console.WriteLine("handler is null");
+                                sendMessage(DataParser.getSetResistanceResponseJson(false));
+                            }
+                            else
+                            {
+                                this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
+                                sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
                             break;
                         default:
@@ -100,6 +140,11 @@ namespace Client
 
         }
 
+        private void sendMessage(byte[] message)
+        {
+            stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
         private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
@@ -109,6 +154,10 @@ namespace Client
         //maybe move this to other place
         public void BPM(byte[] bytes)
         {
+            if (!sessionRunning)
+            {
+                return;
+            }
             if (bytes == null)
             {
                 throw new ArgumentNullException("no bytes");
@@ -119,6 +168,10 @@ namespace Client
 
         public void Bike(byte[] bytes)
         {
+            if (!sessionRunning)
+            {
+                return;
+            }
             if (bytes == null)
             {
                 throw new ArgumentNullException("no bytes");
@@ -141,9 +194,18 @@ namespace Client
             Console.WriteLine("enter password");
             string password = Console.ReadLine();
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, password));
+            string hashUser = Hashing.Hasher.HashString(username);
+            string hashPassword = Hashing.Hasher.HashString(password);
 
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
+
+           
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        public void setHandler(IHandler handler)
+        {
+            this.handler = handler;
         }
     }
 }
