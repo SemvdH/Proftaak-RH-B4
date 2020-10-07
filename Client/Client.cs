@@ -103,14 +103,17 @@ namespace Client
                             }
                             break;
                         case DataParser.START_SESSION:
+                            Console.WriteLine("Start session identifier");
                             this.sessionRunning = true;
                             sendMessage(DataParser.getStartSessionJson());
                             break;
                         case DataParser.STOP_SESSION:
+                            Console.WriteLine("Stop session identifier");
                             this.sessionRunning = false;
                             sendMessage(DataParser.getStopSessionJson());
                             break;
                         case DataParser.SET_RESISTANCE:
+                            Console.WriteLine("Set resistance identifier");
                             if (this.handler == null)
                             {
                                 Console.WriteLine("handler is null");

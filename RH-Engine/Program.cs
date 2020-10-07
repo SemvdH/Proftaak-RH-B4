@@ -226,7 +226,6 @@ namespace RH_Engine
 
 
 
-<<<<<<< HEAD
             //Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
 
             //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
@@ -245,9 +244,8 @@ namespace RH_Engine
             //  Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
             //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
             //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
-=======
             Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
->>>>>>> develop
+
         }
 
         /// <summary>
