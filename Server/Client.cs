@@ -142,7 +142,9 @@ namespace Server
             }
             else if (DataParser.isRawData(message))
             {
+                // print the raw data
                 Console.WriteLine(BitConverter.ToString(payloadbytes));
+                // TODO change, checking for length is not that safe
                 if (payloadbytes.Length == 8)
                 {
                     saveData?.WriteDataRAWBike(payloadbytes);
@@ -167,7 +169,6 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
-            Console.WriteLine("got hashes " + username + "\n" + password);
 
 
             if (!File.Exists(fileName))

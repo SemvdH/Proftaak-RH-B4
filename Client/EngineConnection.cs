@@ -8,12 +8,14 @@ namespace Client
 {
     public delegate void HandleSerial(string message);
     public delegate void HandleNoTunnelId();
+    public delegate void OnSuccessfullConnection();
 
     public sealed class EngineConnection
     {
         private static EngineConnection instance = null;
         private static readonly object padlock = new object();
         public HandleNoTunnelId OnNoTunnelId;
+        public OnSuccessfullConnection OnSuccessFullConnection;
 
 
         private static PC[] PCs = {
@@ -29,9 +31,13 @@ namespace Client
         private static ServerResponseReader serverResponseReader;
         private static string sessionId = string.Empty;
         private static string tunnelId = string.Empty;
+        private static string cameraId = string.Empty;
         private static string routeId = string.Empty;
         private static string panelId = string.Empty;
         private static string bikeId = string.Empty;
+        private static string headId = string.Empty;
+
+        public bool FollowingRoute = false;
 
         private static NetworkStream stream;
 
@@ -45,6 +51,9 @@ namespace Client
 
         }
 
+        /// <summary>
+        /// Singleton constructor
+        /// </summary>
         public static EngineConnection INSTANCE
         {
             get
@@ -60,6 +69,11 @@ namespace Client
             }
         }
 
+       
+
+        /// <summary>
+        /// connects to the vr engine and initalizes the serverResponseReader
+        /// </summary>
         public void Connect()
         {
             TcpClient client = new TcpClient("145.48.6.10", 6666);
@@ -68,6 +82,18 @@ namespace Client
             CreateConnection();
         }
 
+        /// <summary>
+        /// initializes and starts the reading of the responses from the vr server
+        /// </summary>
+        /// <param name="stream">the networkstream</param>
+        private void initReader()
+        {
+            serverResponseReader = new ServerResponseReader(stream);
+            serverResponseReader.callback = HandleResponse;
+            serverResponseReader.StartRead();
+        }
+
+        #region VR Message traffic
         /// <summary>
         /// connects to the server and creates the tunnel
         /// </summary>
@@ -84,25 +110,7 @@ namespace Client
 
             WriteTextMessage(tunnelCreate);
 
-            // wait until we have a tunnel id
-            while (tunnelId == string.Empty) { }
-            if (tunnelId != null)
-            {
-                Write("got tunnel id! " + tunnelId);
-            }
-            mainCommand = new Command(tunnelId);
 
-        }
-        /// <summary>
-        /// initializes and starts the reading of the responses from the vr server
-        /// </summary>
-        /// <param name="stream">the networkstream</param>
-        private void initReader()
-        {
-            serverResponseReader = new ServerResponseReader(stream);
-            serverResponseReader.callback = HandleResponse;
-            serverResponseReader.StartRead();
-            Connected = true;
         }
 
         /// <summary>
@@ -121,12 +129,19 @@ namespace Client
             else if (id == "tunnel/create")
             {
                 tunnelId = JSONParser.GetTunnelID(message);
+                Console.WriteLine("set tunnel id to " + tunnelId);
                 if (tunnelId == null)
                 {
                     Write("could not find a valid tunnel id!");
                     OnNoTunnelId?.Invoke();
                     Connected = false;
+                    FollowingRoute = false;
                     return;
+                } else
+                {
+                    Write("got tunnel id! " + tunnelId);
+                    Connected = true;
+                    OnSuccessFullConnection?.Invoke();
                 }
             }
 
@@ -138,6 +153,95 @@ namespace Client
                 if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
             }
         }
+
+        public void initScene()
+        {
+            Write("initializing scene...");
+            mainCommand = new Command(tunnelId);
+
+            // reset the scene
+            WriteTextMessage(mainCommand.ResetScene());
+
+            //Get sceneinfo and set the id's
+            SendMessageAndOnResponse(mainCommand.GetSceneInfoCommand("sceneinfo"), "sceneinfo",
+                (message) =>
+                {
+                    //Console.WriteLine("\r\n\r\n\r\nscene info" + message);
+                    cameraId = JSONParser.GetIdSceneInfoChild(message, "Camera");
+                    string headId = JSONParser.GetIdSceneInfoChild(message, "Head");
+                    string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
+                    string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
+
+                    //Force(stream, mainCommand.DeleteNode(handLeftId, "deleteHandL"), "deleteHandL", (message) => Console.WriteLine("Left hand deleted"));
+                    //Force(stream, mainCommand.DeleteNode(handRightId, "deleteHandR"), "deleteHandR", (message) => Console.WriteLine("Right hand deleted"));
+                });
+            // add the route and set the route id
+            SendMessageAndOnResponse(mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
+        }
+
+        internal void StartRouteFollow()
+        {
+            Write("Starting route follow...");
+            FollowingRoute = true;
+
+            SendMessageAndOnResponse(mainCommand.AddBikeModel("bikeID"), "bikeID",
+                (message) =>
+                {
+                    bikeId = JSONParser.GetResponseUuid(message);
+                    SendMessageAndOnResponse(mainCommand.addPanel("panelAdd", bikeId), "panelAdd",
+                        (message) =>
+                        {
+
+                            panelId = JSONParser.getPanelID(message);
+                            WriteTextMessage(mainCommand.ColorPanel(panelId));
+                            WriteTextMessage(mainCommand.ClearPanel(panelId));
+
+
+                            showPanel(mainCommand, 5.3, 83, 52, 53);
+
+                            while (cameraId == string.Empty) { }
+                            SetFollowSpeed(5.0f);
+                        });
+                });
+        }
+
+        private void showPanel(Command mainCommand, double bikeSpeed, int bpm, int power, int resistance)
+        {
+            SendMessageAndOnResponse(mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showHeartrate(panelId, "bpm", bpm), "bpm",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showPower(panelId, "power", power), "power",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+
+            // Check if every text is drawn!
+
+            WriteTextMessage(mainCommand.SwapPanel(panelId));
+        }
+
+        private void SetFollowSpeed(float speed)
+        {
+            WriteTextMessage(mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
+            WriteTextMessage(mainCommand.RouteFollow(routeId, cameraId, speed));
+        }
+
+        #endregion
+
+        #region message send/receive
 
         /// <summary>
         /// method that sends the speciefied message with the specified serial, and executes the given action upon receivind a reply from the server with this serial.
@@ -168,6 +272,14 @@ namespace Client
             stream.Write(res);
 
             //Write("sent message " + message);
+        }
+
+        #endregion
+
+        public void Stop()
+        {
+            serverResponseReader.Stop();
+            
         }
         public void Write(string msg)
         {
