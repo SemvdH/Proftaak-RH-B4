@@ -179,6 +179,7 @@ namespace RH_Engine
                                 bool speedReplied = false;
                                 bool moveReplied = true;
                                 panelId = JSONParser.getPanelID(message);
+                                WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
                                 WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
                                 
 
@@ -186,6 +187,7 @@ namespace RH_Engine
                                     (message) =>
                                     {
                                         Console.WriteLine(message);
+                                        
                                         SendMessageAndOnResponse(stream, mainCommand.bikeSpeed(panelId, "bikeSpeed", 5.0), "bikeSpeed",
                                             (message) =>
                                                 {
@@ -223,31 +225,7 @@ namespace RH_Engine
 
             //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
             //string command;
-
-
-
-<<<<<<< HEAD
-            //Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
-
-            //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
-            //WriteTextMessage(stream, command);
-
-            //command = mainCommand.addPanel();
-            //  WriteTextMessage(stream, command);
-            //  string response = ReadPrefMessage(stream);
-            //  Console.WriteLine("add Panel response: \n\r" + response);
-            //  string uuidPanel = JSONParser.getPanelID(response);
-            //  WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
-            //  Console.WriteLine(ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel, 2.42));
-            //  Console.WriteLine(ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.ColorPanel(uuidPanel));
-            //  Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
-            //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
-=======
             Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
->>>>>>> develop
         }
 
         /// <summary>
@@ -330,7 +308,7 @@ namespace RH_Engine
         {
             WriteTextMessage(stream, mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
             WriteTextMessage(stream, mainCommand.RouteFollow(routeId, cameraId, speed));
-            WriteTextMessage(stream, mainCommand.RouteFollow(routeId, panelId, speed, 0, "XYZ", 1, false, new float[] { 0, 0, 0 }, new float[] { 0f, 0f, 150f }));
+            //WriteTextMessage(stream, mainCommand.RouteFollow(routeId, panelId, speed, 1f, "XYZ", 1, false, new float[] { 0, 0, 0 }, new float[] { 0f, 5f, 5f }));
         }
         //string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
         private static void Force(NetworkStream stream, string message, string serial, HandleSerial action)

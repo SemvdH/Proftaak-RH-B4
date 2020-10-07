@@ -106,8 +106,21 @@ namespace RH_Engine
                 data = new
                 {
                     name = "dashboard",
+                    parent = uuidBike,
                     components = new
                     {
+                        transform = new
+                        {
+                            position = new float[]
+                            {
+                                -1.5f, 1f, 0f
+                            },
+                            scale = 1,
+                            rotation = new int[]
+                            {
+                                -30, 90,0
+                            }
+                        },
                         panel = new
                         {
                             size = new int[] { 1, 1 },
@@ -130,7 +143,7 @@ namespace RH_Engine
                 data = new
                 {
                     id = uuidPanel,
-                    color = new int[] { 1, 1, 1, 1 }
+                    color = new float[] { 0f, 0f, 0f, 0f }
                 }
             };
 
