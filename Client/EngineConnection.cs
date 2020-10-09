@@ -14,6 +14,7 @@ namespace Client
     {
         private static EngineConnection instance = null;
         private static readonly object padlock = new object();
+        private static System.Timers.Timer updateTimer;
         public HandleNoTunnelId OnNoTunnelId;
         public OnSuccessfullConnection OnSuccessFullConnection;
 
@@ -57,6 +58,15 @@ namespace Client
             BikePower = 0;
             BikeBPM = 0;
             BikeResistance = 50;
+            updateTimer = new System.Timers.Timer(1000);
+            updateTimer.Elapsed += UpdateTimer_Elapsed;
+            updateTimer.AutoReset = true;
+            updateTimer.Enabled = false;
+        }
+
+        private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            UpdateInfoPanel();
         }
 
         /// <summary>
@@ -164,6 +174,7 @@ namespace Client
 
         public void initScene()
         {
+            
             Write("initializing scene...");
             mainCommand = new Command(tunnelId);
 
@@ -179,9 +190,6 @@ namespace Client
                     string headId = JSONParser.GetIdSceneInfoChild(message, "Head");
                     string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
                     string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
-
-                    //Force(stream, mainCommand.DeleteNode(handLeftId, "deleteHandL"), "deleteHandL", (message) => Console.WriteLine("Left hand deleted"));
-                    //Force(stream, mainCommand.DeleteNode(handRightId, "deleteHandR"), "deleteHandR", (message) => Console.WriteLine("Right hand deleted"));
                 });
             // add the route and set the route id
             SendMessageAndOnResponse(mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
@@ -204,6 +212,7 @@ namespace Client
 
                             WriteTextMessage(mainCommand.ColorPanel(panelId));
                             UpdateInfoPanel();
+                            updateTimer.Enabled = true;
 
                             while (cameraId == string.Empty) { }
                             SetFollowSpeed(5.0f);
