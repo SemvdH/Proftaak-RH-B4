@@ -13,6 +13,8 @@ namespace ClientApp.ViewModels
     class LoginViewModel : ObservableObject
     {
         public string Username { get; set; }
+        public ICommand LoginCommand { get; set; }
+        public bool LoginStatus { get; set; }
         private MainWindowViewModel mainWindowViewModel;
         public LoginViewModel(MainWindowViewModel mainWindowViewModel)
         {
@@ -24,11 +26,12 @@ namespace ClientApp.ViewModels
             });
         }
 
-        public ICommand LoginCommand { get; set; }
+
 
         internal void setLoginStatus(bool status)
         {
-            this.mainWindowViewModel.InfoModel.ConnectedToServer = true;
+            this.mainWindowViewModel.InfoModel.ConnectedToServer = status;
+            this.LoginStatus = status;
             if (status)
             {
                 this.mainWindowViewModel.SelectedViewModel = new MainViewModel(mainWindowViewModel);
