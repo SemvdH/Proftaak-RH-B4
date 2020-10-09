@@ -21,7 +21,7 @@
 
             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="10">
                 <Label  Content="Connected to server:"/>
-                <Label  Content="{Binding Path=MainWindowViewModel.InfoModel.ConnectedToServer}"/>
+                <Label  Content="true"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Margin="10">

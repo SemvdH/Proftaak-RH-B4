@@ -9,7 +9,7 @@ namespace ClientApp.ViewModels
     {
         public ICommand RetryServerCommand { get; set; }
         public ICommand RetryVREngineCommand { get; set; }
-        public MainWindowViewModel MainWindowViewModel;
+        public MainWindowViewModel MainWindowViewModel { get; set; }
 
 
         public MainViewModel(MainWindowViewModel mainWindowViewModel)
