@@ -8,6 +8,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
+        <DockPanel.Background>
+            <ImageBrush TileMode="Tile" ViewportUnits="Absolute" Viewport="0 0 355 200" ImageSource="/Images/re15.jpg"/>
+        </DockPanel.Background>
         <StackPanel VerticalAlignment="Center" Width="auto">
             <Label Content="Username" HorizontalContentAlignment="Center" />
             <TextBox x:Name="Username" Text="{Binding Username}" TextWrapping="Wrap" Width="120"/>
