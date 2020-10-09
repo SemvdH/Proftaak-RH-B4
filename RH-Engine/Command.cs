@@ -187,23 +187,7 @@ namespace RH_Engine
 
         public string showBikespeed(string uuidPanel, string serialCode, double speed)
         {
-            //dynamic payload = new
-            //{
-            //    id = "scene/panel/drawtext",
-            //    serial = serialCode,
-            //    data = new
-            //    {
-            //        id = uuidPanel,
-            //        text = "Speed: " + speed + " m/s",
-            //        position = new int[] { 4, 24 },
-            //        size = 36.0,
-            //        color = new int[] { 0, 0, 0, 1 },
-            //        font = "segoeui"
-            //    }
-            //};
-
-            //return JsonConvert.SerializeObject(Payload(payload));
-            return showOnPanel(uuidPanel, serialCode, "Speed: " + speed + " m/s", 0);
+            return showOnPanel(uuidPanel, serialCode, $"Speed: {string.Format("{0:.##}", speed)} m /s ({string.Format("{0:.##}", speed * 3.6)} km/h)", 0);
         }
 
         public string showHeartrate(string uuidPanel, string serialCode, int bpm)
