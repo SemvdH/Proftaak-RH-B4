@@ -4,7 +4,7 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using Client;
+using ClientApp.Utils;
 
 namespace Server
 {
