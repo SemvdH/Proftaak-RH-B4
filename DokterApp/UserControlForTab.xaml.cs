@@ -94,13 +94,13 @@ namespace DokterApp
 
         public bool IsReading { get; set; }
 
-        async private void Read()
+        private void Read()
         {
             var r = new Random();
 
             while (IsReading)
             {
-                await Task.Delay(150);
+                Thread.Sleep(150);
                 var now = DateTime.Now;
 
                 _trend += r.Next(-8, 10);
