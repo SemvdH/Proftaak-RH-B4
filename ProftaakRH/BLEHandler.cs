@@ -51,13 +51,13 @@ namespace Hardware
 
             // List available devices
             List<String> bleBikeList = bleBike.ListDevices();
-            Console.WriteLine("Devices found: ");
+            Console.WriteLine("[BLEHANDLER] Devices found: ");
             foreach (var name in bleBikeList)
             {
                 Console.WriteLine(name);
                 if (name.Contains("Avans Bike"))
                 {
-                    Console.WriteLine("connecting to {0}", name);
+                    Console.WriteLine("[BLEHANDLER] connecting to {0}", name);
                     Connect(name);
                     break;
 
