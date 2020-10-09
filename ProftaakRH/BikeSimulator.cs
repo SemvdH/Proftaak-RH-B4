@@ -28,6 +28,8 @@ namespace Hardware.Simulators
         byte[] powerArray;
         byte[] accPowerArray;
 
+        bool running = false;
+
 
 
         public BikeSimulator(IDataReceiver dataReceiver)
@@ -51,12 +53,14 @@ namespace Hardware.Simulators
             //Example BLE Message
             //4A-09-4E-05-19-16-00-FF-28-00-00-20-F0
 
+            this.running = true;
+
             float x = 0.0f;
 
             //Perlin for Random values
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
 
-            while (true)
+            while (this.running)
             {
                 CalculateVariables(improvedPerlin.GetValue(x) + 1);
 
@@ -124,6 +128,10 @@ namespace Hardware.Simulators
             this.resistance = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
         }
 
+        public void stop()
+        {
+            this.running = false;
+        }
     }
 
 }
