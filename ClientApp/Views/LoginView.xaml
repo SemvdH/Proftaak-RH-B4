@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientApp.Views"
+             xmlns:viewModels="clr-namespace:ClientApp.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
@@ -13,6 +14,10 @@
             <Label Content="Password" HorizontalContentAlignment="Center"/>
             <PasswordBox x:Name="Password" Width="120"/>
             <Button x:Name="Login" Content="Login" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=Password}" Margin="0,20,0,0" Width="120"/>
+            <CheckBox Name = "PCheckBox" Margin = "198,94,208,194" Content = "Checked Me"/>
+            <Popup IsOpen="{Binding LoginStatus}" PopupAnimation = "Slide">
+                <Label Content="Login failed" Foreground="Red"/>
+            </Popup>
         </StackPanel>
     </DockPanel>
 </UserControl>

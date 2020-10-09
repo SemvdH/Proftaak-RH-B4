@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -121,14 +122,15 @@ namespace ClientApp.Utils
                             string responseStatus = DataParser.getResponseStatus(payloadbytes);
                             if (responseStatus == "OK")
                             {
-                                Console.WriteLine("Username and password correct!");
+                                Debug.WriteLine("Username and password correct!");
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
                                 initEngine();
                             }
                             else
                             {
-                                Console.WriteLine($"login failed \"{responseStatus}\"");
+                                this.LoginViewModel.setLoginStatus(false);
+                                Debug.WriteLine($"login failed \"{responseStatus}\"");
                             }
                             break;
                         case DataParser.START_SESSION:
