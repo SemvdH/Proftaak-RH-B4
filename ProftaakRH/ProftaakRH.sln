@@ -17,10 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DokterApp", "..\DokterApp\D
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hashing", "..\Hashing\Hashing.shproj", "{70277749-D423-4871-B692-2EFC5A6ED932}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "..\ClientApp\ClientApp.csproj", "{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Hashing\Hashing.projitems*{5759dd20-7a4f-4d8d-b986-a70a7818c112}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{70277749-d423-4871-b692-2efc5a6ed932}*SharedItemsImports = 13
+		..\Hashing\Hashing.projitems*{7ef854c1-73eb-4099-a7d7-057cceee6f8f}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{b150f08b-13da-4d17-bd96-7e89f52727c6}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{b1ab6f51-a20d-4162-9a7f-b3350b7510fd}*SharedItemsImports = 5
 	EndGlobalSection
@@ -53,6 +56,10 @@ Global
 		{B150F08B-13DA-4D17-BD96-7E89F52727C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B150F08B-13DA-4D17-BD96-7E89F52727C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B150F08B-13DA-4D17-BD96-7E89F52727C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
