@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using ClientApp.Utils;
 using Hardware.Simulators;
 using System.Threading;
+using ProftaakRH;
 
 namespace ClientApp
 {
@@ -24,14 +25,13 @@ namespace ClientApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IHandler handler;
         public MainWindow()
         {
             Client client = new Client();
 
-
             InitializeComponent();
             DataContext = new MainWindowViewModel(client);
-
 
             //BLEHandler bLEHandler = new BLEHandler(client);
 
@@ -39,16 +39,19 @@ namespace ClientApp
 
             //client.setHandler(bLEHandler);
 
-
             BikeSimulator bikeSimulator = new BikeSimulator(client);
 
             Thread newThread = new Thread(new ThreadStart(bikeSimulator.StartSimulation));
             newThread.Start();
 
-
             client.SetHandler(bikeSimulator);
+            handler = bikeSimulator;
+        }
 
-
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            handler.stop();
         }
     }
 }

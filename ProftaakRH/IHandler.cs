@@ -7,5 +7,7 @@ namespace ProftaakRH
     public interface IHandler
     {
         void setResistance(float percentage);
+
+        void stop();
     }
 }

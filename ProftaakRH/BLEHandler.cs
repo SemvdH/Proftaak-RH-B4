@@ -44,7 +44,7 @@ namespace Hardware
         /// </summary>
         public void Connect()
         {
-            
+
             BLE bleBike = new BLE();
 
             Thread.Sleep(1000); // We need some time to list available devices
@@ -202,6 +202,12 @@ namespace Hardware
 
 
             bleBike.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", antMessage);
+        }
+
+        public void stop()
+        {
+            bleBike.SubscriptionValueChanged -= BleBike_SubscriptionValueChanged;
+            bleHeart.SubscriptionValueChanged -= BleBike_SubscriptionValueChanged;
         }
     }
 }
