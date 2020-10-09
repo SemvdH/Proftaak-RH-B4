@@ -19,30 +19,32 @@ namespace RH_Engine
             this.tunnelID = tunnelID;
         }
 
-        public string TerrainCommand(int[] sizeArray, float[] heightsArray)
+        public string TerrainAdd(int[] sizeArray, float[] heightsArray, string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/terrain/add",
+                serial = serialCode,
                 data = new
                 {
                     size = sizeArray,
-                    heights = heightsArray
+                    heights = heightsArray,
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddLayer(string uid, string texture)
+        public string AddLayer(string uuid, string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/node/addlayer",
+                serial = serialCode,
                 data = new
                 {
-                    id = uid,
-                    diffuse = @"C:\Users\woute\Downloads\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\textures\terrain\adesert_cracks_d.jpg",
-                    normal = @"C:\Users\woute\Downloads\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\textures\terrain\adesert_mntn_d.jpg",
+                    id = uuid,
+                    diffuse = @"data\NetworkEngine\textures\terrain\grass_green_d.jpg",
+                    normal = @"data\NetworkEngine\textures\terrain\grass_green_n.jpg",
                     minHeight = 0,
                     maxHeight = 10,
                     fadeDist = 1
@@ -63,19 +65,27 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddNodeCommand()
+        public string renderTerrain(string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/node/add",
+                serial = serialCode,
                 data = new
                 {
                     name = "newNode",
                     components = new
                     {
+                        transform = new
+                        {
+                            position = new int[] { -80, 0, -80 },
+                            scale = 1f,
+                            rotation = new int[] { 0, 0, 0 }
+                        },
                         terrain = new
                         {
-                            smoothnormals = true
+                            smoothnormals = true,
+
                         }
                     }
                 }
@@ -311,6 +321,19 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
+        public string ShowRoute(string serialCode, bool goShow)
+        {
+            dynamic payload = new
+            {
+                id = "route/show",
+                data = new
+                {
+                    show = goShow
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
         public string RouteCommand(string serialToSend)
         {
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(4325, LibNoise.NoiseQuality.Best);
@@ -422,12 +445,13 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string RoadCommand(string uuid_route)
+        
+        public string RoadCommand(string uuid_route, string serialCode)
         {
-            Console.WriteLine("road");
             dynamic payload = new
             {
                 id = "scene/road/add",
+                serial = serialCode,
                 data = new
                 {
                     route = uuid_route,
@@ -464,6 +488,7 @@ namespace RH_Engine
 
         public string SkyboxCommand(double timeToSet)
         {
+            Console.WriteLine(timeToSet);
             if (timeToSet < 0 || timeToSet > 24)
             {
                 throw new Exception("The time must be between 0 and 24!");
