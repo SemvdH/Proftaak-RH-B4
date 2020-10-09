@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
-using ClientApp.Utils;
+using Client;
 
 namespace Server
 {
