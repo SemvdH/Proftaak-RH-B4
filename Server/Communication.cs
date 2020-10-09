@@ -1,4 +1,5 @@
-﻿using Client;
+﻿using ClientApp;
+using ClientApp.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
