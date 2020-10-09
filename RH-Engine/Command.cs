@@ -106,8 +106,21 @@ namespace RH_Engine
                 data = new
                 {
                     name = "dashboard",
+                    parent = uuidBike,
                     components = new
                     {
+                        transform = new
+                        {
+                            position = new float[]
+                            {
+                                -1.5f, 1f, 0f
+                            },
+                            scale = 1,
+                            rotation = new int[]
+                            {
+                                -30, 90,0
+                            }
+                        },
                         panel = new
                         {
                             size = new int[] { 1, 1 },
@@ -130,7 +143,7 @@ namespace RH_Engine
                 data = new
                 {
                     id = uuidPanel,
-                    color = new int[] { 1, 1, 1, 1 }
+                    color = new float[] { 0f, 0f, 0f, 0f }
                 }
             };
 
@@ -151,7 +164,7 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string bikeSpeed(string uuidPanel, string serialCode, double speed)
+        private string showOnPanel(string uuidPanel, string serialCode, string mText, int index)
         {
             dynamic payload = new
             {
@@ -160,15 +173,52 @@ namespace RH_Engine
                 data = new
                 {
                     id = uuidPanel,
-                    text = "Speed: " + speed.ToString(),
-                    position = new int[] { 4, 24 },
-                    size = 36.0,
+                    text = mText,
+                    position = new int[] { 4, 24 + index * 32 },
+                    size = 32.0,
                     color = new int[] { 0, 0, 0, 1 },
                     font = "segoeui"
                 }
             };
 
             return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+
+        public string showBikespeed(string uuidPanel, string serialCode, double speed)
+        {
+            //dynamic payload = new
+            //{
+            //    id = "scene/panel/drawtext",
+            //    serial = serialCode,
+            //    data = new
+            //    {
+            //        id = uuidPanel,
+            //        text = "Speed: " + speed + " m/s",
+            //        position = new int[] { 4, 24 },
+            //        size = 36.0,
+            //        color = new int[] { 0, 0, 0, 1 },
+            //        font = "segoeui"
+            //    }
+            //};
+
+            //return JsonConvert.SerializeObject(Payload(payload));
+            return showOnPanel(uuidPanel, serialCode, "Speed: " + speed + " m/s", 0);
+        }
+
+        public string showHeartrate(string uuidPanel, string serialCode, int bpm)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Heartrate: " + bpm + " bpm", 1);
+        }
+
+        public string showPower(string uuidPanel, string serialCode, double power)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Inst. Power: " + power + " W", 2);
+        }
+
+        public string showResistance(string uuidPanel, string serialCode, double resistance)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Resistance: " + resistance + " %", 3);
         }
 
         public string SwapPanelCommand(string uuid)
@@ -369,6 +419,20 @@ namespace RH_Engine
                     rotateOffset = rotateOffsetVector,
                     positionOffset = positionOffsetVector
 
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string RouteSpeed(float speedValue,string nodeID)
+        {
+            dynamic payload = new
+            {
+                id = "route/follow/speed",
+                data = new
+                {
+                    node = nodeID,
+                    speed = speedValue
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));

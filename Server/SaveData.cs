@@ -63,12 +63,20 @@ namespace Server
             {
                 // do nothing
             }
-            using (BinaryWriter sw = new BinaryWriter(File.Open(fileLocation, FileMode.Create)))
+            using (var fileStream = new FileStream(fileLocation, FileMode.Append, FileAccess.Write, FileShare.None))
+            using (var bw = new BinaryWriter(fileStream))
             {
-                sw.Seek(length, SeekOrigin.End);
-                sw.Write(data);
-                sw.Flush();
+                //sw.BaseStream.Seek(length, SeekOrigin.Begin);
+                bw.Write(data);
+                bw.Flush();
+                //Console.WriteLine("wrote at " + bw.BaseStream.Position);
             }
+            //using (BinaryReader binaryReader = new BinaryReader(File.Open(fileLocation, FileMode.Open)))
+            //{
+            //    byte[] totalArray = new byte[binaryReader.BaseStream.Length];
+            //    binaryReader.BaseStream.Read(totalArray, 0, (int)binaryReader.BaseStream.Length);
+            //    Console.WriteLine("all data is " + BitConverter.ToString(totalArray));
+            //}
         }
 
         /// <summary>
@@ -86,6 +94,7 @@ namespace Server
             {
                 FileInfo fi = new FileInfo(this.path + rawBPMFilename);
                 int length = (int)fi.Length;
+                //Console.WriteLine("length " + length);
 
                 byte[] output = new byte[outputSize];
 
@@ -93,15 +102,20 @@ namespace Server
                 int readSize = messageSize * averageOver;
                 byte[] readBuffer = new byte[readSize];
 
-                using (FileStream fileStream = new FileStream(this.path + rawBPMFilename, FileMode.Open, FileAccess.Read))
+                using (BinaryReader binaryReader = new BinaryReader(File.Open(this.path + rawBPMFilename, FileMode.Open)))
                 {
-                    for (int i = 1; i >= outputSize; i++)
+                    //byte[] totalArray = new byte[binaryReader.BaseStream.Length];
+                    //binaryReader.BaseStream.Read(totalArray, 0, (int)binaryReader.BaseStream.Length);
+                    //Console.WriteLine("all data is " + BitConverter.ToString(totalArray));
+                    for (int i = 1; i <= outputSize; i++)
                     {
                         if (length - (i * readSize) < 0)
                         {
                             break;
                         }
-                        fileStream.Read(readBuffer, length - (i * readSize), readSize);
+                        binaryReader.BaseStream.Seek(length - (i * readSize), SeekOrigin.Begin);
+                        binaryReader.BaseStream.Read(readBuffer, 0, readSize);
+                        //Console.WriteLine("read " + binaryReader.BaseStream.Position + " and size " + readSize + " with value " + BitConverter.ToString(readBuffer));
 
                         //handling data
                         int total = 0;

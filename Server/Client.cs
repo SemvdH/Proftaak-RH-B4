@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using Client;
 using Newtonsoft.Json;
-using System.Security.Cryptography;
+using ClientApp.Utils;
 
 namespace Server
 {
@@ -77,7 +75,7 @@ namespace Server
 
 
         /// <summary>
-        /// TODO
+        /// handles all incoming data from the client
         /// </summary>
         /// <param name="message">including message length and messageId (can be changed)</param>
         private void HandleData(byte[] message)
@@ -143,7 +141,9 @@ namespace Server
             }
             else if (DataParser.isRawData(message))
             {
+                // print the raw data
                 Console.WriteLine(BitConverter.ToString(payloadbytes));
+                // TODO change, checking for length is not that safe
                 if (payloadbytes.Length == 8)
                 {
                     saveData?.WriteDataRAWBike(payloadbytes);
@@ -168,7 +168,6 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
-            Console.WriteLine("got hashes " + username + "\n" + password);
 
 
             if (!File.Exists(fileName))
@@ -216,10 +215,6 @@ namespace Server
                 sw.WriteLine(username + " " + password);
             }
         }
-
-
-
-
 
         public static string ByteArrayToString(byte[] ba)
         {

@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using ClientApp.ViewModels;
 using ProftaakRH;
 
-namespace Client
+namespace ClientApp.Utils
 {
     public class Client : IDataReceiver
     {
@@ -17,6 +18,7 @@ namespace Client
         private EngineConnection engineConnection;
         private bool sessionRunning = false;
         private IHandler handler = null;
+        private LoginViewModel LoginViewModel;
 
 
         public Client() : this("localhost", 5555)
@@ -57,7 +59,7 @@ namespace Client
                 Console.WriteLine("Skipping connecting to VR engine...");
                 engineConnection.Stop();
             }
-            
+
         }
 
         private void engineConnected()
@@ -78,8 +80,6 @@ namespace Client
 
 
             this.stream = this.client.GetStream();
-
-            tryLogin();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
@@ -122,13 +122,13 @@ namespace Client
                             if (responseStatus == "OK")
                             {
                                 Console.WriteLine("Username and password correct!");
+                                this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
-                                //initEngine();
+                                initEngine();
                             }
                             else
                             {
                                 Console.WriteLine($"login failed \"{responseStatus}\"");
-                                tryLogin();
                             }
                             break;
                         case DataParser.START_SESSION:
@@ -237,7 +237,7 @@ namespace Client
             switch (bytes[0])
             {
                 case 0x10:
-                    
+
                     engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
                     break;
                 case 0x19:
@@ -263,20 +263,14 @@ namespace Client
         /// <summary>
         /// tries to log in to the server by asking for a username and password
         /// </summary>
-        private void tryLogin()
+        public void tryLogin(string username, string password)
         {
-            //TODO File in lezen
-            Console.WriteLine("enter username");
-            string username = Console.ReadLine();
-            Console.WriteLine("enter password");
-            string password = Console.ReadLine();
-
             string hashUser = Hashing.Hasher.HashString(username);
             string hashPassword = Hashing.Hasher.HashString(password);
 
             byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
 
-           
+
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
@@ -284,9 +278,14 @@ namespace Client
         /// sets the handler for the client, so either the bike simulator or the bluetooth bike handler
         /// </summary>
         /// <param name="handler"></param>
-        public void setHandler(IHandler handler)
+        public void SetHandler(IHandler handler)
         {
             this.handler = handler;
+        }
+
+        internal void SetLoginViewModel(LoginViewModel loginViewModel)
+        {
+            this.LoginViewModel = loginViewModel;
         }
     }
 }

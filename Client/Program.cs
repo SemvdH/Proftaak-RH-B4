@@ -12,7 +12,7 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("// Connecting... //");
             //connect fiets?
 
             Thread.Sleep(20000);
@@ -23,18 +23,18 @@ namespace Client
             {
 
             }
-            BLEHandler bLEHandler = new BLEHandler(client);
+            //BLEHandler bLEHandler = new BLEHandler(client);
 
-            bLEHandler.Connect();
+            //bLEHandler.Connect();
 
-            client.setHandler(bLEHandler);
+            //client.setHandler(bLEHandler);
 
 
-            //BikeSimulator bikeSimulator = new BikeSimulator(client);
+            BikeSimulator bikeSimulator = new BikeSimulator(client);
 
-            //bikeSimulator.StartSimulation();
+            bikeSimulator.StartSimulation();
 
-            //client.setHandler(bikeSimulator);
+            client.setHandler(bikeSimulator);
 
             while (true)
             {

@@ -4,7 +4,7 @@ using System.Text;
 using RH_Engine;
 using System.Net.Sockets;
 
-namespace Client
+namespace ClientApp.Utils
 {
     public delegate void HandleSerial(string message);
     public delegate void HandleNoTunnelId();
@@ -77,7 +77,7 @@ namespace Client
             }
         }
 
-       
+
 
         /// <summary>
         /// connects to the vr engine and initalizes the serverResponseReader
@@ -109,7 +109,7 @@ namespace Client
         public void CreateConnection()
         {
 
-            WriteTextMessage( "{\r\n\"id\" : \"session/list\",\r\n\"serial\" : \"list\"\r\n}");
+            WriteTextMessage("{\r\n\"id\" : \"session/list\",\r\n\"serial\" : \"list\"\r\n}");
 
             // wait until we have got a sessionId
             while (sessionId == string.Empty) { }
@@ -145,7 +145,8 @@ namespace Client
                     Connected = false;
                     FollowingRoute = false;
                     return;
-                } else
+                }
+                else
                 {
                     Write("got tunnel id! " + tunnelId);
                     Connected = true;
@@ -270,7 +271,8 @@ namespace Client
             if (serialResponses.ContainsKey(serial))
             {
                 serialResponses[serial] = action;
-            } else
+            }
+            else
             {
                 serialResponses.Add(serial, action);
             }
@@ -300,11 +302,11 @@ namespace Client
         public void Stop()
         {
             serverResponseReader.Stop();
-            
+
         }
         public void Write(string msg)
         {
-            Console.WriteLine( "[ENGINECONNECT] " + msg);
+            Console.WriteLine("[ENGINECONNECT] " + msg);
         }
 
     }

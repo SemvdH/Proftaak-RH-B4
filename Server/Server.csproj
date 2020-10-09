@@ -10,7 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Client\Client.csproj" />
+	  <ProjectReference Include="..\ClientApp\ClientApp.csproj" />
 	</ItemGroup>
 
 	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
