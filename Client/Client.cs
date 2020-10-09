@@ -189,6 +189,7 @@ namespace Client
         private void OnWrite(IAsyncResult ar)
         {
             this.stream.EndWrite(ar);
+
         }
 
         #region interface
