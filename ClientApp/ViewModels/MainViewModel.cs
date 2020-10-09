@@ -11,10 +11,14 @@ namespace ClientApp.ViewModels
         public ICommand RetryVREngineCommand { get; set; }
         public MainWindowViewModel MainWindowViewModel { get; set; }
 
+        private Client client;
 
         public MainViewModel(MainWindowViewModel mainWindowViewModel)
         {
             this.MainWindowViewModel = mainWindowViewModel;
+            client = this.MainWindowViewModel.client;
+            client.engineConnectFailed = retryEngineConnection;
+            client.engineConnectSuccess = succesEngineConnection;
             this.RetryServerCommand = new RelayCommand(() =>
             {
                 //try connect server
@@ -23,8 +27,28 @@ namespace ClientApp.ViewModels
             this.RetryVREngineCommand = new RelayCommand(() =>
             {
                 //try connect vr-engine
+                
                 this.MainWindowViewModel.InfoModel.ConnectedToVREngine = true;
+                this.MainWindowViewModel.InfoModel.CanConnectToVR = false;
+                client.engineConnection.CreateConnection();
+
             });
         }
+
+        private void retryEngineConnection()
+        {
+            this.MainWindowViewModel.InfoModel.ConnectedToVREngine = false;
+            this.MainWindowViewModel.InfoModel.CanConnectToVR = true;
+            client.engineConnection.CreateConnection();
+        }
+
+        private void succesEngineConnection()
+        {
+            this.MainWindowViewModel.InfoModel.ConnectedToVREngine = true;
+            this.MainWindowViewModel.InfoModel.CanConnectToVR = false;
+
+        }
+
+
     }
 }
