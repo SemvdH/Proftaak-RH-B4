@@ -212,7 +212,7 @@ namespace ClientApp.Utils
             if (engineConnection.Connected && engineConnection.FollowingRoute)
             {
                 engineConnection.BikeBPM = bytes[1];
-                engineConnection.UpdateInfoPanel();
+
             }
 
 
@@ -225,6 +225,7 @@ namespace ClientApp.Utils
         /// <param name="bytes">the message</param>
         public void Bike(byte[] bytes)
         {
+            
             if (!sessionRunning)
             {
                 return;
@@ -234,18 +235,19 @@ namespace ClientApp.Utils
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
+            bool canSendToEngine = engineConnection.Connected && engineConnection.FollowingRoute;
             switch (bytes[0])
             {
+
                 case 0x10:
 
-                    engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
+                    if (canSendToEngine) engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
                     break;
                 case 0x19:
-                    engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+                    if (canSendToEngine) engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
                     break;
             }
-            if (engineConnection.Connected && engineConnection.FollowingRoute)
-                engineConnection.UpdateInfoPanel();
+
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
