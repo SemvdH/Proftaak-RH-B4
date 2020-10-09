@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RH-Engine", "..\RH-Engine\R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "..\Server\Server.csproj", "{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "..\Client\Client.csproj", "{5759DD20-7A4F-4D8D-B986-A70A7818C112}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message", "..\Message\Message.csproj", "{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DokterApp", "..\DokterApp\DokterApp.csproj", "{B150F08B-13DA-4D17-BD96-7E89F52727C6}"
@@ -21,7 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "..\ClientApp\C
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\Hashing\Hashing.projitems*{5759dd20-7a4f-4d8d-b986-a70a7818c112}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{70277749-d423-4871-b692-2efc5a6ed932}*SharedItemsImports = 13
 		..\Hashing\Hashing.projitems*{7ef854c1-73eb-4099-a7d7-057cceee6f8f}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{b150f08b-13da-4d17-bd96-7e89f52727c6}*SharedItemsImports = 5
@@ -44,10 +41,6 @@ Global
 		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1AB6F51-A20D-4162-9A7F-B3350B7510FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5759DD20-7A4F-4D8D-B986-A70A7818C112}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ED6832D-B0FB-4460-9BCD-FAA58863B0CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
