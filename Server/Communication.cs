@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Client;
+using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
@@ -10,6 +12,7 @@ namespace Server
     {
         private TcpListener listener;
         private List<Client> clients;
+        private Client doctor;
 
         public Communication(TcpListener listener)
         {
@@ -28,9 +31,19 @@ namespace Server
 
         private void OnConnect(IAsyncResult ar)
         {
+            
             var tcpClient = listener.EndAcceptTcpClient(ar);
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
             clients.Add(new Client(this, tcpClient));
+            if (doctor == null)
+            {
+                doctor = clients.ElementAt(0);
+            }
+            else
+            {
+
+                doctor.sendMessage(DataParser.getLoginResponse("new client"));
+            }
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 

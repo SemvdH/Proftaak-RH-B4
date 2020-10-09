@@ -36,6 +36,7 @@ namespace Server
 
         private void OnRead(IAsyncResult ar)
         {
+            
             int receivedBytes = this.stream.EndRead(ar);
 
             if (totalBufferReceived + receivedBytes > 1024)
@@ -160,7 +161,7 @@ namespace Server
 
         }
 
-        private void sendMessage(byte[] message)
+        public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
