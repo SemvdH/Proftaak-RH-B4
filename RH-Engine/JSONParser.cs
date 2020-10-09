@@ -87,6 +87,16 @@ namespace RH_Engine
             return null;
         }
 
+        public static string GetTerrainID(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            if (jsonData.data.data.status == "ok")
+            {
+                return jsonData.data.data.data.uuid;
+            }
+            return null;
+        }
+
         /// <summary>
         /// method to get the uuid from requests for adding a node,route or road
         /// </summary>

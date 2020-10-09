@@ -11,6 +11,6 @@
 
     <DockPanel>
         <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
-        <ContentControl  HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding SelectedViewModel}" />
+        <ContentControl  HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding SelectedViewModel}" Focusable="False" />
     </DockPanel>
 </Window>

@@ -25,10 +25,8 @@ namespace DokterApp
         public MainWindow()
         {
             InitializeComponent();
-   
-        }
 
-        
+        }
 
         private void Login_Click_1(object sender, RoutedEventArgs e)
         {
@@ -36,16 +34,13 @@ namespace DokterApp
             handler = windowTabs.NewTab;
 
             this.Label.Content = "Waiting";
-            this.client = new Client("localhost", 5555, this.Username.Text, this.Password.Text, handler);
+            this.client = new Client("localhost", 5555, this.Username.Text, this.Password.Password, handler);
             while (!client.IsConnected())
             {
             }
-            
-            
+
             windowTabs.Show();
-            
             this.Close();
-            
         }
 
     }
