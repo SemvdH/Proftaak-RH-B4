@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DoctorApp.ViewModels
 {
-    class MainWindowViewModel
+    class MainWindowViewModel : ObservableObject
     {
         public Info InfoModel { get; set; }
 

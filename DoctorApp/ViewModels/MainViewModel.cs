@@ -9,9 +9,12 @@ namespace DoctorApp.ViewModels
     {
         public MainWindowViewModel MainWindowViewModel { get; set; }
 
+        Client client;
+
         public MainViewModel(MainWindowViewModel mainWindowViewModel)
         {
-            MainWindowViewModel = mainWindowViewModel;
+            this.MainWindowViewModel = mainWindowViewModel;
+            client = this.MainWindowViewModel.client;
         }
     }
 }

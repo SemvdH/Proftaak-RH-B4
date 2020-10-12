@@ -14,5 +14,6 @@
             <views:LoginView />
             <!-- This is a UserControl -->
         </DataTemplate>
+        
         </Application.Resources>
 </Application>
