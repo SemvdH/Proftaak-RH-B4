@@ -36,6 +36,12 @@ namespace RH_Engine
         private static string bikeId = string.Empty;
         private static string headId = string.Empty;
 
+        private static double bikeSpeed = 6.66;
+        private static int bpm = 6;
+        private static int power = 6;
+        private static int resistance = 6;
+        private static string lastMessage = "No message received yet";
+
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
 
         private static void Main(string[] args)
@@ -189,11 +195,8 @@ namespace RH_Engine
                                 bool speedReplied = false;
                                 bool moveReplied = true;
                                 panelId = JSONParser.getPanelID(message);
-                                WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
-                                WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
-
-
-                                showPanel(stream, mainCommand, 5.3, 83, 52, 53);
+                                
+                                showPanel(stream, mainCommand);
 
 
                                 //while (!(speedReplied && moveReplied)) { }
@@ -338,8 +341,10 @@ namespace RH_Engine
         }
 
         
-        private static void showPanel(NetworkStream stream, Command mainCommand, double bikeSpeed, int bpm, int power, int resistance)
+        private static void showPanel(NetworkStream stream, Command mainCommand)
         {
+            WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
+            WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
             SendMessageAndOnResponse(stream, mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
                 (message) =>
                 {
@@ -356,6 +361,11 @@ namespace RH_Engine
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(stream, mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showMessage(panelId, "message", lastMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn
