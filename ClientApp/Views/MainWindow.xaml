@@ -13,8 +13,8 @@
         WindowStartupLocation="CenterScreen"
         MinHeight="{Binding MinimumHeight}"
         MinWidth="{Binding MinimumWidth}"
-        Title="Whaazzzzuuuuuuuup"
-        >
+        Title="Whaazzzzuuuuuuuup">
+    <!--Icon="/Images/Logo/icon1_small.ico"-->
     <!--Icon="pack://application:,,,/Images/Log/icon1_small.ico"-->
 
     <Window.Resources>
@@ -122,7 +122,7 @@
     </WindowChrome.WindowChrome>
 
     <Grid>
-        <Frame Content="{Binding SelectedViewModel}" Focusable="False"/>
+        <Frame Content="{Binding SelectedViewModel}" Focusable="False" NavigationUIVisibility="Hidden"/>
         <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
     </Grid>
 </Window>
