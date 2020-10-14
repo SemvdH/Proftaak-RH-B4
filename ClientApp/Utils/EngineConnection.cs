@@ -239,28 +239,28 @@ namespace ClientApp.Utils
             Write("Setting environment");
             WriteTextMessage(mainCommand.DeleteNode(groundPlaneId, "none"));
 
-            PlaceHouses(mainCommand);
+            PlaceHouses();
 
             WriteTextMessage(mainCommand.SkyboxCommand(DateTime.Now.Hour));
         }
 
-        private void PlaceHouses(Command mainCommand)
+        private void PlaceHouses()
         {
-            PlaceHouse(mainCommand, 2, new float[] { 10f, 1f, 30f }, 1);
-            PlaceHouse(mainCommand, 1, new float[] { 42f, 1f, 22f }, new float[] { 0f, 90f, 0f }, 2);
-            PlaceHouse(mainCommand, 11, new float[] { -20f, 1f, 0f }, new float[] { 0f, -35f, 0f }, 3);
-            PlaceHouse(mainCommand, 7, new float[] { -15f, 1f, 50f }, new float[] { 0f, -50f, 0f }, 4);
-            PlaceHouse(mainCommand, 24, new float[] { 40f, 1f, 40f }, new float[] { 0f, 75f, 0f }, 5);
-            PlaceHouse(mainCommand, 22, new float[] { 34f, 1f, -20f }, 6);
-            PlaceHouse(mainCommand, 14, new float[] { 0f, 1f, -20f }, new float[] { 0f, 210f, 0f }, 7);
+            PlaceHouse(2, new float[] { 10f, 1f, 30f }, 1);
+            PlaceHouse(1, new float[] { 42f, 1f, 22f }, new float[] { 0f, 90f, 0f }, 2);
+            PlaceHouse(11, new float[] { -20f, 1f, 0f }, new float[] { 0f, -35f, 0f }, 3);
+            PlaceHouse(7, new float[] { -15f, 1f, 50f }, new float[] { 0f, -50f, 0f }, 4);
+            PlaceHouse(24, new float[] { 40f, 1f, 40f }, new float[] { 0f, 75f, 0f }, 5);
+            PlaceHouse(22, new float[] { 34f, 1f, -20f }, 6);
+            PlaceHouse(14, new float[] { 0f, 1f, -20f }, new float[] { 0f, 210f, 0f }, 7);
         }
 
-        private void PlaceHouse(Command mainCommand, int numberHousemodel, float[] position, int serialNumber)
+        private void PlaceHouse(int numberHousemodel, float[] position, int serialNumber)
         {
-            PlaceHouse(mainCommand, numberHousemodel, position, new float[] { 0f, 0f, 0f }, serialNumber);
+            PlaceHouse(numberHousemodel, position, new float[] { 0f, 0f, 0f }, serialNumber);
         }
 
-        private void PlaceHouse(Command mainCommand, int numberHousemodel, float[] position, float[] rotation, int serialNumber)
+        private void PlaceHouse(int numberHousemodel, float[] position, float[] rotation, int serialNumber)
         {
             string folderHouses = @"data\NetworkEngine\models\houses\set1\";
             SendMessageAndOnResponse(mainCommand.AddModel("House1", "housePlacement" + serialNumber, folderHouses + "house" + numberHousemodel + ".obj", position, 4, rotation), "housePlacement" + serialNumber, (message) => Console.WriteLine(message));
@@ -316,16 +316,16 @@ namespace ClientApp.Utils
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
             for (int i = 0; i < 256 * 256; i++)
             {
-                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) / 3.5f + 1;
+                height[i] = improvedPerlin.GetValue(x /10, x / 10, x * 100) / 3.5f + 1;
 
-                if (height[i] > 1.1f)
-                {
-                    height[i] = height[i] * 0.8f;
-                }
-                else if (height[i] < 0.9f)
-                {
-                    height[i] = height[i] * 1.2f;
-                }
+                //if (height[i] > 1.1f)
+                //{
+                //    height[i] = height[i] * 0.8f;
+                //}
+                //else if (height[i] < 0.9f)
+                //{
+                //    height[i] = height[i] * 1.2f;
+                //}
                 x += 0.001f;
             }
 
