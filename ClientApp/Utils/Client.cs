@@ -8,15 +8,18 @@ using ProftaakRH;
 
 namespace ClientApp.Utils
 {
+    public delegate void EngineCallback();
     public class Client : IDataReceiver
     {
+        public EngineCallback engineConnectFailed;
+        public EngineCallback engineConnectSuccess;
         private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
         private bool connected;
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
-        private EngineConnection engineConnection;
+        public EngineConnection engineConnection;
         private bool sessionRunning = false;
         private IHandler handler = null;
         private LoginViewModel LoginViewModel;
@@ -40,7 +43,7 @@ namespace ClientApp.Utils
         private void initEngine()
         {
             engineConnection = EngineConnection.INSTANCE;
-            engineConnection.OnNoTunnelId = retryEngineConnection;
+            engineConnection.OnNoTunnelId = RetryEngineConnection;
             engineConnection.OnSuccessFullConnection = engineConnected;
             if (!engineConnection.Connected) engineConnection.Connect();
         }
@@ -48,24 +51,16 @@ namespace ClientApp.Utils
         /// <summary>
         /// retries to connect to the VR engine if no tunnel id was found
         /// </summary>
-        private void retryEngineConnection()
+        public void RetryEngineConnection()
         {
-            Console.WriteLine("-- Could not connect to the VR engine. Please make sure you are running the simulation!");
-            Console.WriteLine("-- Press ENTER to retry connecting to the VR engine.");
-            Console.WriteLine("-- Press 'q' and then ENTER to not connect to the VR engine");
-            string input = Console.ReadLine();
-            if (input == string.Empty) engineConnection.CreateConnection();
-            else
-            {
-                Console.WriteLine("Skipping connecting to VR engine...");
-                engineConnection.Stop();
-            }
+            engineConnectFailed?.Invoke();
 
         }
 
         private void engineConnected()
         {
             Console.WriteLine("successfully connected to VR engine");
+            engineConnectSuccess?.Invoke();
             engineConnection.initScene();
             if (engineConnection.Connected && sessionRunning && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
         }
@@ -126,6 +121,7 @@ namespace ClientApp.Utils
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
                                 initEngine();
+                                
                             }
                             else
                             {

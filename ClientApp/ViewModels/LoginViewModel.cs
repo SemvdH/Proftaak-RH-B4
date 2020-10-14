@@ -14,7 +14,11 @@ namespace ClientApp.ViewModels
     {
         public string Username { get; set; }
         public ICommand LoginCommand { get; set; }
+
+        public bool LoginStatus { get; set; }
+
         public bool InvertedLoginStatus { get; set; }
+
         private MainWindowViewModel mainWindowViewModel;
         public LoginViewModel(MainWindowViewModel mainWindowViewModel)
         {

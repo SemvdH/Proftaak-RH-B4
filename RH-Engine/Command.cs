@@ -215,6 +215,11 @@ namespace RH_Engine
             return showOnPanel(uuidPanel, serialCode, "Resistance: " + resistance + " %", 3);
         }
 
+        public string showMessage(string uuidPanel, string serialCode, string message)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Last message: " + message, 5);
+        }
+
         public string SwapPanelCommand(string uuid)
         {
             dynamic payload = new

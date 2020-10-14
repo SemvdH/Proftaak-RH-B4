@@ -10,5 +10,7 @@ namespace ClientApp.Models
         public bool ConnectedToServer { get; set; }
         public bool ConnectedToVREngine { get; set; }
         public bool DoctorConnected { get; set; }
+
+        public bool CanConnectToVR { get; set; }
     }
 }
