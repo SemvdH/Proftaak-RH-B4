@@ -10,7 +10,7 @@ using Util;
 namespace ClientApp.Utils
 {
     public delegate void EngineCallback();
-    public class Client : IDataReceiver
+    public class Client : IDataReceiver, IDisposable
     {
         public EngineCallback engineConnectFailed;
         public EngineCallback engineConnectSuccess;
@@ -87,6 +87,10 @@ namespace ClientApp.Utils
         /// <param name="ar">the result of the async read</param>
         private void OnRead(IAsyncResult ar)
         {
+            if (ar == null || (!ar.IsCompleted))
+                return;
+
+
             int receivedBytes = this.stream.EndRead(ar);
 
             if (totalBufferReceived + receivedBytes > 1024)
@@ -122,7 +126,7 @@ namespace ClientApp.Utils
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
                                 initEngine();
-                                
+
                             }
                             else
                             {
@@ -224,7 +228,7 @@ namespace ClientApp.Utils
         /// <param name="bytes">the message</param>
         public void Bike(byte[] bytes)
         {
-            
+
             if (!sessionRunning)
             {
                 return;
@@ -266,7 +270,7 @@ namespace ClientApp.Utils
         /// </summary>
         public void tryLogin(string username, string password)
         {
-            
+
             string hashPassword = Util.Hasher.HashString(password);
 
             byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, hashPassword));
@@ -287,6 +291,14 @@ namespace ClientApp.Utils
         internal void SetLoginViewModel(LoginViewModel loginViewModel)
         {
             this.LoginViewModel = loginViewModel;
+        }
+
+        public void Dispose()
+        {
+            Debug.WriteLine("client dispose called");
+            this.stream.Dispose();
+            this.client.Dispose();
+            this.handler.stop();
         }
     }
 }

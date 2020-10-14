@@ -118,6 +118,8 @@ namespace ClientApp.ViewModels
             this.MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(this.mWindow, GetMousePosition()));
 
             var resizer = new WindowResizer(this.mWindow);
+
+            this.mWindow.Closed += (sender, e) => this.client.Dispose();
         }
 
 

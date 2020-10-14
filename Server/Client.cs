@@ -34,14 +34,16 @@ namespace Server
 
         private void OnRead(IAsyncResult ar)
         {
-            
+            if (ar == null || (!ar.IsCompleted))
+                return;
+
             int receivedBytes = this.stream.EndRead(ar);
 
             if (totalBufferReceived + receivedBytes > 1024)
-            if (totalBufferReceived + receivedBytes > 1024)
-            {
-                throw new OutOfMemoryException("buffer too small");
-            }
+                if (totalBufferReceived + receivedBytes > 1024)
+                {
+                    throw new OutOfMemoryException("buffer too small");
+                }
             Array.Copy(buffer, 0, totalBuffer, totalBufferReceived, receivedBytes);
             totalBufferReceived += receivedBytes;
 
@@ -209,7 +211,7 @@ namespace Server
 
 
             }
-          
+
 
         }
 
