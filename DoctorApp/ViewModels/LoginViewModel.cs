@@ -1,15 +1,14 @@
-﻿using System;
+﻿
+using DoctorApp.Utils;
+using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ClientApp.Utils;
-using GalaSoft.MvvmLight.Command;
 using Util;
 
-namespace ClientApp.ViewModels
+namespace DoctorApp.ViewModels
 {
     class LoginViewModel : ObservableObject
     {
@@ -39,7 +38,9 @@ namespace ClientApp.ViewModels
             this.InvertedLoginStatus = !status;
             if (status)
             {
-                this.mainWindowViewModel.SelectedViewModel = new MainViewModel(mainWindowViewModel);
+                MainViewModel mainViewModel = new MainViewModel(mainWindowViewModel);
+                this.mainWindowViewModel.client.SetMainViewModel(mainViewModel);
+                this.mainWindowViewModel.SelectedViewModel = mainViewModel;
             }
         }
     }

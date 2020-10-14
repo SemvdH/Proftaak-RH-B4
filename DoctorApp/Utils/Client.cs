@@ -3,27 +3,26 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using ClientApp.ViewModels;
+using DoctorApp.ViewModels;
 using ProftaakRH;
 using Util;
 
-namespace ClientApp.Utils
+namespace DoctorApp.Utils
 {
     public delegate void EngineCallback();
     public class Client : IDataReceiver
     {
-        public EngineCallback engineConnectFailed;
-        public EngineCallback engineConnectSuccess;
         private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer = new byte[1024];
         private bool connected;
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
-        public EngineConnection engineConnection;
         private bool sessionRunning = false;
         private IHandler handler = null;
         private LoginViewModel LoginViewModel;
+        private MainViewModel MainViewModel;
+        private ClientInfoViewModel ClientInfoViewModel;
 
 
         public Client() : this("localhost", 5555)
@@ -39,34 +38,6 @@ namespace ClientApp.Utils
         }
 
         /// <summary>
-        /// initializes the VR engine and sets the callbacks
-        /// </summary>
-        private void initEngine()
-        {
-            engineConnection = EngineConnection.INSTANCE;
-            engineConnection.OnNoTunnelId = RetryEngineConnection;
-            engineConnection.OnSuccessFullConnection = engineConnected;
-            if (!engineConnection.Connected) engineConnection.Connect();
-        }
-
-        /// <summary>
-        /// retries to connect to the VR engine if no tunnel id was found
-        /// </summary>
-        public void RetryEngineConnection()
-        {
-            engineConnectFailed?.Invoke();
-
-        }
-
-        private void engineConnected()
-        {
-            Console.WriteLine("successfully connected to VR engine");
-            engineConnectSuccess?.Invoke();
-            engineConnection.initScene();
-            if (engineConnection.Connected && sessionRunning && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
-        }
-
-        /// <summary>
         /// callback method for when the TCP client is connected
         /// </summary>
         /// <param name="ar">the result of the async read</param>
@@ -74,7 +45,6 @@ namespace ClientApp.Utils
         {
             this.client.EndConnect(ar);
             Console.WriteLine("TCP client Verbonden!");
-
 
             this.stream = this.client.GetStream();
 
@@ -121,7 +91,6 @@ namespace ClientApp.Utils
                                 Debug.WriteLine("Username and password correct!");
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
-                                initEngine();
                                 
                             }
                             else
@@ -133,7 +102,6 @@ namespace ClientApp.Utils
                         case DataParser.START_SESSION:
                             Console.WriteLine("Session started!");
                             this.sessionRunning = true;
-                            if (engineConnection.Connected && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
                             sendMessage(DataParser.getStartSessionJson());
                             break;
                         case DataParser.STOP_SESSION:
@@ -153,6 +121,12 @@ namespace ClientApp.Utils
                                 this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
                                 sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
+                            break;
+                        case DataParser.NEW_CONNECTION:
+                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            break;
+                        case DataParser.DISCONNECT:
+                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -208,12 +182,6 @@ namespace ClientApp.Utils
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
 
-            if (engineConnection.Connected && engineConnection.FollowingRoute)
-            {
-                engineConnection.BikeBPM = bytes[1];
-
-            }
-
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
@@ -234,8 +202,8 @@ namespace ClientApp.Utils
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
-            bool canSendToEngine = engineConnection.Connected && engineConnection.FollowingRoute;
-            switch (bytes[0])
+           
+           /* switch (bytes[0])
             {
 
                 case 0x10:
@@ -245,7 +213,7 @@ namespace ClientApp.Utils
                 case 0x19:
                     if (canSendToEngine) engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
                     break;
-            }
+            }*/
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
@@ -269,7 +237,7 @@ namespace ClientApp.Utils
             
             string hashPassword = Util.Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, hashPassword));
+            byte[] message = DataParser.getJsonMessage(DataParser.LoginAsDoctor(username, hashPassword));
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
@@ -287,6 +255,16 @@ namespace ClientApp.Utils
         internal void SetLoginViewModel(LoginViewModel loginViewModel)
         {
             this.LoginViewModel = loginViewModel;
+        }
+
+        internal void SetMainViewModel(MainViewModel mainViewModel)
+        {
+            this.MainViewModel = mainViewModel;
+        }
+
+        internal void SetClientInfoViewModel(ClientInfoViewModel clientInfoViewModel)
+        {
+            this.ClientInfoViewModel = clientInfoViewModel;
         }
     }
 }

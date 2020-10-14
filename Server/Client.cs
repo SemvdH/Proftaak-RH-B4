@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 using ClientApp.Utils;
+using System.Diagnostics;
+using Util;
 
 namespace Server
 {
@@ -16,13 +18,9 @@ namespace Server
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
         private SaveData saveData;
-        private string username = null;
+        public string username = null;
         private DateTime sessionStart;
         private string fileName;
-
-
-
-        public string Username { get; set; }
 
         public Client(Communication communication, TcpClient tcpClient)
         {
@@ -39,6 +37,7 @@ namespace Server
             
             int receivedBytes = this.stream.EndRead(ar);
 
+            if (totalBufferReceived + receivedBytes > 1024)
             if (totalBufferReceived + receivedBytes > 1024)
             {
                 throw new OutOfMemoryException("buffer too small");
@@ -96,27 +95,12 @@ namespace Server
                 switch (identifier)
                 {
                     case DataParser.LOGIN:
-                        string username;
-                        string password;
-                        bool worked = DataParser.GetUsernamePassword(payloadbytes, out username, out password);
-                        if (worked)
-                        {
-                            if (verifyLogin(username, password))
-                            {
-                                Console.WriteLine("Log in");
-                                this.username = username;
-                                sendMessage(DataParser.getLoginResponse("OK"));
-                                sendMessage(DataParser.getStartSessionJson());
-                            }
-                            else
-                            {
-                                sendMessage(DataParser.getLoginResponse("wrong username or password"));
-                            }
-                        }
-                        else
-                        {
-                            sendMessage(DataParser.getLoginResponse("invalid json"));
-                        }
+                        handleLogin(payloadbytes);
+                        break;
+                    case DataParser.LOGIN_DOCTOR:
+                        handleLogin(payloadbytes);
+                        communication.doctor = this;
+                        Console.WriteLine("Set doctor to " + communication.doctor + " , this is " + this);
                         break;
                     case DataParser.START_SESSION:
                         this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
@@ -125,7 +109,7 @@ namespace Server
                         this.saveData = null;
                         break;
                     case DataParser.SET_RESISTANCE:
-                        worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
                         Console.WriteLine($"set resistance worked is " + worked);
                         //set resistance on doctor GUI
                         break;
@@ -161,6 +145,32 @@ namespace Server
 
         }
 
+        private void handleLogin(byte[] payloadbytes)
+        {
+            string username;
+            string password;
+            bool worked = DataParser.GetUsernamePassword(payloadbytes, out username, out password);
+            if (worked)
+            {
+                if (verifyLogin(username, password))
+                {
+                    Console.WriteLine("Log in");
+                    this.username = username;
+                    sendMessage(DataParser.getLoginResponse("OK"));
+                    sendMessage(DataParser.getStartSessionJson());
+                    communication.NewLogin(this);
+                }
+                else
+                {
+                    sendMessage(DataParser.getLoginResponse("wrong username or password"));
+                }
+            }
+            else
+            {
+                sendMessage(DataParser.getLoginResponse("invalid json"));
+            }
+        }
+
         public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
@@ -168,6 +178,7 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
+            Console.WriteLine($"Got username {username} and password {password}");
 
 
             if (!File.Exists(fileName))
@@ -182,27 +193,23 @@ namespace Server
             {
                 Console.WriteLine("file exists, located at " + Path.GetFullPath(fileName));
                 string[] usernamesPasswords = File.ReadAllLines(fileName);
-                if (usernamesPasswords.Length == 0)
-                {
-                    newUsers(username, password);
-                    return true;
-                }
-
                 foreach (string s in usernamesPasswords)
                 {
                     string[] combo = s.Split(" ");
                     if (combo[0] == username)
                     {
-                        Console.WriteLine("correct info");
+                        Console.WriteLine("username found in file");
                         return combo[1] == password;
                     }
 
                 }
-                Console.WriteLine("combo was not found in file");
+                Console.WriteLine("username not found in file");
+                newUsers(username, password);
+                return true;
+
 
             }
-            Console.WriteLine("false");
-            return false;
+          
 
         }
 

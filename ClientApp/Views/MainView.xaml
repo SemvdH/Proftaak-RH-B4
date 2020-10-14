@@ -40,12 +40,6 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="1"  Command="{Binding RetryVREngineCommand}" Width="50" Height="20" IsEnabled="{Binding MainWindowViewModel.InfoModel.CanConnectToVR}">
-                <Button.Content>
-                    <TextBlock TextWrapping="Wrap" Text="retry"/>
-                </Button.Content>
-            </Button>
-
         </Grid>
 
     </DockPanel>

@@ -4,7 +4,8 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using ClientApp.Utils;
+using DoctorApp.Utils;
+using Util;
 
 namespace Server
 {
@@ -12,8 +13,7 @@ namespace Server
     {
         private TcpListener listener;
         private List<Client> clients;
-        private Client doctor;
-
+        public Client doctor;
         public Communication(TcpListener listener)
         {
             this.listener = listener;
@@ -35,21 +35,34 @@ namespace Server
             var tcpClient = listener.EndAcceptTcpClient(ar);
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
             clients.Add(new Client(this, tcpClient));
-            if (doctor == null)
+            /*if (doctor == null)
             {
                 doctor = clients.ElementAt(0);
             }
             else
             {
 
-                doctor.sendMessage(DataParser.getLoginResponse("new client"));
-            }
+                doctor.sendMessage(DataParser.getNewConnectionJson("jan"));
+            }*/
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
         internal void Disconnect(Client client)
         {
             clients.Remove(client);
+        }
+
+        public void NewLogin(Client client)
+        {
+            if (doctor == null)
+            {
+                doctor = client;
+            }
+            else
+            {
+                doctor.sendMessage(DataParser.getNewConnectionJson(client.username));
+            }
+            
         }
     }
 }

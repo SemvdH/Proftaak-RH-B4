@@ -1,10 +1,10 @@
-﻿using ClientApp.Utils;
+﻿using DoctorApp.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Util;
 
-namespace ClientApp.Models
+namespace DoctorApp.Models
 {
     class Info : ObservableObject
     {
