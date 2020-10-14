@@ -125,7 +125,7 @@ namespace DoctorApp.Utils
                             this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         case DataParser.DISCONNECT:
-                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            this.MainViewModel.DisconnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");

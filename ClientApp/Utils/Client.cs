@@ -175,7 +175,7 @@ namespace ClientApp.Utils
         /// starts sending a message to the server
         /// </summary>
         /// <param name="message">the message to send</param>
-        private void sendMessage(byte[] message)
+        public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }

@@ -10,7 +10,7 @@ namespace DoctorApp.ViewModels
 {
     class MainViewModel : ObservableObject
     {
-        public ObservableCollection<object> Tabs { get; set; }
+        public ObservableCollection<ClientInfoViewModel> Tabs { get; set; }
         public int Selected { get; set; }
         public MainWindowViewModel MainWindowViewModel { get; set; }
 
@@ -20,7 +20,7 @@ namespace DoctorApp.ViewModels
         {
             this.MainWindowViewModel = mainWindowViewModel;
             client = this.MainWindowViewModel.client;
-            Tabs= new ObservableCollection<object>();
+            Tabs= new ObservableCollection<ClientInfoViewModel>();
         }
 
         public void NewConnectedUser(string username)
@@ -37,7 +37,17 @@ namespace DoctorApp.ViewModels
 
         public void DisconnectedUser(string username)
         {
-
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                foreach (ClientInfoViewModel item in Tabs)
+                {
+                    if (item.Username == username)
+                    {
+                        Tabs.Remove(item);
+                        break;
+                    }
+                }
+            });
         }
     }
 

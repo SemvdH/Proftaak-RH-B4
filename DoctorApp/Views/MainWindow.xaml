@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="800"
         WindowState="Maximized">
     <Grid>
-        <ContentControl  HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding SelectedViewModel}" Focusable="False" />
+        <ContentControl Content="{Binding SelectedViewModel}" Focusable="False" />
         <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
     </Grid>
 </Window>

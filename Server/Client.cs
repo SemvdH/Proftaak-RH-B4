@@ -127,6 +127,9 @@ namespace Server
                         Console.WriteLine($"set resistance worked is " + worked);
                         //set resistance on doctor GUI
                         break;
+                    case DataParser.DISCONNECT:
+                        communication.Disconnect(this);
+                        break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
