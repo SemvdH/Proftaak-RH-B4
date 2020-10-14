@@ -17,8 +17,8 @@
             <Label Content="Password" HorizontalContentAlignment="Center"/>
             <PasswordBox x:Name="Password" Width="120"/>
             <Button x:Name="Login" Content="Login" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=Password}" Margin="0,20,0,0" Width="120"/>
-            <Popup IsOpen="{Binding InvertedLoginStatus}" PopupAnimation = "Fade" HorizontalAlignment="Left">
-                <Label Content="Login failed" Foreground="Red" Background="#FFFF" />
+            <Popup IsOpen="{Binding InvertedLoginStatus}" PopupAnimation = "Slide" HorizontalAlignment="Center">
+                <Label Content="Login failed" Foreground="Red" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent"/>
             </Popup>
         </StackPanel>
     </DockPanel>
