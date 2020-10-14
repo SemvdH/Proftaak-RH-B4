@@ -18,6 +18,7 @@ namespace Util
         public const string NEW_CONNECTION = "NEW CONNECTION";
         public const string DISCONNECT = "DISCONNECT";
         public const string LOGIN_DOCTOR = "LOGIN DOCTOR";
+        public const string MESSAGE = "MESSAGE";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
