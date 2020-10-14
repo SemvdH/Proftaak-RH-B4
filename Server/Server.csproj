@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ClientApp\ClientApp.csproj" />
+	  <ProjectReference Include="..\DoctorApp\DoctorApp.csproj" />
 	</ItemGroup>
 
 	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />

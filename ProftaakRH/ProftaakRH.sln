@@ -15,12 +15,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RH-Engine", "..\RH-Engine\R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "..\Server\Server.csproj", "{7D751284-17E8-434C-A7F6-2EB37572E7AE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "..\ClientApp\ClientApp.csproj", "{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorApp", "..\DoctorApp\DoctorApp.csproj", "{A232F2D5-AF98-4777-BF3A-FBDDFBC02994}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\Hashing\Hashing.projitems*{70277749-d423-4871-b692-2efc5a6ed932}*SharedItemsImports = 13
 		..\Hashing\Hashing.projitems*{7d751284-17e8-434c-a7f6-2eb37572e7ae}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{7ef854c1-73eb-4099-a7d7-057cceee6f8f}*SharedItemsImports = 5
-		..\Hashing\Hashing.projitems*{97183aad-7964-4776-a932-f5ef1795b852}*SharedItemsImports = 5
+		..\Hashing\Hashing.projitems*{a232f2d5-af98-4777-bf3a-fbddfbc02994}*SharedItemsImports = 5
+		..\Hashing\Hashing.projitems*{b150f08b-13da-4d17-bd96-7e89f52727c6}*SharedItemsImports = 5
+		..\Hashing\Hashing.projitems*{b1ab6f51-a20d-4162-9a7f-b3350b7510fd}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,22 +37,10 @@ Global
 		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97183AAD-7964-4776-A932-F5EF1795B852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97183AAD-7964-4776-A932-F5EF1795B852}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97183AAD-7964-4776-A932-F5EF1795B852}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97183AAD-7964-4776-A932-F5EF1795B852}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1A3CCE4-5FBB-4655-BFE1-7AF2B7D58CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1A3CCE4-5FBB-4655-BFE1-7AF2B7D58CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1A3CCE4-5FBB-4655-BFE1-7AF2B7D58CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1A3CCE4-5FBB-4655-BFE1-7AF2B7D58CA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BECC2E56-E65C-42A0-AF80-DDE32DCD5E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BECC2E56-E65C-42A0-AF80-DDE32DCD5E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BECC2E56-E65C-42A0-AF80-DDE32DCD5E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BECC2E56-E65C-42A0-AF80-DDE32DCD5E0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D751284-17E8-434C-A7F6-2EB37572E7AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D751284-17E8-434C-A7F6-2EB37572E7AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D751284-17E8-434C-A7F6-2EB37572E7AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D751284-17E8-434C-A7F6-2EB37572E7AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A232F2D5-AF98-4777-BF3A-FBDDFBC02994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A232F2D5-AF98-4777-BF3A-FBDDFBC02994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A232F2D5-AF98-4777-BF3A-FBDDFBC02994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A232F2D5-AF98-4777-BF3A-FBDDFBC02994}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

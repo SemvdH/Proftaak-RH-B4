@@ -1,0 +1,22 @@
+﻿<Application x:Class="DoctorApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DoctorApp"
+             xmlns:viewModels="clr-namespace:DoctorApp.ViewModels"
+             xmlns:views="clr-namespace:DoctorApp.Views"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
+            <views:MainView />
+            <!-- This is a UserControl -->
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
+            <views:LoginView />
+            <!-- This is a UserControl -->
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ClientInfoViewModel}">
+            <views:ClientInfoView/>
+        </DataTemplate>
+
+    </Application.Resources>
+</Application>
