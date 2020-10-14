@@ -14,6 +14,9 @@
             <views:LoginView />
             <!-- This is a UserControl -->
         </DataTemplate>
-        
-        </Application.Resources>
+        <DataTemplate DataType="{x:Type viewModels:ClientInfoViewModel}">
+            <views:ClientInfoView/>
+        </DataTemplate>
+
+    </Application.Resources>
 </Application>

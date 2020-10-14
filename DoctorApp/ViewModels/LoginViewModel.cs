@@ -37,7 +37,9 @@ namespace DoctorApp.ViewModels
             this.InvertedLoginStatus = !status;
             if (status)
             {
-                this.mainWindowViewModel.SelectedViewModel = new MainViewModel(mainWindowViewModel);
+                MainViewModel mainViewModel = new MainViewModel(mainWindowViewModel);
+                this.mainWindowViewModel.client.SetMainViewModel(mainViewModel);
+                this.mainWindowViewModel.SelectedViewModel = mainViewModel;
             }
         }
     }

@@ -15,6 +15,8 @@ namespace DoctorApp.Utils
         public const string START_SESSION = "START SESSION";
         public const string STOP_SESSION = "STOP SESSION";
         public const string SET_RESISTANCE = "SET RESISTANCE";
+        public const string NEW_CONNECTION = "NEW CONNECTION";
+        public const string DISCONNECT = "DISCONNECT";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
@@ -191,6 +193,24 @@ namespace DoctorApp.Utils
             return getJsonMessage(SET_RESISTANCE, data);
         }
 
+        public static byte[] getNewConnectionJson(string user)
+        {
+            dynamic data = new
+            {
+                username = user
+            };
+            return getJsonMessage(NEW_CONNECTION, data);
+        }
+
+        public static byte[] getDisconnectJson(string user)
+        {
+            dynamic data = new
+            {
+                username = user
+            };
+            return getJsonMessage(DISCONNECT, data);
+        }
+
         public static float getResistanceFromJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.resistance;
@@ -199,6 +219,11 @@ namespace DoctorApp.Utils
         public static bool getResistanceFromResponseJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.worked;
+        }
+
+        public static string getUsernameFromResponseJson(byte[] json)
+        {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
         }
 
 

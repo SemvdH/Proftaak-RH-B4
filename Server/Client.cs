@@ -16,13 +16,9 @@ namespace Server
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
         private SaveData saveData;
-        private string username = null;
+        public string username = null;
         private DateTime sessionStart;
         private string fileName;
-
-
-
-        public string Username { get; set; }
 
         public Client(Communication communication, TcpClient tcpClient)
         {
@@ -39,6 +35,7 @@ namespace Server
             
             int receivedBytes = this.stream.EndRead(ar);
 
+            if (totalBufferReceived + receivedBytes > 1024)
             if (totalBufferReceived + receivedBytes > 1024)
             {
                 throw new OutOfMemoryException("buffer too small");
@@ -107,6 +104,7 @@ namespace Server
                                 this.username = username;
                                 sendMessage(DataParser.getLoginResponse("OK"));
                                 sendMessage(DataParser.getStartSessionJson());
+                                communication.NewLogin(this);
                             }
                             else
                             {

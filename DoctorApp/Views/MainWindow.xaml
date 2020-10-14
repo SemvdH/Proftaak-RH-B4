@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoctorApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <DockPanel>
-        <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
+        Title="MainWindow" Height="450" Width="800"
+        WindowState="Maximized">
+    <Grid>
         <ContentControl  HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding SelectedViewModel}" Focusable="False" />
-    </DockPanel>
+        <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
+    </Grid>
 </Window>

@@ -20,6 +20,8 @@ namespace DoctorApp.Utils
         private bool sessionRunning = false;
         private IHandler handler = null;
         private LoginViewModel LoginViewModel;
+        private MainViewModel MainViewModel;
+        private ClientInfoViewModel ClientInfoViewModel;
 
 
         public Client() : this("localhost", 5555)
@@ -118,6 +120,12 @@ namespace DoctorApp.Utils
                                 this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
                                 sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
+                            break;
+                        case DataParser.NEW_CONNECTION:
+                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            break;
+                        case DataParser.DISCONNECT:
+                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -246,6 +254,16 @@ namespace DoctorApp.Utils
         internal void SetLoginViewModel(LoginViewModel loginViewModel)
         {
             this.LoginViewModel = loginViewModel;
+        }
+
+        internal void SetMainViewModel(MainViewModel mainViewModel)
+        {
+            this.MainViewModel = mainViewModel;
+        }
+
+        internal void SetClientInfoViewModel(ClientInfoViewModel clientInfoViewModel)
+        {
+            this.ClientInfoViewModel = clientInfoViewModel;
         }
     }
 }

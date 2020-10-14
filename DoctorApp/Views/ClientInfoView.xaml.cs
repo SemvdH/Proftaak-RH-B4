@@ -16,7 +16,7 @@ namespace DoctorApp.Views
     /// <summary>
     /// Interaction logic for ClientInfoView.xaml
     /// </summary>
-    public partial class ClientInfoView : Page
+    public partial class ClientInfoView : UserControl
     {
         public ClientInfoView()
         {
