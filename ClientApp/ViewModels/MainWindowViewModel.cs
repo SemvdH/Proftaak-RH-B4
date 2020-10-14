@@ -48,9 +48,14 @@ namespace ClientApp.ViewModels
 
         public double MinimumHeight { get; set; } = 250;
 
+
+
         public int ResizeBorder { get; set; } = 6;
 
         public Thickness ResizeBorderThickness { get { return new Thickness(ResizeBorder + OuterMarginSize); } }
+
+        public Thickness InnerContentPadding { get { return new Thickness(ResizeBorder); } }
+
 
         public Thickness OuterMarginThickness { get { return new Thickness(OuterMarginSize); } }
 

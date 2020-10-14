@@ -80,13 +80,14 @@
 
                                     </Grid>
 
+                                    <!-- shadow? -->
                                     <Border Grid.Row="1" Height="6" BorderThickness="0 0.2 0 0">
-                                        <Border.BorderBrush>
+                                        <!--<Border.BorderBrush>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                                 <GradientStop Color="{StaticResource BackgroundSemiLight}" Offset="0.0"/>
                                                 <GradientStop Color="{StaticResource BackgroundVeryLight}" Offset="1.0"/>
                                             </LinearGradientBrush>
-                                        </Border.BorderBrush>
+                                        </Border.BorderBrush>-->
 
 
                                         <Border.Background>
@@ -97,6 +98,12 @@
                                         </Border.Background>
                                     </Border>
                                 </Grid>
+
+                                <!-- Page content -->
+                                <Border Grid.Row="2" Grid.Column="0" Margin="20">
+                                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                                </Border>
+
                             </Grid>
                         </Border>
                     </ControlTemplate>
