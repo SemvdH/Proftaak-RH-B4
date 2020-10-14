@@ -12,7 +12,7 @@ namespace Server
     {
         private TcpListener listener;
         private List<Client> clients;
-        private Client doctor;
+        public Client doctor;
         public Communication(TcpListener listener)
         {
             this.listener = listener;

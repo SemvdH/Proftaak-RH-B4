@@ -236,7 +236,7 @@ namespace DoctorApp.Utils
             string hashUser = Hashing.Hasher.HashString(username);
             string hashPassword = Hashing.Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
+            byte[] message = DataParser.getJsonMessage(DataParser.LoginAsDoctor(hashUser, hashPassword));
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);

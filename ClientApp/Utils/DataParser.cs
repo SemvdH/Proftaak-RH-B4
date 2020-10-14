@@ -15,6 +15,7 @@ namespace ClientApp.Utils
         public const string START_SESSION = "START SESSION";
         public const string STOP_SESSION = "STOP SESSION";
         public const string SET_RESISTANCE = "SET RESISTANCE";
+        public const string LOGIN_DOCTOR = "LOGIN DOCTOR";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
