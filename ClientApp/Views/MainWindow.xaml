@@ -9,8 +9,8 @@
         Title="Whaazzzzuuuuuuuup" Height="450" Width="800">
 
 
-    <DockPanel>
+    <Grid>
+        <Frame Content="{Binding SelectedViewModel}" Focusable="False"/>
         <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
-        <Frame  HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding SelectedViewModel}" Focusable="False"/>
-    </DockPanel>
+    </Grid>
 </Window>

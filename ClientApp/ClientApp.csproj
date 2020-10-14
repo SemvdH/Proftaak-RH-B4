@@ -18,10 +18,6 @@
 		<ProjectReference Include="..\RH-Engine\RH-Engine.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Images\" />
-	</ItemGroup>
-
 	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
 
 </Project>
