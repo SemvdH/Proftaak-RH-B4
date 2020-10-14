@@ -1,4 +1,5 @@
-﻿using ClientApp.Models;
+﻿using ClientApp.MagicCode;
+using ClientApp.Models;
 using ClientApp.Utils;
 using GalaSoft.MvvmLight.Command;
 using System;
@@ -114,6 +115,8 @@ namespace ClientApp.ViewModels
             this.MaximizeCommand = new RelayCommand(() => this.mWindow.WindowState ^= WindowState.Maximized);
             this.CloseCommand = new RelayCommand(() => this.mWindow.Close());
             this.MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(this.mWindow, GetMousePosition()));
+
+            var resizer = new WindowResizer(this.mWindow);
         }
 
 
