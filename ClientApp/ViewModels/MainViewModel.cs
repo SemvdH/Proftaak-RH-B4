@@ -1,6 +1,7 @@
 ﻿using ClientApp.Models;
 using ClientApp.Utils;
 using GalaSoft.MvvmLight.Command;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace ClientApp.ViewModels
@@ -27,10 +28,12 @@ namespace ClientApp.ViewModels
             this.RetryVREngineCommand = new RelayCommand(() =>
             {
                 //try connect vr-engine
-                
-                this.MainWindowViewModel.InfoModel.ConnectedToVREngine = true;
-                this.MainWindowViewModel.InfoModel.CanConnectToVR = false;
-                client.engineConnection.CreateConnection();
+
+                //this.MainWindowViewModel.InfoModel.ConnectedToVREngine = true;
+                //this.MainWindowViewModel.InfoModel.CanConnectToVR = false;
+                //client.engineConnection.CreateConnection();
+                //retryEngineConnection();
+                Debug.WriteLine("retry button clicked");
 
             });
         }
