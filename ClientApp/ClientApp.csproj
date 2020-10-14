@@ -4,7 +4,7 @@
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<ApplicationIcon>Images\Logo\icon1.ico</ApplicationIcon>
+		<ApplicationIcon></ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Styles\" />
+	  <Folder Include="Properties\" />
 	</ItemGroup>
 
 	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
