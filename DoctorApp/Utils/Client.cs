@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using DoctorApp.ViewModels;
 using ProftaakRH;
+using Util;
 
 namespace DoctorApp.Utils
 {

@@ -9,6 +9,7 @@
     <Import_RootNamespace>Hashing</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DataParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hasher.cs" />
   </ItemGroup>
 </Project>
