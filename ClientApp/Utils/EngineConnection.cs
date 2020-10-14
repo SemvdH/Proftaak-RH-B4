@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using RH_Engine;
 using System.Net.Sockets;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using LibNoise.Primitive;
 
 namespace ClientApp.Utils
 {
@@ -37,6 +40,8 @@ namespace ClientApp.Utils
         private static string panelId = string.Empty;
         private static string bikeId = string.Empty;
         private static string headId = string.Empty;
+        private static string groundPlaneId = string.Empty;
+        private static string terrainId = string.Empty;
 
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
@@ -191,8 +196,11 @@ namespace ClientApp.Utils
                     string headId = JSONParser.GetIdSceneInfoChild(message, "Head");
                     string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
                     string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
+                    groundPlaneId = JSONParser.GetIdSceneInfoChild(message, "GroundPlane");
+                    Write("--- Ground plane id is " + groundPlaneId);
                 });
             // add the route and set the route id
+            CreateTerrain();
             SendMessageAndOnResponse(mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
         }
 
@@ -217,8 +225,45 @@ namespace ClientApp.Utils
 
                             while (cameraId == string.Empty) { }
                             SetFollowSpeed(5.0f);
+                            WriteTextMessage(mainCommand.RoadCommand(routeId, "road"));
+                            WriteTextMessage(mainCommand.ShowRoute("showRouteFalse", false));
                         });
                 });
+                setEnvironment();
+
+            
+        }
+
+        private void setEnvironment()
+        {
+            Write("Setting environment");
+            WriteTextMessage(mainCommand.DeleteNode(groundPlaneId, "none"));
+
+            PlaceHouses(mainCommand);
+
+            WriteTextMessage(mainCommand.SkyboxCommand(DateTime.Now.Hour));
+        }
+
+        private void PlaceHouses(Command mainCommand)
+        {
+            PlaceHouse(mainCommand, 2, new float[] { 10f, 1f, 30f }, 1);
+            PlaceHouse(mainCommand, 1, new float[] { 42f, 1f, 22f }, new float[] { 0f, 90f, 0f }, 2);
+            PlaceHouse(mainCommand, 11, new float[] { -20f, 1f, 0f }, new float[] { 0f, -35f, 0f }, 3);
+            PlaceHouse(mainCommand, 7, new float[] { -15f, 1f, 50f }, new float[] { 0f, -50f, 0f }, 4);
+            PlaceHouse(mainCommand, 24, new float[] { 40f, 1f, 40f }, new float[] { 0f, 75f, 0f }, 5);
+            PlaceHouse(mainCommand, 22, new float[] { 34f, 1f, -20f }, 6);
+            PlaceHouse(mainCommand, 14, new float[] { 0f, 1f, -20f }, new float[] { 0f, 210f, 0f }, 7);
+        }
+
+        private void PlaceHouse(Command mainCommand, int numberHousemodel, float[] position, int serialNumber)
+        {
+            PlaceHouse(mainCommand, numberHousemodel, position, new float[] { 0f, 0f, 0f }, serialNumber);
+        }
+
+        private void PlaceHouse(Command mainCommand, int numberHousemodel, float[] position, float[] rotation, int serialNumber)
+        {
+            string folderHouses = @"data\NetworkEngine\models\houses\set1\";
+            SendMessageAndOnResponse(mainCommand.AddModel("House1", "housePlacement" + serialNumber, folderHouses + "house" + numberHousemodel + ".obj", position, 4, rotation), "housePlacement" + serialNumber, (message) => Console.WriteLine(message));
         }
 
         public void UpdateInfoPanel()
@@ -262,6 +307,41 @@ namespace ClientApp.Utils
         {
             WriteTextMessage(mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
             WriteTextMessage(mainCommand.RouteFollow(routeId, cameraId, speed));
+        }
+
+        public void CreateTerrain()
+        {
+            float x = 0f;
+            float[] height = new float[256 * 256];
+            ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
+            for (int i = 0; i < 256 * 256; i++)
+            {
+                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) / 3.5f + 1;
+
+                if (height[i] > 1.1f)
+                {
+                    height[i] = height[i] * 0.8f;
+                }
+                else if (height[i] < 0.9f)
+                {
+                    height[i] = height[i] * 1.2f;
+                }
+                x += 0.001f;
+            }
+
+            SendMessageAndOnResponse(mainCommand.TerrainAdd(new int[] { 256, 256 }, height, "terrain"), "terrain",
+                (message) =>
+                {
+
+                    SendMessageAndOnResponse(mainCommand.renderTerrain("renderTerrain"), "renderTerrain",
+                        (message) =>
+                        {
+                            terrainId = JSONParser.GetTerrainID(message);
+                            string addLayerMsg = mainCommand.AddLayer(terrainId, "addLayer");
+                            SendMessageAndOnResponse(addLayerMsg, "addLayer", (message) => Console.WriteLine(""));
+
+                        });
+                });
         }
 
         #endregion
@@ -315,7 +395,7 @@ namespace ClientApp.Utils
         }
         public void Write(string msg)
         {
-            Console.WriteLine("[ENGINECONNECT] " + msg);
+            Debug.WriteLine("[ENGINECONNECT] " + msg);
         }
 
     }
