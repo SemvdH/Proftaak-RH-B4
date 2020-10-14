@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientApp"
         xmlns:views="clr-namespace:ClientApp.Views"
+        xmlns:images="clrnamespace.Images"
         mc:Ignorable="d"
-        Title="Whaazzzzuuuuuuuup" Height="450" Width="800">
-
-
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Title="Whaazzzzuuuuuuuup">
+    <!--Icon="pack://application:,,,/Images/Logo/icon1_small.ico"-->
     <Grid>
         <Frame Content="{Binding SelectedViewModel}" Focusable="False"/>
         <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
