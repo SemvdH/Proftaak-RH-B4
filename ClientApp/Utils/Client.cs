@@ -265,10 +265,10 @@ namespace ClientApp.Utils
         /// </summary>
         public void tryLogin(string username, string password)
         {
-            string hashUser = Hashing.Hasher.HashString(username);
+            
             string hashPassword = Hashing.Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, hashPassword));
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);

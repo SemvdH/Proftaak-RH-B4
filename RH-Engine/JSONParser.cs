@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace RH_Engine
@@ -122,5 +123,19 @@ namespace RH_Engine
             }
             return null;
         }
+
+        public static string GetChildUuid(string name, JArray children)
+        {
+            foreach (dynamic child in children)
+            {
+                if (child.name == name)
+                {
+                    return child.uuid;
+                }
+            }
+            Console.WriteLine("Could not find id of " + name);
+            return null;
+        }
+
     }
 }
