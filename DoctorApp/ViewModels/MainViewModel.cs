@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Controls;
+using Util;
 
 namespace DoctorApp.ViewModels
 {

@@ -3,6 +3,7 @@ using ClientApp.Utils;
 using GalaSoft.MvvmLight.Command;
 using System.Diagnostics;
 using System.Windows.Input;
+using Util;
 
 namespace ClientApp.ViewModels
 {
