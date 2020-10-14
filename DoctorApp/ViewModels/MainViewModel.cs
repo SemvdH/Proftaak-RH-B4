@@ -30,7 +30,6 @@ namespace DoctorApp.ViewModels
                 Tabs.Add(new ClientInfoViewModel
                 {
                     Username = username,
-                    TabName = username
                 });
             });
         }

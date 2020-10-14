@@ -8,6 +8,6 @@ namespace DoctorApp.ViewModels
     class ClientInfoViewModel
     {
         public string Username { get; set; }
-        public string TabName { get; set; }
+        public string Status { get; set; }
     }
 }
