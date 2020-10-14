@@ -166,6 +166,7 @@ namespace Server
 
         private bool verifyLogin(string username, string password)
         {
+            Console.WriteLine($"Got username {username} and password {password}");
 
 
             if (!File.Exists(fileName))
@@ -180,27 +181,23 @@ namespace Server
             {
                 Console.WriteLine("file exists, located at " + Path.GetFullPath(fileName));
                 string[] usernamesPasswords = File.ReadAllLines(fileName);
-                if (usernamesPasswords.Length == 0)
-                {
-                    newUsers(username, password);
-                    return true;
-                }
-
                 foreach (string s in usernamesPasswords)
                 {
                     string[] combo = s.Split(" ");
                     if (combo[0] == username)
                     {
-                        Console.WriteLine("correct info");
+                        Console.WriteLine("username found in file");
                         return combo[1] == password;
                     }
 
                 }
-                Console.WriteLine("combo was not found in file");
+                Console.WriteLine("username not found in file");
+                newUsers(username, password);
+                return true;
+
 
             }
-            Console.WriteLine("false");
-            return false;
+          
 
         }
 
