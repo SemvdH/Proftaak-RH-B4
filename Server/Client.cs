@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 using ClientApp.Utils;
+using System.Diagnostics;
+using Util;
 
 namespace Server
 {
@@ -93,28 +95,12 @@ namespace Server
                 switch (identifier)
                 {
                     case DataParser.LOGIN:
-                        string username;
-                        string password;
-                        bool worked = DataParser.GetUsernamePassword(payloadbytes, out username, out password);
-                        if (worked)
-                        {
-                            if (verifyLogin(username, password))
-                            {
-                                Console.WriteLine("Log in");
-                                this.username = username;
-                                sendMessage(DataParser.getLoginResponse("OK"));
-                                sendMessage(DataParser.getStartSessionJson());
-                                communication.NewLogin(this);
-                            }
-                            else
-                            {
-                                sendMessage(DataParser.getLoginResponse("wrong username or password"));
-                            }
-                        }
-                        else
-                        {
-                            sendMessage(DataParser.getLoginResponse("invalid json"));
-                        }
+                        handleLogin(payloadbytes);
+                        break;
+                    case DataParser.LOGIN_DOCTOR:
+                        handleLogin(payloadbytes);
+                        communication.doctor = this;
+                        Console.WriteLine("Set doctor to " + communication.doctor + " , this is " + this);
                         break;
                     case DataParser.START_SESSION:
                         this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
@@ -123,7 +109,7 @@ namespace Server
                         this.saveData = null;
                         break;
                     case DataParser.SET_RESISTANCE:
-                        worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
                         Console.WriteLine($"set resistance worked is " + worked);
                         //set resistance on doctor GUI
                         break;
@@ -160,6 +146,32 @@ namespace Server
             }
 
 
+        }
+
+        private void handleLogin(byte[] payloadbytes)
+        {
+            string username;
+            string password;
+            bool worked = DataParser.GetUsernamePassword(payloadbytes, out username, out password);
+            if (worked)
+            {
+                if (verifyLogin(username, password))
+                {
+                    Console.WriteLine("Log in");
+                    this.username = username;
+                    sendMessage(DataParser.getLoginResponse("OK"));
+                    sendMessage(DataParser.getStartSessionJson());
+                    communication.NewLogin(this);
+                }
+                else
+                {
+                    sendMessage(DataParser.getLoginResponse("wrong username or password"));
+                }
+            }
+            else
+            {
+                sendMessage(DataParser.getLoginResponse("invalid json"));
+            }
         }
 
         public void sendMessage(byte[] message)

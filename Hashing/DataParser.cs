@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 
-namespace DoctorApp.Utils
+namespace Util
 {
     public class DataParser
     {
@@ -17,6 +17,8 @@ namespace DoctorApp.Utils
         public const string SET_RESISTANCE = "SET RESISTANCE";
         public const string NEW_CONNECTION = "NEW CONNECTION";
         public const string DISCONNECT = "DISCONNECT";
+        public const string LOGIN_DOCTOR = "LOGIN DOCTOR";
+        public const string MESSAGE = "MESSAGE";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
@@ -28,6 +30,21 @@ namespace DoctorApp.Utils
             dynamic json = new
             {
                 identifier = LOGIN,
+                data = new
+                {
+                    username = mUsername,
+                    password = mPassword,
+                }
+            };
+
+            return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
+        }
+
+        public static byte[] LoginAsDoctor(string mUsername, string mPassword)
+        {
+            dynamic json = new
+            {
+                identifier = LOGIN_DOCTOR,
                 data = new
                 {
                     username = mUsername,

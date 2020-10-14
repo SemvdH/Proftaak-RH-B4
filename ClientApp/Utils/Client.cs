@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using ClientApp.ViewModels;
 using ProftaakRH;
+using Util;
 
 namespace ClientApp.Utils
 {
@@ -266,7 +267,7 @@ namespace ClientApp.Utils
         public void tryLogin(string username, string password)
         {
             
-            string hashPassword = Hashing.Hasher.HashString(password);
+            string hashPassword = Util.Hasher.HashString(password);
 
             byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, hashPassword));
 

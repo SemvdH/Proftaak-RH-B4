@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using DoctorApp.Utils;
+using Util;
 
 namespace Server
 {
@@ -12,7 +13,7 @@ namespace Server
     {
         private TcpListener listener;
         private List<Client> clients;
-        private Client doctor;
+        public Client doctor;
         public Communication(TcpListener listener)
         {
             this.listener = listener;

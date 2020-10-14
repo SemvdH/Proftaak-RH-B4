@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "..\ClientApp\ClientApp.csproj", "{7EF854C1-73EB-4099-A7D7-057CCEEE6F8F}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hashing", "..\Hashing\Hashing.shproj", "{70277749-D423-4871-B692-2EFC5A6ED932}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Util", "..\Hashing\Util.shproj", "{70277749-D423-4871-B692-2EFC5A6ED932}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProftaakRH", "ProftaakRH.csproj", "{C1A3CCE4-5FBB-4655-BFE1-7AF2B7D58CA3}"
 EndProject

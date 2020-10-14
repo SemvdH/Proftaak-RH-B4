@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using DoctorApp.ViewModels;
 using ProftaakRH;
+using Util;
 
 namespace DoctorApp.Utils
 {
@@ -233,10 +234,10 @@ namespace DoctorApp.Utils
         /// </summary>
         public void tryLogin(string username, string password)
         {
-            string hashUser = Hashing.Hasher.HashString(username);
-            string hashPassword = Hashing.Hasher.HashString(password);
+            
+            string hashPassword = Util.Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
+            byte[] message = DataParser.getJsonMessage(DataParser.LoginAsDoctor(username, hashPassword));
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
