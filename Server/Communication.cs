@@ -35,15 +35,6 @@ namespace Server
             var tcpClient = listener.EndAcceptTcpClient(ar);
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
             clients.Add(new Client(this, tcpClient));
-            /*if (doctor == null)
-            {
-                doctor = clients.ElementAt(0);
-            }
-            else
-            {
-
-                doctor.sendMessage(DataParser.getNewConnectionJson("jan"));
-            }*/
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
