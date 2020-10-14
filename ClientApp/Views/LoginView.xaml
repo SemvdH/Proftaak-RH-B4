@@ -7,10 +7,10 @@
              xmlns:viewModels="clr-namespace:ClientApp.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel Background="Lime">
-        <!--<DockPanel.Background>
-            <ImageBrush TileMode="Tile" ViewportUnits="Absolute" Viewport="0 0 256 256" ImageSource="\images\stone.png"/>
-        </DockPanel.Background>-->
+    <DockPanel>
+        <DockPanel.Background>
+            <ImageBrush TileMode="Tile" ViewportUnits="Absolute" Viewport="0 0 64 64" ImageSource="\images\stone.png"/>
+        </DockPanel.Background>
         <StackPanel VerticalAlignment="Center" Width="auto">
             <Label Content="Username" HorizontalContentAlignment="Center" />
             <TextBox x:Name="Username" Text="{Binding Username}" TextWrapping="Wrap" Width="120"/>

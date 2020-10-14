@@ -11,9 +11,10 @@
         AllowsTransparency="True"
         x:Name="applicatonWindow"
         WindowStartupLocation="CenterScreen"
+        MinHeight="{Binding MinimumHeight}"
+        MinWidth="{Binding MinimumWidth}"
         Title="Whaazzzzuuuuuuuup"
-        Width="500"
-        Height="500">
+        >
     <!--Icon="pack://application:,,,/Images/Log/icon1_small.ico"-->
 
     <Window.Resources>
@@ -23,13 +24,27 @@
                     <ControlTemplate TargetType="{x:Type Window}">
                         <Border  Padding="{Binding OuterMarginThickness, FallbackValue=10}" >
                             <Grid>
+
+                                <!-- opacity mask -->
+                                <Border x:Name="Container"
+                                        Background="{StaticResource BackgroundLightBrush}"
+                                        CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}"/>
+
+
                                 <Border CornerRadius="{Binding WindowCornerRadius, FallbackValue=10}" 
-                                        Background="#efefef">
+                                        Background="{StaticResource BackgroundVeryLightBrush}">
                                     <Border.Effect>
                                         <DropShadowEffect ShadowDepth="0" Opacity="0.2"/>
                                     </Border.Effect>
                                 </Border>
+
+
                                 <Grid>
+
+                                    <Grid.OpacityMask>
+                                        <VisualBrush Visual="{Binding ElementName=Container}"/>
+                                    </Grid.OpacityMask>
+
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="{Binding TitleHeightGridLength, FallbackValue=42}"/>
                                         <RowDefinition Height="Auto"/>
@@ -38,7 +53,7 @@
                                     </Grid.RowDefinitions>
 
                                     <!-- Title bar -->
-                                    <Grid Grid.Column="0" Grid.Row="0" Panel.ZIndex="1" Background="Red">
+                                    <Grid Grid.Column="0" Grid.Row="0" Panel.ZIndex="1" Background="{StaticResource BackgroundLightBrush}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
@@ -46,11 +61,41 @@
                                         </Grid.ColumnDefinitions>
 
                                         <!-- icon -->
-                                        <Button Style="{StaticResource Hoverless}" WindowChrome.IsHitTestVisibleInChrome="True" Command="{Binding MenuCommand}">
-                                            <Image Source="/Images/Stone.png"/>
+                                        <Button Grid.Column="0" Style="{StaticResource SystemIconButton}" Command="{Binding MenuCommand}">
+                                            <Image Source="/Images/Logo/icon1.ico"/>
+                                            <!--<TextBlock Text="icon"/>-->
                                         </Button>
+
+                                        <!-- Title -->
+                                        <Viewbox Grid.Column="1" Margin="0">
+                                            <TextBlock Style="{StaticResource HeaderText}" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title, FallbackValue=failed}"/>
+                                        </Viewbox>
+
+                                        <!-- Window buttons -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Button Style="{StaticResource WindowControlButton}" Content="_" Command="{Binding MinimizeCommand}"/>
+                                            <Button Style="{StaticResource WindowControlButton}" Content="[]" Command="{Binding MaximizeCommand}"/>
+                                            <Button Style="{StaticResource WindowCloseButton}" Content="X" Command="{Binding CloseCommand}"/>
+                                        </StackPanel>
+
                                     </Grid>
 
+                                    <Border Grid.Row="1" Height="6" BorderThickness="0 0.2 0 0">
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="{StaticResource BackgroundSemiLight}" Offset="0.0"/>
+                                                <GradientStop Color="{StaticResource BackgroundVeryLight}" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
+
+
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="{StaticResource BackgroundVeryLight}" Offset="1.0"/>
+                                                <GradientStop Color="{StaticResource BackgroundSemiLight}" Offset="0.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
                                 </Grid>
                             </Grid>
                         </Border>
@@ -68,8 +113,8 @@
             GlassFrameThickness="0"/>
     </WindowChrome.WindowChrome>
 
-    <!--<Grid>
+    <Grid>
         <Frame Content="{Binding SelectedViewModel}" Focusable="False"/>
         <Label Content="gemaakt door: mensen" DockPanel.Dock="Bottom" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
-    </Grid>-->
+    </Grid>
 </Window>

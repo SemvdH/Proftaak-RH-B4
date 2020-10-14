@@ -1,9 +1,12 @@
 ﻿using ClientApp.Models;
 using ClientApp.Utils;
+using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ClientApp.ViewModels
 {
@@ -18,6 +21,18 @@ namespace ClientApp.ViewModels
 
         #endregion
 
+        #region commands
+
+        public ICommand MinimizeCommand { get; set; }
+
+        public ICommand MaximizeCommand { get; set; }
+
+        public ICommand CloseCommand { get; set; }
+
+        public ICommand MenuCommand { get; set; }
+
+        #endregion
+
         #region public properties
         public Info InfoModel { get; set; }
 
@@ -28,6 +43,11 @@ namespace ClientApp.ViewModels
         /// <summary>
         /// size of the resize border around the window
         /// </summary>
+
+        public double MinimumWidth { get; set; } = 250;
+
+        public double MinimumHeight { get; set; } = 250;
+
         public int ResizeBorder { get; set; } = 6;
 
         public Thickness ResizeBorderThickness { get { return new Thickness(ResizeBorder + OuterMarginSize); } }
@@ -84,7 +104,23 @@ namespace ClientApp.ViewModels
             LoginViewModel loginViewModel = new LoginViewModel(this);
             SelectedViewModel = loginViewModel;
             this.client.SetLoginViewModel(loginViewModel);
+
+            this.MinimizeCommand = new RelayCommand(() => this.mWindow.WindowState = WindowState.Minimized);
+            this.MaximizeCommand = new RelayCommand(() => this.mWindow.WindowState ^= WindowState.Maximized);
+            this.CloseCommand = new RelayCommand(() => this.mWindow.Close());
+            this.MenuCommand = new RelayCommand(() => SystemCommands.ShowSystemMenu(this.mWindow, GetMousePosition()));
         }
 
+
+        #region helper 
+
+        private Point GetMousePosition()
+        {
+            Debug.WriteLine("getmousePosition called");
+            var p = Mouse.GetPosition(this.mWindow);
+            return new Point(p.X + this.mWindow.Left, p.Y + this.mWindow.Top);
+        }
+
+        #endregion
     }
 }

@@ -8,6 +8,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Images\Logo\icon1.ico" />
+	  <None Remove="Images\re15.jpg" />
+	  <None Remove="Images\stone.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Images\Logo\icon1.ico">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Images\re15.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Images\stone.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="4.3.0" />
 		<PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
