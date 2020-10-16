@@ -54,7 +54,7 @@
 
                                         <!-- icon -->
                                         <Button Grid.Column="0" Style="{StaticResource SystemIconButton}" Command="{Binding MenuCommand}">
-                                            <Image Source="/Images/Logo/icon1.ico"/>
+                                            <Image Source="/img/doctor.ico"/>
                                             <!--<TextBlock Text="icon"/>-->
                                         </Button>
 

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:DoctorApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             
              >
     <Grid Margin="15,5,15,15">
         <Grid.ColumnDefinitions>
