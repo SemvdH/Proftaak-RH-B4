@@ -46,6 +46,7 @@ namespace ClientApp.Utils
             engineConnection = EngineConnection.INSTANCE;
             engineConnection.OnNoTunnelId = RetryEngineConnection;
             engineConnection.OnSuccessFullConnection = engineConnected;
+            engineConnection.OnEngineDisconnect = RetryEngineConnection;
             if (!engineConnection.Connected) engineConnection.Connect();
         }
 
