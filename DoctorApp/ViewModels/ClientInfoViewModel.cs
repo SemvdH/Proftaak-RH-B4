@@ -1,4 +1,5 @@
-﻿using DoctorApp.Utils;
+﻿using DoctorApp.Models;
+using DoctorApp.Utils;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
@@ -11,25 +12,10 @@ using Util;
 
 namespace DoctorApp.ViewModels
 {
-    
+
     class ClientInfoViewModel : ObservableObject
     {
-        public ObservableCollection<string> ChatLog { get; set; }
-        public string Username { get; set; }
-
-        public string Status { get; set; }
-
-        public int Speed { get; set; }
-
-        public int BPM { get; set; }
-
-        public int Resistance { get; set; }
-        public int Acc_Power { get; set; }
-
-        public int Curr_Power { get; set; }
-
-        public int Distance { get; set; }
-
+        public PatientInfo PatientInfo { get; set; }
         public ICommand StartSession { get; set; }
 
         public ICommand StopSession { get; set; }
@@ -45,33 +31,36 @@ namespace DoctorApp.ViewModels
         public MainWindowViewModel MainWindowViewModel { get; set; }
         private Client client;
 
-        public ClientInfoViewModel(MainWindowViewModel mainWindowViewModel)
+        public ClientInfoViewModel(MainWindowViewModel mainWindowViewModel, string username)
         {
             MainWindowViewModel = mainWindowViewModel;
-            ChatLog = new ObservableCollection<string>();
+            this.PatientInfo = new PatientInfo() { Username = username, Status = "Waiting to start" };
+            PatientInfo.ChatLog = new ObservableCollection<string>();
             client = mainWindowViewModel.client;
 
-            StartSession = new RelayCommand(()=>{
-                client.sendMessage(DataParser.getStartSessionJson(Username));
-                Status = "Session started";
+            StartSession = new RelayCommand(() =>
+            {
+                client.sendMessage(DataParser.getStartSessionJson(PatientInfo.Username));
+                PatientInfo.Status = "Session started";
             });
 
-            StopSession = new RelayCommand(() => {
-                client.sendMessage(DataParser.getStopSessionJson(Username));
-                Status = "Session stopped, waiting to start again.";
+            StopSession = new RelayCommand(() =>
+            {
+                client.sendMessage(DataParser.getStopSessionJson(PatientInfo.Username));
+                PatientInfo.Status = "Session stopped, waiting to start again.";
             });
 
             Chat = new RelayCommand<object>((parameter) =>
             {
-                client.sendMessage(DataParser.getChatJson(Username, ((TextBox)parameter).Text));
-                ChatLog.Add(DateTime.Now+": "+ ((TextBox)parameter).Text);
+                client.sendMessage(DataParser.getChatJson(PatientInfo.Username, ((TextBox)parameter).Text));
+                PatientInfo.ChatLog.Add(DateTime.Now + ": " + ((TextBox)parameter).Text);
             });
 
             //TODO RelayCommand ChatToAll
 
             SetResistance = new RelayCommand<object>((parameter) =>
             {
-                client.sendMessage(DataParser.getSetResistanceJson(Username, float.Parse(((TextBox)parameter).Text)));
+                client.sendMessage(DataParser.getSetResistanceJson(PatientInfo.Username, float.Parse(((TextBox)parameter).Text)));
             });
 
         }

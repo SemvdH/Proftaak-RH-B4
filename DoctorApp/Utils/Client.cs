@@ -82,7 +82,6 @@ namespace DoctorApp.Utils
                 string identifier;
                 bool isJson = DataParser.getJsonIdentifier(messageBytes, out identifier);
 
-                Debug.WriteLine("doctor " + Encoding.ASCII.GetString(payloadbytes));
                 if (isJson)
                 {
                     switch (identifier)

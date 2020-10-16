@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using Util;
-using System.Linq;
 
 namespace Server
 {
@@ -93,7 +93,6 @@ namespace Server
             string identifier;
             bool isJson = DataParser.getJsonIdentifier(message, out identifier);
 
-            Debug.WriteLine("server " + Encoding.ASCII.GetString(payloadbytes));
             if (isJson)
             {
                 switch (identifier)
@@ -109,7 +108,6 @@ namespace Server
                         if (handleLogin(payloadbytes))
                         {
                             communication.Doctor = this;
-                            Console.WriteLine("Set doctor to " + communication.Doctor + " , this is " + this);
                         }
                         break;
                     case DataParser.START_SESSION:
@@ -120,7 +118,6 @@ namespace Server
                         break;
                     case DataParser.SET_RESISTANCE:
                         bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
-                        Console.WriteLine($"set resistance worked is " + worked);
                         //set resistance on doctor GUI
                         break;
                     case DataParser.DISCONNECT:
@@ -170,7 +167,6 @@ namespace Server
                     Console.WriteLine("Log in");
                     this.username = username;
                     sendMessage(DataParser.getLoginResponse("OK"));
-                    //sendMessage(DataParser.getStartSessionJson());
                     return true;
                 }
                 else
@@ -187,7 +183,6 @@ namespace Server
 
         public void sendMessage(byte[] message)
         {
-            Debug.WriteLine("serverclient " + Encoding.ASCII.GetString(message.Skip(5).ToArray()));
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 

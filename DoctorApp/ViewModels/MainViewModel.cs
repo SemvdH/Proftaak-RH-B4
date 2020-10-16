@@ -21,19 +21,14 @@ namespace DoctorApp.ViewModels
         {
             this.MainWindowViewModel = mainWindowViewModel;
             client = this.MainWindowViewModel.client;
-            Tabs= new ObservableCollection<ClientInfoViewModel>();
+            Tabs = new ObservableCollection<ClientInfoViewModel>();
         }
 
         public void NewConnectedUser(string username)
         {
-            System.Diagnostics.Debug.WriteLine("CREATING TAB FOR " + username);
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                Tabs.Add(new ClientInfoViewModel(MainWindowViewModel)
-                {
-                    Username = username,
-                    Status = "Waiting to start"
-                });
+                Tabs.Add(new ClientInfoViewModel(MainWindowViewModel, username));
             });
         }
 
@@ -43,7 +38,7 @@ namespace DoctorApp.ViewModels
             {
                 foreach (ClientInfoViewModel item in Tabs)
                 {
-                    if (item.Username == username)
+                    if (item.PatientInfo.Username == username)
                     {
                         Tabs.Remove(item);
                         break;
