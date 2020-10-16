@@ -102,7 +102,7 @@ namespace DoctorApp.Utils
                                 Debug.WriteLine($"login failed \"{responseStatus}\"");
                             }
                             break;
-                        /*case DataParser.START_SESSION:
+                        case DataParser.START_SESSION:
                             Console.WriteLine("Session started!");
                             break;
                         case DataParser.STOP_SESSION:

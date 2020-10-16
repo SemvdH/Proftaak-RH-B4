@@ -59,7 +59,7 @@ namespace Server
         internal void Disconnect(Client client)
         {
             clients.Remove(client);
-            doctor.sendMessage(DataParser.getDisconnectJson(client.username));
+            Doctor.sendMessage(DataParser.getDisconnectJson(client.username));
         }
 
         public void NewLogin(Client client)
