@@ -57,6 +57,9 @@ namespace DoctorApp.Utils
         /// <param name="ar">the result of the async read</param>
         private void OnRead(IAsyncResult ar)
         {
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+                return;
+
             int receivedBytes = this.stream.EndRead(ar);
 
             if (totalBufferReceived + receivedBytes > 1024)
@@ -91,7 +94,7 @@ namespace DoctorApp.Utils
                                 Debug.WriteLine("Username and password correct!");
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
-                                
+
                             }
                             else
                             {
@@ -192,7 +195,7 @@ namespace DoctorApp.Utils
         /// <param name="bytes">the message</param>
         public void Bike(byte[] bytes)
         {
-            
+
             if (!sessionRunning)
             {
                 return;
@@ -202,18 +205,18 @@ namespace DoctorApp.Utils
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawDataMessage(bytes);
-           
-           /* switch (bytes[0])
-            {
 
-                case 0x10:
+            /* switch (bytes[0])
+             {
 
-                    if (canSendToEngine) engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
-                    break;
-                case 0x19:
-                    if (canSendToEngine) engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
-                    break;
-            }*/
+                 case 0x10:
+
+                     if (canSendToEngine) engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
+                     break;
+                 case 0x19:
+                     if (canSendToEngine) engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+                     break;
+             }*/
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
@@ -234,7 +237,7 @@ namespace DoctorApp.Utils
         /// </summary>
         public void tryLogin(string username, string password)
         {
-            
+
             string hashPassword = Util.Hasher.HashString(password);
 
             byte[] message = DataParser.getJsonMessage(DataParser.LoginAsDoctor(username, hashPassword));
@@ -265,6 +268,14 @@ namespace DoctorApp.Utils
         internal void SetClientInfoViewModel(ClientInfoViewModel clientInfoViewModel)
         {
             this.ClientInfoViewModel = clientInfoViewModel;
+        }
+
+        public void Dispose()
+        {
+            Debug.WriteLine("client dispose called");
+            this.stream.Dispose();
+            this.client.Dispose();
+            this.handler?.stop();
         }
     }
 }
