@@ -74,6 +74,7 @@ namespace RH_Engine
 
         public static string GetID(string json)
         {
+            //TODO fix null
             dynamic d = JsonConvert.DeserializeObject(json);
             return d.id;
         }

@@ -89,7 +89,7 @@ namespace ClientApp.ViewModels
 
         public int TitleHeight { get; set; } = 42;
 
-        public GridLength TitleHeightGridLegth { get { return new GridLength(TitleHeight + ResizeBorder); } }
+        public GridLength TitleHeightGridLength { get { return new GridLength(TitleHeight + ResizeBorder); } }
 
         #endregion
 
