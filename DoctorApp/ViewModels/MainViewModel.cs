@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Controls;
 using Util;
@@ -50,6 +51,30 @@ namespace DoctorApp.ViewModels
                     }
                 }
             });
+        }
+
+        public void TransferDataToClientBike(byte[] bytes)
+        {
+            string username = DataParser.getNameFromBytes(bytes);
+            foreach(ClientInfoViewModel item in Tabs)
+            {
+                if(item.Username == username)
+                {
+                    item.BikeData(bytes);
+                }
+            }
+        }
+
+        public void TransferDataToClientBPM(byte[] bytes)
+        {
+            string username = DataParser.getNameFromBytes(bytes);
+            foreach (ClientInfoViewModel item in Tabs)
+            {
+                if (item.Username == username)
+                {
+                    item.BikeData(bytes);
+                }
+            }
         }
     }
 

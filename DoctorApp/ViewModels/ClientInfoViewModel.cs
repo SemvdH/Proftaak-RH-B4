@@ -76,6 +76,18 @@ namespace DoctorApp.ViewModels
 
         }
 
+        public void BPMData(byte [] bytes)
+        {
+            //TODO
+            //Parsen van de data you fuck
+        }
+
+        public void BikeData(byte[] bytes)
+        {
+            //TODO
+            //Parsen van de data you fuck
+        }
+
 
     }
 }

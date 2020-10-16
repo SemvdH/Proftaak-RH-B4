@@ -123,13 +123,14 @@ namespace DoctorApp.Utils
                             break;
                     }
                 }
-                else if (DataParser.isRawData(messageBytes))
+                else if (DataParser.isRawDataBikeDoctor(messageBytes))
                 {
-                    Console.WriteLine($"Received data: {BitConverter.ToString(payloadbytes)}");
+                    MainViewModel.TransferDataToClientBike(payloadbytes);
                 }
-
-                totalBufferReceived -= expectedMessageLength;
-                expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
+                else if (DataParser.isRawDataBPMDoctor(messageBytes))
+                {
+                    MainViewModel.TransferDataToClientBPM(payloadbytes);
+                }
             }
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
