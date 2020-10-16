@@ -5,7 +5,6 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using DoctorApp.Utils;
 using Util;
 
 namespace Server
@@ -60,6 +59,7 @@ namespace Server
         internal void Disconnect(Client client)
         {
             clients.Remove(client);
+            Doctor.sendMessage(DataParser.getDisconnectJson(client.username));
         }
 
         public void NewLogin(Client client)
@@ -78,6 +78,31 @@ namespace Server
                 this.Doctor = null;
             }
             this.clients.Remove(client);
+        }
+
+        public void StartSessionUser(string user)
+        {
+            foreach(Client client in clients)
+            {
+                if(client.username == user)
+                {
+                    client.sendMessage(DataParser.getStartSessionJson(user));
+                    client.StartSession();
+                }
+            }
+        }
+
+        public void StopSessionUser(string user)
+        {
+            foreach (Client client in clients)
+            {
+                if (client.username == user)
+                {
+                    client.sendMessage(DataParser.getStopSessionJson(user));
+                    client.StopSession();
+                }
+            }
+
         }
     }
 }

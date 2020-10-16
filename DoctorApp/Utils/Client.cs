@@ -116,7 +116,7 @@ namespace DoctorApp.Utils
                             this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         case DataParser.DISCONNECT:
-                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            this.MainViewModel.DisconnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -140,7 +140,7 @@ namespace DoctorApp.Utils
         /// starts sending a message to the server
         /// </summary>
         /// <param name="message">the message to send</param>
-        private void sendMessage(byte[] message)
+        public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
@@ -170,7 +170,7 @@ namespace DoctorApp.Utils
 
             string hashPassword = Util.Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.LoginAsDoctor(username, hashPassword));
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(username, hashPassword));
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
