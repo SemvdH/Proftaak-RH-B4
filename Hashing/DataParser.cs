@@ -128,8 +128,6 @@ namespace Util
             }
             byte messageId = bytes[4];
 
-            System.Diagnostics.Debug.WriteLine(Encoding.ASCII.GetString(bytes.Skip(5).ToArray()));
-
             if (messageId == 0x01)
             {
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(bytes.Skip(5).ToArray()));

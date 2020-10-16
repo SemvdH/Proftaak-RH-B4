@@ -137,7 +137,7 @@ namespace Server
             else if (DataParser.isRawData(message))
             {
                 // print the raw data
-                Console.WriteLine(BitConverter.ToString(payloadbytes));
+                //Console.WriteLine(BitConverter.ToString(payloadbytes));
                 // TODO change, checking for length is not that safe
                 if (payloadbytes.Length == 8)
                 {
