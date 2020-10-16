@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DataParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hasher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MagicCode\WindowResizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObservableObject.cs" />
   </ItemGroup>
   <ItemGroup>
