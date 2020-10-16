@@ -182,20 +182,29 @@ namespace Util
             return getMessage(payload, 0x01);
         }
 
-        public static byte[] getStartSessionJson()
-        {
-            return getJsonMessage(START_SESSION);
-        }
-
-        public static byte[] getStopSessionJson()
-        {
-            return getJsonMessage(STOP_SESSION);
-        }
-
-        public static byte[] getSetResistanceJson(float mResistance)
+        public static byte[] getStartSessionJson(string user)
         {
             dynamic data = new
             {
+                username = user
+            };
+            return getJsonMessage(START_SESSION, data);
+        }
+
+        public static byte[] getStopSessionJson(string user)
+        {
+            dynamic data = new
+            {
+                username = user
+            };
+            return getJsonMessage(STOP_SESSION, data);
+        }
+
+        public static byte[] getSetResistanceJson(string user,float mResistance)
+        {
+            dynamic data = new
+            {
+                username = user,
                 resistance = mResistance
             };
             return getJsonMessage(SET_RESISTANCE, data);
@@ -243,16 +252,25 @@ namespace Util
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
         }
 
-        /*public static bool getChatMessageFronJson(byte[] json, out string username, out string chat)
+        public static string getChatMessageFromJson(byte[] json)
         {
-            try
-            {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.chat;           
+        }
 
-            }
-            dynamic jsn = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json));
-            username = jsn.data.username;
-            chat = jsn.data.chat;
-        }*/
+        public static string getUsernameFromJson(byte[] json)
+        {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
+        }
+
+        public static byte[] getChatJson(string user, string message)
+        {
+            dynamic data = new
+            {
+                username = user,
+                chat = message
+            };
+            return getJsonMessage(MESSAGE, data);
+        }
 
 
     }

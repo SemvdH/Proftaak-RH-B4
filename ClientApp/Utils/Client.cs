@@ -130,7 +130,7 @@ namespace ClientApp.Utils
                                 Debug.WriteLine($"login failed \"{responseStatus}\"");
                             }
                             break;
-                        case DataParser.START_SESSION:
+                        /*case DataParser.START_SESSION:
                             Console.WriteLine("Session started!");
                             this.sessionRunning = true;
                             if (engineConnection.Connected && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
@@ -140,7 +140,7 @@ namespace ClientApp.Utils
                             Console.WriteLine("Stop session identifier");
                             this.sessionRunning = false;
                             sendMessage(DataParser.getStopSessionJson());
-                            break;
+                            break;*/
                         case DataParser.SET_RESISTANCE:
                             Console.WriteLine("Set resistance identifier");
                             if (this.handler == null)

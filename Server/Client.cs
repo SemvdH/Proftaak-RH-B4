@@ -160,7 +160,7 @@ namespace Server
                     Console.WriteLine("Log in");
                     this.username = username;
                     sendMessage(DataParser.getLoginResponse("OK"));
-                    sendMessage(DataParser.getStartSessionJson());
+                    //sendMessage(DataParser.getStartSessionJson());
                     communication.NewLogin(this);
                 }
                 else

@@ -99,7 +99,7 @@ namespace DoctorApp.Utils
                                 Debug.WriteLine($"login failed \"{responseStatus}\"");
                             }
                             break;
-                        case DataParser.START_SESSION:
+                        /*case DataParser.START_SESSION:
                             Console.WriteLine("Session started!");
                             this.sessionRunning = true;
                             sendMessage(DataParser.getStartSessionJson());
@@ -108,7 +108,7 @@ namespace DoctorApp.Utils
                             Console.WriteLine("Stop session identifier");
                             this.sessionRunning = false;
                             sendMessage(DataParser.getStopSessionJson());
-                            break;
+                            break;*/
                         case DataParser.SET_RESISTANCE:
                             Console.WriteLine("Set resistance identifier");
                             if (this.handler == null)
