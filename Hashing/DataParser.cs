@@ -225,6 +225,8 @@ namespace Util
 
         public static byte[] getNewConnectionJson(string user)
         {
+            if (user == null)
+                throw new ArgumentNullException("user null");
             dynamic data = new
             {
                 username = user

@@ -300,6 +300,7 @@ namespace ClientApp.Utils
             this.stream.Dispose();
             this.client.Dispose();
             this.handler.stop();
+            this.engineConnection.Stop();
         }
     }
 }
