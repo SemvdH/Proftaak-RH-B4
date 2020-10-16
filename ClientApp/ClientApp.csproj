@@ -8,25 +8,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Images\CoolBackground.jpg" />
-	  <None Remove="Images\Logo\icon1.ico" />
-	  <None Remove="Images\re15.jpg" />
-	  <None Remove="Images\stone.png" />
+		<None Remove="Images\CoolBackground.jpg" />
+		<None Remove="Images\Logo\icon1.ico" />
+		<None Remove="Images\re15.jpg" />
+		<None Remove="Images\stone.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="Images\CoolBackground.jpg">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Images\Logo\icon1.ico">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Images\re15.jpg">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Images\stone.png">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
+		<Content Include="Images\CoolBackground.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Images\Logo\icon1.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Images\re15.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Images\stone.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -42,7 +42,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Properties\" />
+		<Folder Include="Properties\" />
 	</ItemGroup>
 
 	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
