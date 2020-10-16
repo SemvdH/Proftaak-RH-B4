@@ -34,14 +34,16 @@ namespace Server
 
         private void OnRead(IAsyncResult ar)
         {
-            
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+                return;
+
             int receivedBytes = this.stream.EndRead(ar);
 
             if (totalBufferReceived + receivedBytes > 1024)
-            if (totalBufferReceived + receivedBytes > 1024)
-            {
-                throw new OutOfMemoryException("buffer too small");
-            }
+                if (totalBufferReceived + receivedBytes > 1024)
+                {
+                    throw new OutOfMemoryException("buffer too small");
+                }
             Array.Copy(buffer, 0, totalBuffer, totalBufferReceived, receivedBytes);
             totalBufferReceived += receivedBytes;
 
@@ -98,9 +100,14 @@ namespace Server
                         handleLogin(payloadbytes);
                         break;
                     case DataParser.LOGIN_DOCTOR:
-                        handleLogin(payloadbytes);
-                        communication.doctor = this;
-                        Console.WriteLine("Set doctor to " + communication.doctor + " , this is " + this);
+                        if (communication.doctor != null)
+                            return;
+
+                        if (handleLogin(payloadbytes))
+                        {
+                            communication.doctor = this;
+                            Console.WriteLine("Set doctor to " + communication.doctor + " , this is " + this);
+                        }
                         break;
                     case DataParser.START_SESSION:
                         this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
@@ -148,7 +155,7 @@ namespace Server
 
         }
 
-        private void handleLogin(byte[] payloadbytes)
+        private bool handleLogin(byte[] payloadbytes)
         {
             string username;
             string password;
@@ -162,6 +169,7 @@ namespace Server
                     sendMessage(DataParser.getLoginResponse("OK"));
                     //sendMessage(DataParser.getStartSessionJson());
                     communication.NewLogin(this);
+                    return true;
                 }
                 else
                 {
@@ -172,6 +180,7 @@ namespace Server
             {
                 sendMessage(DataParser.getLoginResponse("invalid json"));
             }
+            return false;
         }
 
         public void sendMessage(byte[] message)
@@ -212,7 +221,7 @@ namespace Server
 
 
             }
-          
+
 
         }
 

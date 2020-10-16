@@ -40,6 +40,19 @@ namespace Util
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
         }
 
+        public static byte[] GetMessageToSend(string messageToSend)
+        {
+            dynamic json = new
+            {
+                identifier = MESSAGE,
+                data = new
+                {
+                    message = messageToSend
+                }
+            };
+            return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
+        }
+
         public static byte[] LoginAsDoctor(string mUsername, string mPassword)
         {
             dynamic json = new

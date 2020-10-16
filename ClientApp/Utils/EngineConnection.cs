@@ -10,16 +10,17 @@ using LibNoise.Primitive;
 namespace ClientApp.Utils
 {
     public delegate void HandleSerial(string message);
-    public delegate void HandleNoTunnelId();
-    public delegate void OnSuccessfullConnection();
+    public delegate void EngineDelegate();
 
     public sealed class EngineConnection
     {
         private static EngineConnection instance = null;
         private static readonly object padlock = new object();
         private static System.Timers.Timer updateTimer;
-        public HandleNoTunnelId OnNoTunnelId;
-        public OnSuccessfullConnection OnSuccessFullConnection;
+        private static System.Timers.Timer noVRResponseTimer;
+        public EngineDelegate OnNoTunnelId;
+        public EngineDelegate OnSuccessFullConnection;
+        public EngineDelegate OnEngineDisconnect;
 
 
         private static PC[] PCs = {
@@ -42,6 +43,7 @@ namespace ClientApp.Utils
         private static string headId = string.Empty;
         private static string groundPlaneId = string.Empty;
         private static string terrainId = string.Empty;
+        private static string lastMessage = "No message received yet";
 
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
@@ -67,11 +69,32 @@ namespace ClientApp.Utils
             updateTimer.Elapsed += UpdateTimer_Elapsed;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = false;
+
+            noVRResponseTimer = new System.Timers.Timer(15000);
+            noVRResponseTimer.Elapsed += noVRResponseTimeout;
+            noVRResponseTimer.AutoReset = false;
+            noVRResponseTimer.Enabled = false;
+            
         }
 
         private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             UpdateInfoPanel();
+        }
+
+        private void noVRResponseTimeout(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Write("VR RESPONSE TIMEOUT");
+            noVRResponseTimer.Stop();
+            sessionId = string.Empty;
+            tunnelId = string.Empty;
+            cameraId = string.Empty;
+            routeId = string.Empty;
+            panelId = string.Empty;
+            bikeId = string.Empty;
+            groundPlaneId = string.Empty;
+            terrainId = string.Empty;
+            OnEngineDisconnect?.Invoke();
         }
 
         /// <summary>
@@ -165,6 +188,7 @@ namespace ClientApp.Utils
                 {
                     Write("got tunnel id! " + tunnelId);
                     Connected = true;
+                    noVRResponseTimer.Enabled = true;
                     OnSuccessFullConnection?.Invoke();
                 }
             }
@@ -176,6 +200,9 @@ namespace ClientApp.Utils
                 //Console.WriteLine("Got serial " + serial);
                 if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
             }
+
+            noVRResponseTimer.Stop();
+            noVRResponseTimer.Start();
         }
 
         public void initScene()
@@ -293,6 +320,11 @@ namespace ClientApp.Utils
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", lastMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn

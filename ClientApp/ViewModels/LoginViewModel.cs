@@ -20,14 +20,14 @@ namespace ClientApp.ViewModels
 
         public bool InvertedLoginStatus { get; set; }
 
-        private MainWindowViewModel mainWindowViewModel;
+        private MainWindowViewModel MainWindowViewModel;
         public LoginViewModel(MainWindowViewModel mainWindowViewModel)
         {
-            this.mainWindowViewModel = mainWindowViewModel;
+            this.MainWindowViewModel = mainWindowViewModel;
             LoginCommand = new RelayCommand<object>((parameter) =>
             {
                 //TODO send username and password to server
-                this.mainWindowViewModel.client.tryLogin(Username, ((PasswordBox)parameter).Password);
+                this.MainWindowViewModel.client.tryLogin(Username, ((PasswordBox)parameter).Password);
             });
         }
 
@@ -35,11 +35,11 @@ namespace ClientApp.ViewModels
 
         internal void setLoginStatus(bool status)
         {
-            this.mainWindowViewModel.InfoModel.ConnectedToServer = status;
+            this.MainWindowViewModel.InfoModel.ConnectedToServer = status;
             this.InvertedLoginStatus = !status;
             if (status)
             {
-                this.mainWindowViewModel.SelectedViewModel = new MainViewModel(mainWindowViewModel);
+                this.MainWindowViewModel.SelectedViewModel = new MainViewModel(MainWindowViewModel);
             }
         }
     }

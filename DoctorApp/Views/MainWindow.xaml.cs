@@ -26,7 +26,7 @@ namespace DoctorApp
         {
             Client client = new Client();
             InitializeComponent();
-            DataContext = new MainWindowViewModel(client);
+            DataContext = new MainWindowViewModel(this, client);
         }
     }
 }
