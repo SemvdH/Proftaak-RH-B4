@@ -298,7 +298,7 @@ namespace ClientApp.Utils
                 {
                     // TODO check if is drawn
                 });
-            SendMessageAndOnResponse(stream, mainCommand.showMessage(panelId, "message", lastMessage), "message",
+            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", lastMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn
