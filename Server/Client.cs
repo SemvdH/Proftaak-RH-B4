@@ -3,9 +3,9 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
-using ClientApp.Utils;
 using System.Diagnostics;
 using Util;
+using System.Linq;
 
 namespace Server
 {
@@ -92,6 +92,8 @@ namespace Server
 
             string identifier;
             bool isJson = DataParser.getJsonIdentifier(message, out identifier);
+
+            Debug.WriteLine("server " + Encoding.ASCII.GetString(payloadbytes));
             if (isJson)
             {
                 switch (identifier)
@@ -111,18 +113,18 @@ namespace Server
                         }
                         break;
                     case DataParser.START_SESSION:
-                        this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                        this.communication.StartSessionUser(DataParser.getUsernameFromJson(payloadbytes));
                         break;
                     case DataParser.STOP_SESSION:
-                        this.saveData = null;
+                        this.communication.StopSessionUser(DataParser.getUsernameFromJson(payloadbytes));
                         break;
                     case DataParser.SET_RESISTANCE:
                         bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
                         Console.WriteLine($"set resistance worked is " + worked);
                         //set resistance on doctor GUI
                         break;
-                    case DataParser.MESSAGE:
-                        //TODO send message to clients
+                    case DataParser.DISCONNECT:
+                        communication.Disconnect(this);
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -168,7 +170,7 @@ namespace Server
                     Console.WriteLine("Log in");
                     this.username = username;
                     sendMessage(DataParser.getLoginResponse("OK"));
-                    sendMessage(DataParser.getStartSessionJson());
+                    //sendMessage(DataParser.getStartSessionJson());
                     return true;
                 }
                 else
@@ -185,6 +187,7 @@ namespace Server
 
         public void sendMessage(byte[] message)
         {
+            Debug.WriteLine("serverclient " + Encoding.ASCII.GetString(message.Skip(5).ToArray()));
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
@@ -241,6 +244,16 @@ namespace Server
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
+        }
+
+        public void StartSession()
+        {
+            this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+        }
+
+        public void StopSession()
+        {
+            this.saveData = null;
         }
     }
 }

@@ -139,12 +139,12 @@ namespace ClientApp.Utils
                             Console.WriteLine("Session started!");
                             this.sessionRunning = true;
                             if (engineConnection.Connected && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
-                            sendMessage(DataParser.getStartSessionJson());
+                            Debug.WriteLine("start");
                             break;
                         case DataParser.STOP_SESSION:
                             Console.WriteLine("Stop session identifier");
                             this.sessionRunning = false;
-                            sendMessage(DataParser.getStopSessionJson());
+                            Debug.WriteLine("stop");
                             break;
                         case DataParser.SET_RESISTANCE:
                             Console.WriteLine("Set resistance identifier");
@@ -181,7 +181,7 @@ namespace ClientApp.Utils
         /// starts sending a message to the server
         /// </summary>
         /// <param name="message">the message to send</param>
-        private void sendMessage(byte[] message)
+        public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
@@ -297,6 +297,7 @@ namespace ClientApp.Utils
         public void Dispose()
         {
             Debug.WriteLine("client dispose called");
+            sendMessage(DataParser.getDisconnectJson(LoginViewModel.Username));
             this.stream.Dispose();
             this.client.Dispose();
             this.handler.stop();

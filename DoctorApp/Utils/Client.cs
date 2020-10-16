@@ -10,7 +10,7 @@ using Util;
 namespace DoctorApp.Utils
 {
     public delegate void EngineCallback();
-    public class Client : IDataReceiver
+    public class Client
     {
         private TcpClient client;
         private NetworkStream stream;
@@ -18,8 +18,6 @@ namespace DoctorApp.Utils
         private bool connected;
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
-        private bool sessionRunning = false;
-        private IHandler handler = null;
         private LoginViewModel LoginViewModel;
         private MainViewModel MainViewModel;
         private ClientInfoViewModel ClientInfoViewModel;
@@ -83,6 +81,8 @@ namespace DoctorApp.Utils
 
                 string identifier;
                 bool isJson = DataParser.getJsonIdentifier(messageBytes, out identifier);
+
+                Debug.WriteLine("doctor " + Encoding.ASCII.GetString(payloadbytes));
                 if (isJson)
                 {
                     switch (identifier)
@@ -104,32 +104,19 @@ namespace DoctorApp.Utils
                             break;
                         case DataParser.START_SESSION:
                             Console.WriteLine("Session started!");
-                            this.sessionRunning = true;
-                            sendMessage(DataParser.getStartSessionJson());
                             break;
                         case DataParser.STOP_SESSION:
                             Console.WriteLine("Stop session identifier");
-                            this.sessionRunning = false;
-                            sendMessage(DataParser.getStopSessionJson());
                             break;
                         case DataParser.SET_RESISTANCE:
                             Console.WriteLine("Set resistance identifier");
-                            if (this.handler == null)
-                            {
-                                Console.WriteLine("handler is null");
-                                sendMessage(DataParser.getSetResistanceResponseJson(false));
-                            }
-                            else
-                            {
-                                this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
-                                sendMessage(DataParser.getSetResistanceResponseJson(true));
-                            }
                             break;
                         case DataParser.NEW_CONNECTION:
+                            Debug.WriteLine("doctor client new connection");
                             this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         case DataParser.DISCONNECT:
-                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            this.MainViewModel.DisconnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -153,7 +140,7 @@ namespace DoctorApp.Utils
         /// starts sending a message to the server
         /// </summary>
         /// <param name="message">the message to send</param>
-        private void sendMessage(byte[] message)
+        public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
@@ -166,63 +153,6 @@ namespace DoctorApp.Utils
         {
             this.stream.EndWrite(ar);
         }
-
-        #region interface
-        //maybe move this to other place
-        /// <summary>
-        /// bpm method for receiving the BPM value from the bluetooth bike or the simulation
-        /// </summary>
-        /// <param name="bytes">the message</param>
-        public void BPM(byte[] bytes)
-        {
-            if (!sessionRunning)
-            {
-                return;
-            }
-            if (bytes == null)
-            {
-                throw new ArgumentNullException("no bytes");
-            }
-            byte[] message = DataParser.GetRawDataMessage(bytes);
-
-
-            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
-        }
-
-        /// <summary>
-        /// method for receiving the bike message from the bluetooth bike or the simulation
-        /// </summary>
-        /// <param name="bytes">the message</param>
-        public void Bike(byte[] bytes)
-        {
-
-            if (!sessionRunning)
-            {
-                return;
-            }
-            if (bytes == null)
-            {
-                throw new ArgumentNullException("no bytes");
-            }
-            byte[] message = DataParser.GetRawDataMessage(bytes);
-
-            /* switch (bytes[0])
-             {
-
-                 case 0x10:
-
-                     if (canSendToEngine) engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
-                     break;
-                 case 0x19:
-                     if (canSendToEngine) engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
-                     break;
-             }*/
-
-
-            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
-        }
-
-        #endregion
 
         /// <summary>
         /// wether or not the client stream is connected
@@ -246,15 +176,6 @@ namespace DoctorApp.Utils
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
-        /// <summary>
-        /// sets the handler for the client, so either the bike simulator or the bluetooth bike handler
-        /// </summary>
-        /// <param name="handler"></param>
-        public void SetHandler(IHandler handler)
-        {
-            this.handler = handler;
-        }
-
         internal void SetLoginViewModel(LoginViewModel loginViewModel)
         {
             this.LoginViewModel = loginViewModel;
@@ -275,7 +196,6 @@ namespace DoctorApp.Utils
             Debug.WriteLine("client dispose called");
             this.stream.Dispose();
             this.client.Dispose();
-            this.handler?.stop();
         }
     }
 }

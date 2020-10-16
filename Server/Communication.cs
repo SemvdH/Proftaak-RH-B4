@@ -5,7 +5,6 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using DoctorApp.Utils;
 using Util;
 
 namespace Server
@@ -26,8 +25,9 @@ namespace Server
                 this.mDoctor = value;
                 this.clients.ForEach((client) =>
                 {
-                    var dinges = DataParser.getNewConnectionJson(client.username);
-                    Debug.WriteLine("foreach " + Encoding.ASCII.GetString(dinges));
+                    Debug.WriteLine("foreach called for " + client.username);
+                    byte[] dinges = DataParser.getNewConnectionJson(client.username);
+                    Debug.WriteLine("foreach " + Encoding.ASCII.GetString(dinges.Skip(5).ToArray()));
                     this.mDoctor.sendMessage(dinges);
                 });
             }
@@ -59,11 +59,13 @@ namespace Server
         internal void Disconnect(Client client)
         {
             clients.Remove(client);
+            Doctor.sendMessage(DataParser.getDisconnectJson(client.username));
         }
 
         public void NewLogin(Client client)
         {
-            clients.Add(client);
+            this.clients.Add(client);
+            Debug.WriteLine("amount of clients is now " + this.clients.Count);
             var dinges = DataParser.getNewConnectionJson(client.username);
             Debug.WriteLine("new login" + Encoding.ASCII.GetString(dinges));
             Doctor?.sendMessage(dinges);
@@ -76,6 +78,31 @@ namespace Server
                 this.Doctor = null;
             }
             this.clients.Remove(client);
+        }
+
+        public void StartSessionUser(string user)
+        {
+            foreach(Client client in clients)
+            {
+                if(client.username == user)
+                {
+                    client.sendMessage(DataParser.getStartSessionJson(user));
+                    client.StartSession();
+                }
+            }
+        }
+
+        public void StopSessionUser(string user)
+        {
+            foreach (Client client in clients)
+            {
+                if (client.username == user)
+                {
+                    client.sendMessage(DataParser.getStopSessionJson(user));
+                    client.StopSession();
+                }
+            }
+
         }
     }
 }

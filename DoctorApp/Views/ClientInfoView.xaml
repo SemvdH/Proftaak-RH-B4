@@ -24,8 +24,8 @@
                     <Setter Property="Margin" Value="0,0,20,0"/>
                 </Style>
             </StackPanel.Resources>
-            <Label Content="UserName" Name="Username_Label"/>
-            <Label Content="Status: " Name="Status_Label"/>
+            <Label Content="{Binding Path=Username}"/>
+            <Label Content="{Binding Path=Status}"/>
         </StackPanel>
         <StackPanel Margin="0,10,0,0" Grid.RowSpan="2" Grid.Row="1">
             <StackPanel.Resources>
@@ -39,9 +39,9 @@
                 <Label Content="Current BPM" Width="110" DockPanel.Dock="Top"/>
             </DockPanel>
             <DockPanel Height="26" LastChildFill="False" HorizontalAlignment="Stretch">
-                <TextBox Name="textBox_Resistance" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
-                <TextBox Name="textBox_CurrentSpeed" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
-                <TextBox Name="textBox_CurrentBPM" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
+                <TextBox Name="textBox_Resistance" Text="{Binding Path=Resistance}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentSpeed" Text="{Binding Path=Speed}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentBPM" Text="{Binding Path=BPM}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
             </DockPanel>
             <DockPanel Height="26" LastChildFill="False">
                 <Label Content="Distance Covered" Width="110" DockPanel.Dock="Right"/>
@@ -49,20 +49,19 @@
                 <Label Content="Acc. Power" Width="110" DockPanel.Dock="Top"/>
             </DockPanel>
             <DockPanel Height="26" LastChildFill="False">
-                <TextBox Name="textBox_DistanceCovered" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
-                <TextBox Name="textBox_CurrentPower" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
-                <TextBox Name="textBox_AccPower" Text="" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
+                <TextBox Name="textBox_DistanceCovered" Text="{Binding Path=Distance}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentPower" Text="{Binding Path=Curr_Power}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
+                <TextBox Name="textBox_AccPower" Text="{Binding Path=Acc_Power}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
             </DockPanel>
         </StackPanel>
-        <ListBox Name="ChatBox"  Grid.Column="1" Margin="59,41,0,0" Grid.RowSpan="3"/>
+        <ListBox Name="ChatBox"  ItemsSource="{Binding ChatLog}" Grid.Column="1" Margin="59,41,0,0" Grid.RowSpan="3"/>
         <TextBox Name="textBox_Chat" Grid.Column="1" HorizontalAlignment="Left" Margin="59,10,0,0" Grid.Row="3" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
-        <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" />
-        <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97"/>
-        <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" />
+        <Button x:Name="Send" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" Command="{Binding Chat}" CommandParameter="{Binding ElementName=textBox_Chat}"/>
+        <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StartSession}" CommandParameter=""/>
+        <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StopSession}" CommandParameter=""/>
         <TextBox x:Name="textBox_SetResistance" Grid.Column="1" HorizontalAlignment="Left" Margin="69,128,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Width="97"/>
-        <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18"/>
+        <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18" Command="{Binding SetResistance}" CommandParameter="{Binding ElementName=textBox_SetResistance}"/>
         <Canvas Grid.Row="3" Background="White" Margin="0,33,0,0"/>
         <ComboBox Name="DropBox" HorizontalAlignment="Left" Margin="0,6,0,0" Grid.Row="3" VerticalAlignment="Top" Width="190"/>
-        <Button Content="Client Info" Grid.Column="1" HorizontalAlignment="Left" Margin="207,6,0,0" VerticalAlignment="Top" Height="26" Width="82"/>
     </Grid>
 </UserControl>
