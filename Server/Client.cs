@@ -97,16 +97,17 @@ namespace Server
                 switch (identifier)
                 {
                     case DataParser.LOGIN:
-                        handleLogin(payloadbytes);
+                        if (handleLogin(payloadbytes))
+                            communication.NewLogin(this);
                         break;
                     case DataParser.LOGIN_DOCTOR:
-                        if (communication.doctor != null)
+                        if (communication.Doctor != null)
                             return;
 
                         if (handleLogin(payloadbytes))
                         {
-                            communication.doctor = this;
-                            Console.WriteLine("Set doctor to " + communication.doctor + " , this is " + this);
+                            communication.Doctor = this;
+                            Console.WriteLine("Set doctor to " + communication.Doctor + " , this is " + this);
                         }
                         break;
                     case DataParser.START_SESSION:
@@ -168,7 +169,6 @@ namespace Server
                     this.username = username;
                     sendMessage(DataParser.getLoginResponse("OK"));
                     sendMessage(DataParser.getStartSessionJson());
-                    communication.NewLogin(this);
                     return true;
                 }
                 else

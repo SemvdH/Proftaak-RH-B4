@@ -230,9 +230,9 @@ namespace ClientApp.Utils
                             WriteTextMessage(mainCommand.ShowRoute("showRouteFalse", false));
                         });
                 });
-                setEnvironment();
+            setEnvironment();
 
-            
+
         }
 
         private void setEnvironment()
@@ -298,7 +298,7 @@ namespace ClientApp.Utils
                 {
                     // TODO check if is drawn
                 });
-            SendMessageAndOnResponse(stream, mainCommand.showMessage(panelId, "message", lastMessage), "message",
+            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", lastMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn
@@ -322,7 +322,7 @@ namespace ClientApp.Utils
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
             for (int i = 0; i < 256 * 256; i++)
             {
-                height[i] = improvedPerlin.GetValue(x /10, x / 10, x * 100) / 3.5f + 1;
+                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) / 3.5f + 1;
 
                 //if (height[i] > 1.1f)
                 //{
