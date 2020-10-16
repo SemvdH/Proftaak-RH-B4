@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
@@ -12,7 +13,25 @@ namespace Server
     {
         private TcpListener listener;
         private List<Client> clients;
-        public Client doctor;
+        private Client mDoctor;
+        public Client Doctor
+        {
+            get
+            {
+                return this.mDoctor;
+            }
+            set
+            {
+                this.mDoctor = value;
+                this.clients.ForEach((client) =>
+                {
+                    Debug.WriteLine("foreach called for " + client.username);
+                    byte[] dinges = DataParser.getNewConnectionJson(client.username);
+                    Debug.WriteLine("foreach " + Encoding.ASCII.GetString(dinges.Skip(5).ToArray()));
+                    this.mDoctor.sendMessage(dinges);
+                });
+            }
+        }
         public Communication(TcpListener listener)
         {
             this.listener = listener;
@@ -33,7 +52,7 @@ namespace Server
 
             var tcpClient = listener.EndAcceptTcpClient(ar);
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
-            clients.Add(new Client(this, tcpClient));
+            new Client(this, tcpClient);
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
@@ -45,15 +64,20 @@ namespace Server
 
         public void NewLogin(Client client)
         {
-            if (doctor == null)
+            this.clients.Add(client);
+            Debug.WriteLine("amount of clients is now " + this.clients.Count);
+            var dinges = DataParser.getNewConnectionJson(client.username);
+            Debug.WriteLine("new login" + Encoding.ASCII.GetString(dinges));
+            Doctor?.sendMessage(dinges);
+        }
+
+        public void LogOff(Client client)
+        {
+            if (this.Doctor == client)
             {
-                doctor = client;
+                this.Doctor = null;
             }
-            else
-            {
-                doctor.sendMessage(DataParser.getNewConnectionJson(client.username));
-            }
-            
+            this.clients.Remove(client);
         }
 
         public void StartSessionUser(string user)

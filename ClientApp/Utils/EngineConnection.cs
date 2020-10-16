@@ -178,7 +178,7 @@ namespace ClientApp.Utils
                 Console.WriteLine("set tunnel id to " + tunnelId);
                 if (tunnelId == null)
                 {
-                    Write("could not find a valid tunnel id!");
+                    //Write("could not find a valid tunnel id!");
                     OnNoTunnelId?.Invoke();
                     Connected = false;
                     FollowingRoute = false;
@@ -256,9 +256,9 @@ namespace ClientApp.Utils
                             WriteTextMessage(mainCommand.ShowRoute("showRouteFalse", false));
                         });
                 });
-                setEnvironment();
+            setEnvironment();
 
-            
+
         }
 
         private void setEnvironment()
@@ -348,7 +348,7 @@ namespace ClientApp.Utils
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
             for (int i = 0; i < 256 * 256; i++)
             {
-                height[i] = improvedPerlin.GetValue(x /10, x / 10, x * 100) / 3.5f + 1;
+                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) / 3.5f + 1;
 
                 //if (height[i] > 1.1f)
                 //{

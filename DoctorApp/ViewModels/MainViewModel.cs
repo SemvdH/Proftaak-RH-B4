@@ -26,6 +26,7 @@ namespace DoctorApp.ViewModels
 
         public void NewConnectedUser(string username)
         {
+            System.Diagnostics.Debug.WriteLine("CREATING TAB FOR " + username);
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 Tabs.Add(new ClientInfoViewModel(MainWindowViewModel)
@@ -52,5 +53,5 @@ namespace DoctorApp.ViewModels
         }
     }
 
-    
+
 }
