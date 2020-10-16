@@ -92,6 +92,8 @@ namespace Server
 
             string identifier;
             bool isJson = DataParser.getJsonIdentifier(message, out identifier);
+
+            Debug.WriteLine("server " + Encoding.ASCII.GetString(payloadbytes));
             if (isJson)
             {
                 switch (identifier)
