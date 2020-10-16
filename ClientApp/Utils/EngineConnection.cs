@@ -156,7 +156,7 @@ namespace ClientApp.Utils
                 Console.WriteLine("set tunnel id to " + tunnelId);
                 if (tunnelId == null)
                 {
-                    Write("could not find a valid tunnel id!");
+                    //Write("could not find a valid tunnel id!");
                     OnNoTunnelId?.Invoke();
                     Connected = false;
                     FollowingRoute = false;
