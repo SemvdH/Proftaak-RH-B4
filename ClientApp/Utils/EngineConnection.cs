@@ -42,6 +42,7 @@ namespace ClientApp.Utils
         private static string headId = string.Empty;
         private static string groundPlaneId = string.Empty;
         private static string terrainId = string.Empty;
+        private static string lastMessage = "No message received yet";
 
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
@@ -293,6 +294,11 @@ namespace ClientApp.Utils
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showMessage(panelId, "message", lastMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn
