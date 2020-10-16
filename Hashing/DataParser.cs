@@ -243,6 +243,17 @@ namespace Util
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
         }
 
+        /*public static bool getChatMessageFronJson(byte[] json, out string username, out string chat)
+        {
+            try
+            {
+
+            }
+            dynamic jsn = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json));
+            username = jsn.data.username;
+            chat = jsn.data.chat;
+        }*/
+
 
     }
 }

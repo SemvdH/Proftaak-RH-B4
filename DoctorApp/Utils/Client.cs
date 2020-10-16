@@ -150,7 +150,7 @@ namespace DoctorApp.Utils
         /// starts sending a message to the server
         /// </summary>
         /// <param name="message">the message to send</param>
-        private void sendMessage(byte[] message)
+        public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
@@ -234,10 +234,10 @@ namespace DoctorApp.Utils
         /// </summary>
         public void tryLogin(string username, string password)
         {
-            
-            string hashPassword = Util.Hasher.HashString(password);
+            string hashUser = Hasher.HashString(username);
+            string hashPassword = Hasher.HashString(password);
 
-            byte[] message = DataParser.getJsonMessage(DataParser.LoginAsDoctor(username, hashPassword));
+            byte[] message = DataParser.getJsonMessage(DataParser.GetLoginJson(hashUser, hashPassword));
 
 
             this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);

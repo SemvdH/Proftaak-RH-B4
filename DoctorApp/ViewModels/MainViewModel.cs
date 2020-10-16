@@ -28,9 +28,10 @@ namespace DoctorApp.ViewModels
         {
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                Tabs.Add(new ClientInfoViewModel
+                Tabs.Add(new ClientInfoViewModel(MainWindowViewModel)
                 {
                     Username = username,
+                    Status = "Waiting to start"
                 });
             });
         }
