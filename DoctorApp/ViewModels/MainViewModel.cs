@@ -21,11 +21,12 @@ namespace DoctorApp.ViewModels
         {
             this.MainWindowViewModel = mainWindowViewModel;
             client = this.MainWindowViewModel.client;
-            Tabs= new ObservableCollection<object>();
+            Tabs = new ObservableCollection<object>();
         }
 
         public void NewConnectedUser(string username)
         {
+            System.Diagnostics.Debug.WriteLine("CREATING TAB FOR " + username);
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 Tabs.Add(new ClientInfoViewModel
@@ -42,5 +43,5 @@ namespace DoctorApp.ViewModels
         }
     }
 
-    
+
 }

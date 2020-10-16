@@ -26,8 +26,9 @@ namespace Server
                 this.mDoctor = value;
                 this.clients.ForEach((client) =>
                 {
-                    var dinges = DataParser.getNewConnectionJson(client.username);
-                    Debug.WriteLine("foreach " + Encoding.ASCII.GetString(dinges));
+                    Debug.WriteLine("foreach called for " + client.username);
+                    byte[] dinges = DataParser.getNewConnectionJson(client.username);
+                    Debug.WriteLine("foreach " + Encoding.ASCII.GetString(dinges.Skip(5).ToArray()));
                     this.mDoctor.sendMessage(dinges);
                 });
             }
@@ -63,7 +64,8 @@ namespace Server
 
         public void NewLogin(Client client)
         {
-            clients.Add(client);
+            this.clients.Add(client);
+            Debug.WriteLine("amount of clients is now " + this.clients.Count);
             var dinges = DataParser.getNewConnectionJson(client.username);
             Debug.WriteLine("new login" + Encoding.ASCII.GetString(dinges));
             Doctor?.sendMessage(dinges);

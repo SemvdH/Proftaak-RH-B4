@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using ClientApp.Utils;
 using System.Diagnostics;
 using Util;
+using System.Linq;
 
 namespace Server
 {
@@ -168,7 +169,7 @@ namespace Server
                     Console.WriteLine("Log in");
                     this.username = username;
                     sendMessage(DataParser.getLoginResponse("OK"));
-                    sendMessage(DataParser.getStartSessionJson());
+                    //sendMessage(DataParser.getStartSessionJson());
                     return true;
                 }
                 else
@@ -185,6 +186,7 @@ namespace Server
 
         public void sendMessage(byte[] message)
         {
+            Debug.WriteLine("serverclient " + Encoding.ASCII.GetString(message.Skip(5).ToArray()));
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
