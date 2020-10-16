@@ -34,7 +34,7 @@ namespace Server
 
         private void OnRead(IAsyncResult ar)
         {
-            if (ar == null || (!ar.IsCompleted))
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
                 return;
 
             int receivedBytes = this.stream.EndRead(ar);

@@ -87,7 +87,7 @@ namespace ClientApp.Utils
         /// <param name="ar">the result of the async read</param>
         private void OnRead(IAsyncResult ar)
         {
-            if (ar == null || (!ar.IsCompleted))
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
                 return;
 
 
