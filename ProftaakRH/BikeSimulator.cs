@@ -2,6 +2,7 @@
 using ProftaakRH;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -92,8 +93,17 @@ namespace Hardware.Simulators
         //Generate an ANT message for page 0x10
         private byte[] GenerateBike0x10()
         {
-            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime * 4 % 64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
-            return bikeByte;
+            //SOMEONE FIX THIS!!!!!!!!!
+            try
+            {
+                byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime * 4 % 64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
+                return bikeByte;
+            }
+            catch (OverflowException e)
+            {
+                Debug.WriteLine(e);
+                return GenerateBike0x10();
+            }
         }
 
         //Generate an ANT message for BPM

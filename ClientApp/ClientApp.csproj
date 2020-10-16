@@ -9,6 +9,8 @@
 
 	<ItemGroup>
 		<None Remove="Images\CoolBackground.jpg" />
+		<None Remove="Images\Icons\CheckMark.png" />
+		<None Remove="Images\Icons\CrossMark.png" />
 		<None Remove="Images\Logo\icon1.ico" />
 		<None Remove="Images\re15.jpg" />
 		<None Remove="Images\stone.png" />
@@ -17,6 +19,12 @@
 	<ItemGroup>
 		<Content Include="Images\CoolBackground.jpg">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Images\Icons\CheckMark.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Images\Icons\CrossMark.png">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Images\Logo\icon1.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>

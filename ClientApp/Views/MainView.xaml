@@ -19,33 +19,21 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="10">
-                <Label Content="Connected to server:"/>
-                <Label Content="{Binding Path=MainWindowViewModel.InfoModel.ConnectedToServer}"/>
-                <Image Source="{Binding Path=MainWindowViewModel.InfoModel.ConnectedToServer, Converter={StaticResource BoolToMarkConverter}}"/>
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Margin="20" HorizontalAlignment="Center">
+                <Label Content="Connected to server:" VerticalAlignment="Center"/>
+                <Image Source="{Binding Converter={StaticResource BoolToMarkConverter},Path=MainWindowViewModel.InfoModel.ConnectedToServer}" Stretch="Uniform" Width="20" Height="20"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Margin="10">
-                <Label Content="Connected to VR-Engine:"/>
-                <Label Content="{Binding Path=MainWindowViewModel.InfoModel.ConnectedToVREngine}"/>
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Margin="20" HorizontalAlignment="Center">
+                <Label Content="Connected to VR-Engine:" VerticalAlignment="Center"/>
+                <Image Source="{Binding Converter={StaticResource BoolToMarkConverter},Path=MainWindowViewModel.InfoModel.ConnectedToVREngine}" Stretch="Uniform" Width="20" Height="20"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" Margin="10">
-                <Label Content="Doctor connected:"/>
-                <Label  Content="{Binding Path=MainWindowViewModel.InfoModel.DoctorConnected}"/>
+            <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" Margin="20" HorizontalAlignment="Center">
+                <Label Content="Doctor connected:" VerticalAlignment="Center"/>
+                <Image Source="{Binding Converter={StaticResource BoolToMarkConverter},Path=MainWindowViewModel.InfoModel.DoctorConnected}" Stretch="Uniform" Width="20" Height="20"/>
             </StackPanel>
-
-            <Button Grid.Column="0" Grid.Row="1"  Command="{Binding RetryServerCommand}" Width="50" Height="20">
-                <Button.Content>
-                    <TextBlock TextWrapping="Wrap" Text="retry"/>
-                </Button.Content>
-            </Button>
-
         </Grid>
 
     </DockPanel>
