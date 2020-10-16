@@ -4,7 +4,6 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using DoctorApp.Utils;
 using Util;
 
 namespace Server
@@ -55,6 +54,31 @@ namespace Server
                 doctor.sendMessage(DataParser.getNewConnectionJson(client.username));
             }
             
+        }
+
+        public void StartSessionUser(string user)
+        {
+            foreach(Client client in clients)
+            {
+                if(client.username == user)
+                {
+                    client.sendMessage(DataParser.getStartSessionJson(user));
+                    client.StartSession();
+                }
+            }
+        }
+
+        public void StopSessionUser(string user)
+        {
+            foreach (Client client in clients)
+            {
+                if (client.username == user)
+                {
+                    client.sendMessage(DataParser.getStopSessionJson(user));
+                    client.StopSession();
+                }
+            }
+
         }
     }
 }

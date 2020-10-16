@@ -69,11 +69,6 @@ namespace DoctorApp.ViewModels
 
             //TODO RelayCommand ChatToAll
 
-            ClientInfo = new RelayCommand(() =>
-            {
-                //TODO POPUP
-            });
-
             SetResistance = new RelayCommand<object>((parameter) =>
             {
                 client.sendMessage(DataParser.getSetResistanceJson(Username, float.Parse(((TextBox)parameter).Text)));

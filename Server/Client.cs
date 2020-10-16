@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
-using ClientApp.Utils;
 using System.Diagnostics;
 using Util;
 
@@ -110,10 +109,10 @@ namespace Server
                         }
                         break;
                     case DataParser.START_SESSION:
-                        this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+                        this.communication.StartSessionUser(DataParser.getUsernameFromJson(payloadbytes));
                         break;
                     case DataParser.STOP_SESSION:
-                        this.saveData = null;
+                        this.communication.StopSessionUser(DataParser.getUsernameFromJson(payloadbytes));
                         break;
                     case DataParser.SET_RESISTANCE:
                         bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
@@ -241,6 +240,16 @@ namespace Server
             foreach (byte b in ba)
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
+        }
+
+        public void StartSession()
+        {
+            this.saveData = new SaveData(Directory.GetCurrentDirectory() + "/" + this.username + "/" + sessionStart.ToString("yyyy-MM-dd HH-mm-ss"));
+        }
+
+        public void StopSession()
+        {
+            this.saveData = null;
         }
     }
 }

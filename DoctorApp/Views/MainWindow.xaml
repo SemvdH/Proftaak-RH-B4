@@ -5,6 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoctorApp"
         mc:Ignorable="d"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="{x:Type local:MainWindow}">

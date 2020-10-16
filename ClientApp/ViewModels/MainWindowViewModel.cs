@@ -108,7 +108,7 @@ namespace ClientApp.ViewModels
 
             this.InfoModel = new Info();
             this.client = client;
-            loginViewModel = new LoginViewModel(this);
+            LoginViewModel loginViewModel = new LoginViewModel(this);
             SelectedViewModel = loginViewModel;
             this.client.SetLoginViewModel(loginViewModel);
 

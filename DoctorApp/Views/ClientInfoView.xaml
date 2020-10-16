@@ -63,6 +63,5 @@
         <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18" Command="{Binding SetResistance}" CommandParameter="{Binding ElementName=textBox_SetResistance}"/>
         <Canvas Grid.Row="3" Background="White" Margin="0,33,0,0"/>
         <ComboBox Name="DropBox" HorizontalAlignment="Left" Margin="0,6,0,0" Grid.Row="3" VerticalAlignment="Top" Width="190"/>
-        <Button Content="Client Info" Grid.Column="1" HorizontalAlignment="Left" Margin="207,6,0,0" VerticalAlignment="Top" Height="26" Width="82"/>
     </Grid>
 </UserControl>
