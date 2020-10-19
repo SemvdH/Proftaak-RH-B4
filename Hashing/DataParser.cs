@@ -4,9 +4,11 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Printing.IndexedProperties;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Media.Animation;
 
 namespace Util
 {
@@ -289,8 +291,12 @@ namespace Util
 
         private static byte[] GetRawDataDoctor(byte[] payload, string username, byte messageID)
         {
-
-            return getMessage(payload.Concat(Encoding.ASCII.GetBytes(username)).ToArray(), messageID);
+            Debug.WriteLine(BitConverter.ToString(Encoding.ASCII.GetBytes(username)));
+            byte[] nameArray = Encoding.ASCII.GetBytes(username);
+            byte[] total = new byte[nameArray.Length + payload.Length];
+            Array.Copy(payload, 0, total, 0, payload.Length);
+            Array.Copy(nameArray,0,total,payload.Length,nameArray.Length);
+            return getMessage(total,messageID);
 
         }
         /// <summary>

@@ -25,6 +25,8 @@ namespace Server
         private Timer timer;
         private byte[] BikeDataBuffer;
         private byte[] BPMDataBuffer;
+        private bool BPMdata = false;
+        private bool Bikedata = false;
 
         public Client(Communication communication, TcpClient tcpClient)
         {
@@ -153,15 +155,19 @@ namespace Server
 
             }
             else if (DataParser.isRawDataBikeServer(message))
-            {
+            { 
+                Bikedata = true;
                 saveData?.WriteDataRAWBike(payloadbytes);
                 Array.Copy(this.BikeDataBuffer, 0, this.BikeDataBuffer, 8, 8);
                 Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 8);
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(payloadbytes, this.username));
             }
             else if (DataParser.isRawDataBPMServer(message))
             {
+                BPMdata = true;
                 saveData?.WriteDataRAWBPM(payloadbytes);
                 Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 2);
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
             }
 
         }
@@ -264,9 +270,20 @@ namespace Server
 
         private void SendDataToDoctor(object sender, ElapsedEventArgs e)
         {
-            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Take(8).ToArray(), this.username));
-            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Skip(8).ToArray(), this.username));
-            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer, this.username));
+            /*if (Bikedata)
+            {
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Take(8).ToArray(), this.username));
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Skip(8).ToArray(), this.username));
+                Bikedata = false;
+                
+            }
+            if (BPMdata)
+            { 
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(this.BPMDataBuffer, this.username));
+                BPMdata = false;
+
+            }*/
+           
         }
     }
 }

@@ -129,7 +129,7 @@ namespace DoctorApp.Utils
                 {
                     MainViewModel.TransferDataToClientBPM(payloadbytes);
                 }
-
+                Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk
                 totalBufferReceived -= expectedMessageLength;
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             }
