@@ -87,11 +87,20 @@ namespace DoctorApp.ViewModels
         {
             //TODO
             //Parsen van de data you fuck
-            PatientInfo.BPM = bytes[1];
-            if (MySelectedItem == "BPM")
+            if(bytes[0] == 0x00)
             {
-                Chart.NewValue(PatientInfo.BPM);
+
             }
+            else
+            {
+                PatientInfo.BPM = bytes[1];
+                if (MySelectedItem == "BPM")
+                    {
+                    Chart.NewValue(PatientInfo.BPM);
+                }
+
+            }
+            
             
         }
 
@@ -108,17 +117,18 @@ namespace DoctorApp.ViewModels
                     }
                     PatientInfo.Distance = bytes[3];
                     PatientInfo.Speed = (bytes[4] | (bytes[5] << 8)) * 0.01;
+                    if (MySelectedItem == "Speed")
+                    {
+                        Chart.NewValue(PatientInfo.Speed);
+                    }
                     break;
                 case 0x19:
                     PatientInfo.Acc_Power = bytes[3] | (bytes[4] << 8);
                     PatientInfo.Curr_Power = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
                     break;
                 default:
-                    throw new Exception();
-            }
-            if (MySelectedItem == "Speed")
-            {
-                Chart.NewValue(PatientInfo.Speed);
+                    Debug.WriteLine("rip");
+                    break;
             }
         }
 

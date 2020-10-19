@@ -56,7 +56,7 @@ namespace DoctorApp.ViewModels
             {
                 if(item.PatientInfo.Username == username)
                 {
-                    item.BikeData(bytes);
+                    item.BikeData(DataParser.getDataWithoutName(bytes,0,8));
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace DoctorApp.ViewModels
             {
                 if (item.PatientInfo.Username == username)
                 {
-                    item.BikeData(bytes);
+                    item.BikeData(DataParser.getDataWithoutName(bytes, 0,2));
                 }
             }
         }

@@ -41,6 +41,12 @@ namespace Util
 
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
         }
+
+        internal static string getNameFromBytesBike(byte[] bytes)
+        {
+            return getName(bytes, 8, bytes.Length - 8);
+        }
+
         /// <summary>
         /// converts the given string parameter into a message using our protocol.
         /// </summary>
@@ -57,6 +63,18 @@ namespace Util
                 }
             };
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
+        }
+
+        internal static string getNameFromBytesBPM(byte[] bytes)
+        {
+            return getName(bytes, 2, bytes.Length - 2);
+        }
+
+        private static string getName(byte[] bytes , int offset, int lenght)
+        {
+            byte[] nameArray = new byte[lenght];
+            Array.Copy(bytes, offset, nameArray, 0, lenght);
+            return Encoding.UTF8.GetString(nameArray);
         }
 
         /// <summary>
@@ -439,6 +457,13 @@ namespace Util
                 chat = message
             };
             return getJsonMessage(MESSAGE, data);
+        }
+
+        public static byte[] getDataWithoutName(byte[] bytes, int offset, int length)
+        {
+            byte[] data = new byte[length];
+            Array.Copy(bytes, offset, data, 0, length);
+            return data;
         }
 
 
