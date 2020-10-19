@@ -253,6 +253,11 @@ namespace RH_Engine
             return AddModel("bike", serial, "data\\NetworkEngine\\models\\bike\\bike.fbx");
         }
 
+        public string AddBikeModelAnim(string serial, float scalar)
+        {
+            return AddModel("bike", serial, "data\\NetworkEngine\\models\\bike\\bike_anim.fbx", "Armature|Fietsen", new float[] { 0, 0, 0 }, scalar, new float[] { 0, 0, 0 });
+        }
+
         public string AddModel(string nodeName, string serial, string fileLocation)
         {
             return AddModel(nodeName, serial, fileLocation, null, new float[] { 0, 0, 0 }, 1, new float[] { 0, 0, 0 });

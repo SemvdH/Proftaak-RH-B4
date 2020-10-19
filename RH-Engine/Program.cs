@@ -19,9 +19,9 @@ namespace RH_Engine
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
-            new PC("HP-ZBOOK-SEM", "Sem"),
+            //new PC("HP-ZBOOK-SEM", "Sem"),
             //new PC("DESKTOP-TV73FKO", "Wouter"),
-            //new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
+            new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
         };
 
@@ -185,7 +185,7 @@ namespace RH_Engine
 
             //Add route, bike and put camera and bike to follow route at same speed.
             SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
-            SendMessageAndOnResponse(stream, mainCommand.AddBikeModel("bikeID"), "bikeID",
+            SendMessageAndOnResponse(stream, mainCommand.AddBikeModelAnim("bikeID", 0.01f), "bikeID",
                 (message) =>
                 {
                 bikeId = JSONParser.GetResponseUuid(message);

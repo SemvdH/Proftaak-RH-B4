@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using RH_Engine;
@@ -236,7 +236,7 @@ namespace ClientApp.Utils
             Write("Starting route follow...");
             FollowingRoute = true;
 
-            SendMessageAndOnResponse(mainCommand.AddBikeModel("bikeID"), "bikeID",
+            SendMessageAndOnResponse(mainCommand.AddBikeModelAnim("bikeID", 0.01f), "bikeID",
                 (message) =>
                 {
                     bikeId = JSONParser.GetResponseUuid(message);
