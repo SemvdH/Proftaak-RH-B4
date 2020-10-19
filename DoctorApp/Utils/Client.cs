@@ -111,7 +111,6 @@ namespace DoctorApp.Utils
                             Console.WriteLine("Set resistance identifier");
                             break;
                         case DataParser.NEW_CONNECTION:
-                            Debug.WriteLine("doctor client new connection");
                             this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
                             break;
                         case DataParser.DISCONNECT:

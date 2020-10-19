@@ -16,7 +16,6 @@ namespace DoctorApp.ViewModels
     class ClientInfoViewModel : ObservableObject
     {
         public PatientInfo PatientInfo { get; set; }
-        public ObservableCollection<string> ChatLog { get; set; }
 
         public ICommand StartSession { get; set; }
 
@@ -38,28 +37,24 @@ namespace DoctorApp.ViewModels
             MainWindowViewModel = mainWindowViewModel;
             this.PatientInfo = new PatientInfo() { Username = username, Status = "Waiting to start" };
             PatientInfo.ChatLog = new ObservableCollection<string>();
-            ChatLog = new ObservableCollection<string>();
             client = mainWindowViewModel.client;
 
             StartSession = new RelayCommand(() =>
             {
                 client.sendMessage(DataParser.getStartSessionJson(PatientInfo.Username));
                 PatientInfo.Status = "Session started";
-                System.Diagnostics.Debug.WriteLine("patient info status" + PatientInfo.Status);
             });
 
             StopSession = new RelayCommand(() =>
             {
                 client.sendMessage(DataParser.getStopSessionJson(PatientInfo.Username));
                 PatientInfo.Status = "Session stopped, waiting to start again.";
-                System.Diagnostics.Debug.WriteLine("patient info status" + PatientInfo.Status);
             });
 
             Chat = new RelayCommand<object>((parameter) =>
             {
                 client.sendMessage(DataParser.getChatJson(PatientInfo.Username, ((TextBox)parameter).Text));
                 PatientInfo.ChatLog.Add(DateTime.Now + ": " + ((TextBox)parameter).Text);
-                ChatLog.Add(DateTime.Now + ":derp: " + ((TextBox)parameter).Text);
             });
 
             //TODO RelayCommand ChatToAll
