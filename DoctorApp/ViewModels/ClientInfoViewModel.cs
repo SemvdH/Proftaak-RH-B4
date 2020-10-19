@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +18,17 @@ namespace DoctorApp.ViewModels
     {
         public PatientInfo PatientInfo { get; set; }
         public ObservableCollection<string> ChatLog { get; set; }
+
+        private string _mySelectedItem;
+        public string MySelectedItem
+        {
+            get { return _mySelectedItem; }
+            set
+            {
+                Chart.Clear();
+                _mySelectedItem = value;
+            }
+        }
 
         public ICommand StartSession { get; set; }
 
@@ -33,10 +45,13 @@ namespace DoctorApp.ViewModels
         public MainWindowViewModel MainWindowViewModel { get; set; }
         private Client client;
 
+        public Chart Chart { get; set; }
+
         public ClientInfoViewModel(MainWindowViewModel mainWindowViewModel, string username)
         {
             MainWindowViewModel = mainWindowViewModel;
             this.PatientInfo = new PatientInfo() { Username = username, Status = "Waiting to start" };
+            this.Chart = new Chart(this.PatientInfo);
             PatientInfo.ChatLog = new ObservableCollection<string>();
             ChatLog = new ObservableCollection<string>();
             client = mainWindowViewModel.client;
@@ -66,8 +81,9 @@ namespace DoctorApp.ViewModels
 
             SetResistance = new RelayCommand<object>((parameter) =>
             {
-            client.sendMessage(DataParser.getSetResistanceJson(Username, float.Parse(((TextBox)parameter).Text)));
-            this.Resistance = float.Parse(((TextBox)parameter).Text);
+                Debug.WriteLine("resistance");
+                //client.sendMessage(DataParser.getSetResistanceJson(PatientInfo.Username, float.Parse(((TextBox)parameter).Text)));
+                PatientInfo.Resistance = float.Parse(((TextBox)parameter).Text);
             });
 
         }
@@ -76,7 +92,12 @@ namespace DoctorApp.ViewModels
         {
             //TODO
             //Parsen van de data you fuck
-            this.BPM = bytes[1];
+            PatientInfo.BPM = bytes[1];
+            if (MySelectedItem == "BPM")
+            {
+                Chart.NewValue(PatientInfo.BPM);
+            }
+            
         }
 
         public void BikeData(byte[] bytes)
@@ -90,17 +111,20 @@ namespace DoctorApp.ViewModels
                     {
                         throw new Exception();
                     }
-                    this.Distance = bytes[3];
-                    this.Speed = (bytes[4] | (bytes[5] << 8)) * 0.01;
+                    PatientInfo.Distance = bytes[3];
+                    PatientInfo.Speed = (bytes[4] | (bytes[5] << 8)) * 0.01;
                     break;
                 case 0x19:
-                    this.Acc_Power = bytes[3] | (bytes[4] << 8);
-                    this.Curr_Power = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+                    PatientInfo.Acc_Power = bytes[3] | (bytes[4] << 8);
+                    PatientInfo.Curr_Power = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
                     break;
                 default:
                     throw new Exception();
             }
-            
+            if (MySelectedItem == "Speed")
+            {
+                Chart.NewValue(PatientInfo.Speed);
+            }
         }
 
 

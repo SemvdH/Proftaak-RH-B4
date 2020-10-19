@@ -11,7 +11,7 @@
         <TabControl TabStripPlacement="Left" ItemsSource="{Binding Tabs}" SelectedItem="{Binding Selected}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Username}"/>
+                    <TextBlock Text="{Binding PatientInfo.Username}"/>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

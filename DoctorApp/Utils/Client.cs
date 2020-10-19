@@ -90,7 +90,7 @@ namespace DoctorApp.Utils
                             string responseStatus = DataParser.getResponseStatus(payloadbytes);
                             if (responseStatus == "OK")
                             {
-                                Debug.WriteLine("Username and password correct!");
+                                Debug.WriteLine("Doctor Username and password correct!");
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
 
@@ -130,6 +130,9 @@ namespace DoctorApp.Utils
                 {
                     MainViewModel.TransferDataToClientBPM(payloadbytes);
                 }
+
+                totalBufferReceived -= expectedMessageLength;
+                expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             }
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
