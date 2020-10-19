@@ -1,29 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>doctor.ico</ApplicationIcon>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<ItemGroup>
+		<None Remove="img\doctor.ico" />
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<ItemGroup>
+		<Content Include="img\doctor.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="4.3.0" />
-    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.2.9" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="4.3.0" />
+		<PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
+		<PackageReference Include="PropertyChanged.Fody" Version="3.2.9" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
+	</ItemGroup>
 
-  <Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
+	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
 
 </Project>

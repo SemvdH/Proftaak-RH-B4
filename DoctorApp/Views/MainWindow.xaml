@@ -8,6 +8,8 @@
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
+         MinHeight="{Binding MinimumHeight}"
+        MinWidth="{Binding MinimumWidth}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="{x:Type local:MainWindow}">
@@ -52,7 +54,7 @@
 
                                         <!-- icon -->
                                         <Button Grid.Column="0" Style="{StaticResource SystemIconButton}" Command="{Binding MenuCommand}">
-                                            <Image Source="/Images/Logo/icon1.ico"/>
+                                            <Image Source="/img/doctor.ico"/>
                                             <!--<TextBlock Text="icon"/>-->
                                         </Button>
 

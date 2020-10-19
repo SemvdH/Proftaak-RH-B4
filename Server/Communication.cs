@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Pipes;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using Util;
 
 namespace Server
@@ -25,10 +21,7 @@ namespace Server
                 this.mDoctor = value;
                 this.clients.ForEach((client) =>
                 {
-                    Debug.WriteLine("foreach called for " + client.username);
-                    byte[] dinges = DataParser.getNewConnectionJson(client.username);
-                    Debug.WriteLine("foreach " + Encoding.ASCII.GetString(dinges.Skip(5).ToArray()));
-                    this.mDoctor.sendMessage(dinges);
+                    this.mDoctor.sendMessage(DataParser.getNewConnectionJson(client.username));
                 });
             }
         }
@@ -65,10 +58,7 @@ namespace Server
         public void NewLogin(Client client)
         {
             this.clients.Add(client);
-            Debug.WriteLine("amount of clients is now " + this.clients.Count);
-            var dinges = DataParser.getNewConnectionJson(client.username);
-            Debug.WriteLine("new login" + Encoding.ASCII.GetString(dinges));
-            Doctor?.sendMessage(dinges);
+            Doctor?.sendMessage(DataParser.getNewConnectionJson(client.username));
         }
 
         public void LogOff(Client client)
@@ -82,9 +72,9 @@ namespace Server
 
         public void StartSessionUser(string user)
         {
-            foreach(Client client in clients)
+            foreach (Client client in clients)
             {
-                if(client.username == user)
+                if (client.username == user)
                 {
                     client.sendMessage(DataParser.getStartSessionJson(user));
                     client.StartSession();
