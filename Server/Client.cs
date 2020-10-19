@@ -65,6 +65,8 @@ namespace Server
                 }
             }
 
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+                return;
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }

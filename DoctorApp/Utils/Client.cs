@@ -111,10 +111,10 @@ namespace DoctorApp.Utils
                             Console.WriteLine("Set resistance identifier");
                             break;
                         case DataParser.NEW_CONNECTION:
-                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            this.MainViewModel.NewConnectedUser(DataParser.getUsernameFromJson(payloadbytes));
                             break;
                         case DataParser.DISCONNECT:
-                            this.MainViewModel.DisconnectedUser(DataParser.getUsernameFromResponseJson(payloadbytes));
+                            this.MainViewModel.DisconnectedUser(DataParser.getUsernameFromJson(payloadbytes));
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
