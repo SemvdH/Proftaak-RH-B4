@@ -57,11 +57,11 @@
         </StackPanel>
         <ListBox Name="ChatBox"  ItemsSource="{Binding PatientInfo.ChatLog}" Grid.Column="1" Margin="59,41,0,0" Grid.RowSpan="3"/>
         <TextBox Name="textBox_Chat" Grid.Column="1" HorizontalAlignment="Left" Margin="59,10,0,0" Grid.Row="3" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
-        <Button x:Name="Send" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" Command="{Binding PatientInfo.Chat}" CommandParameter="{Binding ElementName=textBox_Chat}"/>
-        <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding PatientInfo.StartSession}" CommandParameter=""/>
-        <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding PatientInfo.StopSession}" CommandParameter=""/>
+        <Button x:Name="Send" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" Command="{Binding Chat}" CommandParameter="{Binding ElementName=textBox_Chat}"/>
+        <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StartSession}" CommandParameter=""/>
+        <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StopSession}" CommandParameter=""/>
         <TextBox x:Name="textBox_SetResistance" Grid.Column="1" HorizontalAlignment="Left" Margin="69,128,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Width="97"/>
-        <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18" Command="{Binding PatientInfo.SetResistance}" CommandParameter="{Binding ElementName=textBox_SetResistance}"/>
+        <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18" Command="{Binding SetResistance}" CommandParameter="{Binding ElementName=textBox_SetResistance}"/>
         <Canvas Grid.Row="3" Background="White" Margin="0,33,0,0"/>
         <ComboBox Name="DropBox" HorizontalAlignment="Left" Margin="0,6,0,0" Grid.Row="3" VerticalAlignment="Top" Width="190"/>
     </Grid>
