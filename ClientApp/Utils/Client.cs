@@ -165,6 +165,7 @@ namespace ClientApp.Utils
                             break;
                         case DataParser.MESSAGE:
                             engineConnection.DoctorMessage = DataParser.getChatMessageFromJson(payloadbytes);
+                            Debug.WriteLine("received message from doctor");
                             break;
                         case DataParser.NEW_CONNECTION:
                             this.LoginViewModel.DoctorConnected(DataParser.getUsernameFromJson(payloadbytes));
