@@ -55,7 +55,7 @@ namespace DoctorApp.ViewModels
 
         public void TransferDataToClientBike(byte[] bytes)
         {
-            string username = DataParser.getNameFromBytes(bytes);
+            string username = DataParser.getNameFromBytesBike(bytes);
             foreach(ClientInfoViewModel item in Tabs)
             {
                 if(item.Username == username)
@@ -67,7 +67,7 @@ namespace DoctorApp.ViewModels
 
         public void TransferDataToClientBPM(byte[] bytes)
         {
-            string username = DataParser.getNameFromBytes(bytes);
+            string username = DataParser.getNameFromBytesBPM(bytes);
             foreach (ClientInfoViewModel item in Tabs)
             {
                 if (item.Username == username)

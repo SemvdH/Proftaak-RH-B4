@@ -54,6 +54,8 @@ namespace Util
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
         }
 
+
+
         public static byte[] LoginAsDoctor(string mUsername, string mPassword)
         {
             dynamic json = new
@@ -81,13 +83,9 @@ namespace Util
 
         private static string ASCIIBytesToString(byte[] bytes, int offset, int length)
         {
-            unsafe
-            {
-                fixed (byte* pAscii = bytes)
-                {
-                    return new String((sbyte*)pAscii, offset, length);
-                }
-            }
+            byte[] nameArray = new byte[length];
+            Array.Copy(bytes, offset, nameArray, 0, length);
+            return Encoding.UTF8.GetString(nameArray);
         }
 
         public static bool GetUsernamePassword(byte[] jsonbytes, out string username, out string password)
