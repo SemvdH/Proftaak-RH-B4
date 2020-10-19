@@ -19,11 +19,12 @@ namespace Server
             set
             {
                 this.mDoctor = value;
-                this.clients.ForEach((client) =>
-                {
-                    this.mDoctor.sendMessage(DataParser.getNewConnectionJson(client.username));
-                    client.sendMessage(DataParser.getNewConnectionJson(this.mDoctor.username));
-                });
+                if (this.mDoctor != null)
+                    this.clients.ForEach((client) =>
+                    {
+                        this.mDoctor.sendMessage(DataParser.getNewConnectionJson(client.username));
+                        client.sendMessage(DataParser.getNewConnectionJson(this.mDoctor.username));
+                    });
             }
         }
         public Communication(TcpListener listener)
@@ -50,12 +51,6 @@ namespace Server
             listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
-        internal void Disconnect(Client client)
-        {
-            clients.Remove(client);
-            Doctor.sendMessage(DataParser.getDisconnectJson(client.username));
-        }
-
         public void NewLogin(Client client)
         {
             this.clients.Add(client);
@@ -76,6 +71,7 @@ namespace Server
                 });
                 this.Doctor = null;
             }
+            Doctor?.sendMessage(DataParser.getDisconnectJson(client.username));
             this.clients.Remove(client);
         }
 

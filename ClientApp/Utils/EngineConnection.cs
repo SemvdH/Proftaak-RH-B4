@@ -44,7 +44,7 @@ namespace ClientApp.Utils
         private static string groundPlaneId = string.Empty;
         private static string terrainId = string.Empty;
 
-        public string DoctorMessage { get; set; };
+        public string DoctorMessage { get; set; }
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
         public float BikeBPM { get; set; }
@@ -75,7 +75,7 @@ namespace ClientApp.Utils
             noVRResponseTimer.Elapsed += noVRResponseTimeout;
             noVRResponseTimer.AutoReset = false;
             noVRResponseTimer.Enabled = false;
-            
+
         }
 
         private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

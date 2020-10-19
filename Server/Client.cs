@@ -65,7 +65,7 @@ namespace Server
                 }
             }
 
-            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead) || !this.tcpClient.Client.Connected)
                 return;
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
@@ -123,7 +123,7 @@ namespace Server
                         //set resistance on doctor GUI
                         break;
                     case DataParser.DISCONNECT:
-                        communication.Disconnect(this);
+                        communication.LogOff(this);
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
