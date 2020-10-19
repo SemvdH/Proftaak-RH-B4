@@ -22,6 +22,7 @@ namespace Server
                 this.clients.ForEach((client) =>
                 {
                     this.mDoctor.sendMessage(DataParser.getNewConnectionJson(client.username));
+                    client.sendMessage(DataParser.getNewConnectionJson(this.mDoctor.username));
                 });
             }
         }
@@ -58,13 +59,21 @@ namespace Server
         public void NewLogin(Client client)
         {
             this.clients.Add(client);
-            Doctor?.sendMessage(DataParser.getNewConnectionJson(client.username));
+            if (this.Doctor != null)
+            {
+                Doctor.sendMessage(DataParser.getNewConnectionJson(client.username));
+                client.sendMessage(DataParser.getNewConnectionJson(Doctor.username));
+            }
         }
 
         public void LogOff(Client client)
         {
             if (this.Doctor == client)
             {
+                this.clients.ForEach((client) =>
+                {
+                    client.sendMessage(DataParser.getDisconnectJson(this.mDoctor.username));
+                });
                 this.Doctor = null;
             }
             this.clients.Remove(client);
