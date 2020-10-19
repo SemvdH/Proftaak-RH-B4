@@ -155,7 +155,9 @@ namespace ClientApp.Utils
                             }
                             else
                             {
-                                this.handler.setResistance(DataParser.getResistanceFromJson(payloadbytes));
+                                float resistance = DataParser.getResistanceFromJson(payloadbytes);
+                                this.handler.setResistance(resistance);
+                                engineConnection.BikeResistance = resistance;
                                 sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
                             break;
