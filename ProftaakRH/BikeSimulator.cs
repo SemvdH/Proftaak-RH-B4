@@ -109,7 +109,8 @@ namespace Hardware.Simulators
 
         private byte check(int value)
         {
-            return value > 255 ? Convert.ToByte(255) : Convert.ToByte(value);
+           
+            return value > 255 ? Convert.ToByte(255) : value < 0 ? Convert.ToByte(0) : Convert.ToByte(value);
         }
 
         //Generate an ANT message for BPM
