@@ -9,11 +9,15 @@
 
 	<ItemGroup>
 		<None Remove="img\doctor.ico" />
+		<None Remove="img\patient.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="img\doctor.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="img\patient.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
