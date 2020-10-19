@@ -43,6 +43,7 @@ namespace ClientApp.Utils
         /// </summary>
         private void initEngine()
         {
+            Debug.WriteLine("init engine");
             engineConnection = EngineConnection.INSTANCE;
             engineConnection.OnNoTunnelId = RetryEngineConnection;
             engineConnection.OnSuccessFullConnection = engineConnected;
@@ -88,6 +89,7 @@ namespace ClientApp.Utils
         /// <param name="ar">the result of the async read</param>
         private void OnRead(IAsyncResult ar)
         {
+            Debug.WriteLine("got message in client app");
             if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
                 return;
 
@@ -136,7 +138,7 @@ namespace ClientApp.Utils
                             }
                             break;
                         case DataParser.START_SESSION:
-                            Console.WriteLine("Session started!");
+                            Debug.WriteLine("Session started!");
                             this.sessionRunning = true;
                             if (engineConnection.Connected && !engineConnection.FollowingRoute) engineConnection.StartRouteFollow();
                             Debug.WriteLine("start");
@@ -147,25 +149,26 @@ namespace ClientApp.Utils
                             Debug.WriteLine("stop");
                             break;
                         case DataParser.SET_RESISTANCE:
-                            Console.WriteLine("Set resistance identifier");
+                            Debug.WriteLine("Set resistance identifier");
                             if (this.handler == null)
                             {
                                 // send that the operation was not successful if the handler is null
-                                Console.WriteLine("handler is null");
+                                Debug.WriteLine("handler is null");
                                 sendMessage(DataParser.getSetResistanceResponseJson(false));
                             }
                             else
                             {
                                 // set the resistance in the vr scene and send that it was successful
                                 float resistance = DataParser.getResistanceFromJson(payloadbytes);
+                                Debug.WriteLine("resistance set was " + resistance);
                                 this.handler.setResistance(resistance);
                                 engineConnection.BikeResistance = resistance;
                                 sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
                             break;
                         case DataParser.MESSAGE:
+                            Debug.WriteLine("client has received message from doctor");
                             engineConnection.DoctorMessage = DataParser.getChatMessageFromJson(payloadbytes);
-                            Debug.WriteLine("received message from doctor");
                             break;
                         case DataParser.NEW_CONNECTION:
                             this.LoginViewModel.DoctorConnected(DataParser.getUsernameFromJson(payloadbytes));

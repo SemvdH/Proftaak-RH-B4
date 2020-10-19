@@ -225,7 +225,6 @@ namespace ClientApp.Utils
                     string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
                     string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
                     groundPlaneId = JSONParser.GetIdSceneInfoChild(message, "GroundPlane");
-                    Write("--- Ground plane id is " + groundPlaneId);
                 });
             // add the route and set the route id
             CreateTerrain();
@@ -338,6 +337,7 @@ namespace ClientApp.Utils
 
         private void SetFollowSpeed(float speed)
         {
+            Write("starting route follow");
             WriteTextMessage(mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
             WriteTextMessage(mainCommand.RouteFollow(routeId, cameraId, speed));
         }

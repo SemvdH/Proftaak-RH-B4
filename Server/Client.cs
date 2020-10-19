@@ -122,9 +122,13 @@ namespace Server
                         //bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
                         communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         //set resistance on doctor GUI
+
                         break;
                     case DataParser.DISCONNECT:
                         communication.Disconnect(this);
+                        break;
+                    case DataParser.MESSAGE:
+                        communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");

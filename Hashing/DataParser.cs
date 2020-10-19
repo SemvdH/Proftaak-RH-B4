@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -338,6 +339,7 @@ namespace Util
         /// <returns>the response of the message, so wether it was successful or not.</returns>
         public static bool getResistanceFromResponseJson(byte[] json)
         {
+            Debug.WriteLine("got message " + Encoding.ASCII.GetString(json));
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.worked;
         }
 
