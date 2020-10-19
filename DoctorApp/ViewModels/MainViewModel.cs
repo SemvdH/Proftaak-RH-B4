@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Windows.Controls;
 using Util;
@@ -26,6 +27,7 @@ namespace DoctorApp.ViewModels
 
         public void NewConnectedUser(string username)
         {
+            Debug.WriteLine("new tab with name " + username);
             App.Current.Dispatcher.Invoke((Action)delegate
             {
                 Tabs.Add(new ClientInfoViewModel(MainWindowViewModel, username));
