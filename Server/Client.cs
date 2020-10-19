@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Timers;
 using Newtonsoft.Json;
 using Util;
 
@@ -21,6 +22,9 @@ namespace Server
         public string username = null;
         private DateTime sessionStart;
         private string fileName;
+        private Timer timer;
+        private byte[] BikeDataBuffer;
+        private byte[] BPMDataBuffer;
 
         public Client(Communication communication, TcpClient tcpClient)
         {
@@ -29,6 +33,12 @@ namespace Server
             this.tcpClient = tcpClient;
             this.stream = this.tcpClient.GetStream();
             this.fileName = Directory.GetCurrentDirectory() + "/userInfo.dat";
+            this.timer = new Timer();
+            this.BikeDataBuffer = new byte[16];
+            this.BPMDataBuffer = new byte[2];
+            this.timer.Interval = 1000;
+            this.timer.AutoReset = true;
+            this.timer.Elapsed += SendDataToDoctor;
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
@@ -114,9 +124,11 @@ namespace Server
                         break;
                     case DataParser.START_SESSION:
                         this.communication.StartSessionUser(DataParser.getUsernameFromJson(payloadbytes));
+                        this.timer.Start();
                         break;
                     case DataParser.STOP_SESSION:
                         this.communication.StopSessionUser(DataParser.getUsernameFromJson(payloadbytes));
+                        this.timer.Stop();
                         break;
                     case DataParser.SET_RESISTANCE:
                         //bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
@@ -143,13 +155,15 @@ namespace Server
             else if (DataParser.isRawDataBikeServer(message))
             {
                 saveData?.WriteDataRAWBike(payloadbytes);
-
+                Array.Copy(this.BikeDataBuffer, 0, this.BikeDataBuffer, 8, 8);
+                Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 8);
             }
             else if (DataParser.isRawDataBPMServer(message))
             {
                 saveData?.WriteDataRAWBPM(payloadbytes);
+                Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 2);
             }
-               
+
         }
 
         private bool handleLogin(byte[] payloadbytes)
@@ -246,6 +260,13 @@ namespace Server
         public void StopSession()
         {
             this.saveData = null;
+        }
+
+        private void SendDataToDoctor(object sender, ElapsedEventArgs e)
+        {
+            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Take(8).ToArray(), this.username));
+            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Skip(8).ToArray(), this.username));
+            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer, this.username));
         }
     }
 }
