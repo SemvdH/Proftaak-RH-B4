@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace Util.WPF
+namespace Util.MagicCode
 {
     public static class FocusAdvancement
     {
