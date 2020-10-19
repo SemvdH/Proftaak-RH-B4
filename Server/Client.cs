@@ -119,7 +119,8 @@ namespace Server
                         this.communication.StopSessionUser(DataParser.getUsernameFromJson(payloadbytes));
                         break;
                     case DataParser.SET_RESISTANCE:
-                        bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        //bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         //set resistance on doctor GUI
                         break;
                     case DataParser.DISCONNECT:

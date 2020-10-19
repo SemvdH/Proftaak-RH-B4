@@ -103,5 +103,16 @@ namespace Server
             }
 
         }
+
+        public void SendMessageToClient(string user, byte[] message)
+        {
+            foreach (Client c in clients)
+            {
+                if (c.username == user)
+                {
+                    c.sendMessage(message);
+                }
+            }
+        }        
     }
 }
