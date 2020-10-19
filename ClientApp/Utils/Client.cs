@@ -163,6 +163,9 @@ namespace ClientApp.Utils
                                 sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
                             break;
+                        case DataParser.MESSAGE:
+                            engineConnection.DoctorMessage = DataParser.getChatMessageFromJson(payloadbytes);
+                            break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                             break;
