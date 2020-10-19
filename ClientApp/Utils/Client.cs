@@ -150,11 +150,13 @@ namespace ClientApp.Utils
                             Console.WriteLine("Set resistance identifier");
                             if (this.handler == null)
                             {
+                                // send that the operation was not successful if the handler is null
                                 Console.WriteLine("handler is null");
                                 sendMessage(DataParser.getSetResistanceResponseJson(false));
                             }
                             else
                             {
+                                // set the resistance in the vr scene and send that it was successful
                                 float resistance = DataParser.getResistanceFromJson(payloadbytes);
                                 this.handler.setResistance(resistance);
                                 engineConnection.BikeResistance = resistance;
