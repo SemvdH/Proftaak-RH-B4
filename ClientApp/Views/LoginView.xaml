@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientApp.Views"
              xmlns:viewModels="clr-namespace:ClientApp.ViewModels"
+      xmlns:Util="clr-namespace:Util.WPF"
              mc:Ignorable="d" 
       ShowsNavigationUI="False"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -14,10 +15,10 @@
         </DockPanel.Background>
         <StackPanel VerticalAlignment="Center" Width="auto">
             <Label Content="Username" HorizontalContentAlignment="Center" />
-            <TextBox x:Name="Username" Text="{Binding Username}" TextWrapping="Wrap" Width="120"/>
+            <TextBox x:Name="Username" Text="{Binding Username}" TextWrapping="Wrap" Width="120" Util:FocusAdvancement.AdvancesByEnterKey="True" />
             <Label Content="Password" HorizontalContentAlignment="Center"/>
             <PasswordBox x:Name="Password" Width="120"/>
-            <Button x:Name="Login" Content="Login" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=Password}" Margin="0,20,0,0" Width="120"/>
+            <Button x:Name="Login" Content="Login" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=Password}" Margin="0,20,0,0" Width="120" Util:FocusAdvancement.AdvancesByEnterKey="True"/>
             <Popup IsOpen="{Binding InvertedLoginStatus}" PopupAnimation = "Slide" HorizontalAlignment="Center">
                 <Label Content="Login failed" Foreground="Red" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Background="Transparent"/>
             </Popup>
