@@ -34,7 +34,7 @@ namespace Server
 
         private void OnRead(IAsyncResult ar)
         {
-            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead) || !this.tcpClient.Client.Connected)
                 return;
 
             int receivedBytes = this.stream.EndRead(ar);
@@ -65,7 +65,7 @@ namespace Server
                 }
             }
 
-            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead) || !this.tcpClient.Client.Connected)
                 return;
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
@@ -125,7 +125,7 @@ namespace Server
 
                         break;
                     case DataParser.DISCONNECT:
-                        communication.Disconnect(this);
+                        communication.LogOff(this);
                         break;
                     case DataParser.MESSAGE:
                         communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);

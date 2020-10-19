@@ -75,7 +75,7 @@ namespace ClientApp.Utils
             noVRResponseTimer.Elapsed += noVRResponseTimeout;
             noVRResponseTimer.AutoReset = false;
             noVRResponseTimer.Enabled = false;
-            
+
         }
 
         private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
