@@ -11,27 +11,28 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DataParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hasher.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MagicCode\WindowResizer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ObservableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WPFStuff\MagicCode\FocusAdvancement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WPFStuff\MagicCode\WindowResizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WPFStuff\ObservableObject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\Buttons.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)WPFStuff\Styles\Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\Colors.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)WPFStuff\Styles\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\Fonts.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)WPFStuff\Styles\Fonts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\Texts.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)WPFStuff\Styles\Texts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Styles\Windows.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)WPFStuff\Styles\Windows.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
