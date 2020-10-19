@@ -102,14 +102,14 @@ namespace Hardware.Simulators
             catch (OverflowException e)
             {
                 Debug.WriteLine(e);
+                byte[] res = { 0x10,0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0xFF};
+                return res;
             }
-            byte[] res = { 0x10,0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0xFF};
-            return res;
         }
 
         private byte check(int value)
         {
-            return value > 255 ? Convert.ToByte(0) : Convert.ToByte(value);
+            return value > 255 ? Convert.ToByte(255) : Convert.ToByte(value);
         }
 
         //Generate an ANT message for BPM
