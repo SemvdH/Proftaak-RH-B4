@@ -43,8 +43,8 @@ namespace ClientApp.Utils
         private static string headId = string.Empty;
         private static string groundPlaneId = string.Empty;
         private static string terrainId = string.Empty;
-        private static string lastMessage = "No message received yet";
 
+        public string DoctorMessage { get; set; };
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
         public float BikeBPM { get; set; }
@@ -65,6 +65,7 @@ namespace ClientApp.Utils
             BikePower = 0;
             BikeBPM = 0;
             BikeResistance = 50;
+            DoctorMessage = "No message received yet";
             updateTimer = new System.Timers.Timer(1000);
             updateTimer.Elapsed += UpdateTimer_Elapsed;
             updateTimer.AutoReset = true;
@@ -324,7 +325,7 @@ namespace ClientApp.Utils
                 {
                     // TODO check if is drawn
                 });
-            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", lastMessage), "message",
+            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", DoctorMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn

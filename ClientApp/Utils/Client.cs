@@ -163,6 +163,9 @@ namespace ClientApp.Utils
                                 sendMessage(DataParser.getSetResistanceResponseJson(true));
                             }
                             break;
+                        case DataParser.MESSAGE:
+                            engineConnection.DoctorMessage = DataParser.getChatMessageFromJson(payloadbytes);
+                            break;
                         case DataParser.NEW_CONNECTION:
                             this.LoginViewModel.DoctorConnected(DataParser.getUsernameFromJson(payloadbytes));
                             break;
