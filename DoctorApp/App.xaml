@@ -9,11 +9,11 @@
         <ResourceDictionary>
             <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
                 <views:MainView />
-                <!-- This is a UserControl -->
+                <!-- This is a Page -->
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
                 <views:LoginView />
-                <!-- This is a UserControl -->
+                <!-- This is a Page -->
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:ClientInfoViewModel}">
                 <views:ClientInfoView/>

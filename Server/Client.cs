@@ -34,7 +34,7 @@ namespace Server
 
         private void OnRead(IAsyncResult ar)
         {
-            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead))
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead) || !this.tcpClient.Client.Connected)
                 return;
 
             int receivedBytes = this.stream.EndRead(ar);
@@ -65,6 +65,8 @@ namespace Server
                 }
             }
 
+            if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead) || !this.tcpClient.Client.Connected)
+                return;
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }
@@ -117,11 +119,16 @@ namespace Server
                         this.communication.StopSessionUser(DataParser.getUsernameFromJson(payloadbytes));
                         break;
                     case DataParser.SET_RESISTANCE:
-                        bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        //bool worked = DataParser.getResistanceFromResponseJson(payloadbytes);
+                        communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         //set resistance on doctor GUI
+
                         break;
                     case DataParser.DISCONNECT:
-                        communication.Disconnect(this);
+                        communication.LogOff(this);
+                        break;
+                    case DataParser.MESSAGE:
+                        communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");

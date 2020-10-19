@@ -11,7 +11,10 @@
         <TabControl TabStripPlacement="Left" ItemsSource="{Binding Tabs}" SelectedItem="{Binding Selected}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding PatientInfo.Username}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/img/patient.png" Width="25" Margin="0 0 5 0"/>
+                        <TextBlock Text="{Binding PatientInfo.Username}" FontSize="20" MaxWidth="100" Width="100" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

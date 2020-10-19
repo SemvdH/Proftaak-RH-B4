@@ -43,8 +43,8 @@ namespace ClientApp.Utils
         private static string headId = string.Empty;
         private static string groundPlaneId = string.Empty;
         private static string terrainId = string.Empty;
-        private static string lastMessage = "No message received yet";
 
+        public string DoctorMessage { get; set; }
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
         public float BikeBPM { get; set; }
@@ -65,6 +65,7 @@ namespace ClientApp.Utils
             BikePower = 0;
             BikeBPM = 0;
             BikeResistance = 50;
+            DoctorMessage = "No message received yet";
             updateTimer = new System.Timers.Timer(1000);
             updateTimer.Elapsed += UpdateTimer_Elapsed;
             updateTimer.AutoReset = true;
@@ -74,7 +75,7 @@ namespace ClientApp.Utils
             noVRResponseTimer.Elapsed += noVRResponseTimeout;
             noVRResponseTimer.AutoReset = false;
             noVRResponseTimer.Enabled = false;
-            
+
         }
 
         private void UpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -224,7 +225,6 @@ namespace ClientApp.Utils
                     string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
                     string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
                     groundPlaneId = JSONParser.GetIdSceneInfoChild(message, "GroundPlane");
-                    Write("--- Ground plane id is " + groundPlaneId);
                 });
             // add the route and set the route id
             CreateTerrain();
@@ -324,7 +324,7 @@ namespace ClientApp.Utils
                 {
                     // TODO check if is drawn
                 });
-            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", lastMessage), "message",
+            SendMessageAndOnResponse(mainCommand.showMessage(panelId, "message", DoctorMessage), "message",
                 (message) =>
                 {
                     // TODO check if is drawn
@@ -337,6 +337,7 @@ namespace ClientApp.Utils
 
         private void SetFollowSpeed(float speed)
         {
+            Write("starting route follow");
             WriteTextMessage(mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
             WriteTextMessage(mainCommand.RouteFollow(routeId, cameraId, speed));
         }

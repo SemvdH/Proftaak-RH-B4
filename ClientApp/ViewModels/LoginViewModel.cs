@@ -42,5 +42,15 @@ namespace ClientApp.ViewModels
                 this.MainWindowViewModel.SelectedViewModel = new MainViewModel(MainWindowViewModel);
             }
         }
+
+        internal void DoctorConnected(string name)
+        {
+            this.MainWindowViewModel.InfoModel.DoctorConnected = true;
+        }
+
+        internal void DoctorDisconnected(string name)
+        {
+            this.MainWindowViewModel.InfoModel.DoctorConnected = false;
+        }
     }
 }
