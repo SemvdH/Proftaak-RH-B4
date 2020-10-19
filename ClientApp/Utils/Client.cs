@@ -167,6 +167,12 @@ namespace ClientApp.Utils
                             engineConnection.DoctorMessage = DataParser.getChatMessageFromJson(payloadbytes);
                             Debug.WriteLine("received message from doctor");
                             break;
+                        case DataParser.NEW_CONNECTION:
+                            this.LoginViewModel.DoctorConnected(DataParser.getUsernameFromJson(payloadbytes));
+                            break;
+                        case DataParser.DISCONNECT:
+                            this.LoginViewModel.DoctorDisconnected(DataParser.getUsernameFromJson(payloadbytes));
+                            break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                             break;
