@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -23,10 +24,11 @@ namespace Server
         private DateTime sessionStart;
         private string fileName;
         private Timer timer;
-        private byte[] BikeDataBuffer;
-        private byte[] BPMDataBuffer;
+        private volatile byte[] BikeDataBuffer;
+        private volatile byte[] BPMDataBuffer;
         private bool BPMdata = false;
         private bool Bikedata = false;
+        private object token = new object { };
 
         public Client(Communication communication, TcpClient tcpClient)
         {
@@ -39,8 +41,9 @@ namespace Server
             this.BikeDataBuffer = new byte[16];
             this.BPMDataBuffer = new byte[2];
             this.timer.Interval = 1000;
-            this.timer.AutoReset = true;
+            this.timer.AutoReset = false;
             this.timer.Elapsed += SendDataToDoctor;
+            Console.WriteLine("token is " + token);
             stream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(OnRead), null);
         }
 
@@ -158,15 +161,21 @@ namespace Server
             {
                 //Bikedata = true;
                 saveData?.WriteDataRAWBike(payloadbytes);
-                Array.Copy(this.BikeDataBuffer, 0, this.BikeDataBuffer, 8, 8);
-                Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 8);
+                lock (token)
+                {
+                    Array.Copy(this.BikeDataBuffer, 0, this.BikeDataBuffer, 8, 8);
+                    Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 8);
+                }
                 //this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(payloadbytes, this.username));
             }
             else if (DataParser.isRawDataBPMServer(message))
             {
                 //BPMdata = true;
                 saveData?.WriteDataRAWBPM(payloadbytes);
-                Array.Copy(payloadbytes, 0, this.BPMDataBuffer, 0, 2);
+                lock (token)
+                {
+                    Array.Copy(payloadbytes, 0, this.BPMDataBuffer, 0, 2);
+                }
                 //this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
             }
 
@@ -270,10 +279,13 @@ namespace Server
 
         private void SendDataToDoctor(object sender, ElapsedEventArgs e)
         {
-            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Take(8).ToArray(), this.username));
-            this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Skip(8).ToArray(), this.username));
-            this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(this.BPMDataBuffer, this.username));
-
+            lock (token)
+            {
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Take(8).ToArray(), this.username));
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(this.BikeDataBuffer.Skip(8).ToArray(), this.username));
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(this.BPMDataBuffer, this.username));
+            }
+            this.timer.Start();
         }
     }
 }
