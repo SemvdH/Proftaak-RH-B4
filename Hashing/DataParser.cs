@@ -39,7 +39,11 @@ namespace Util
 
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
         }
-
+        /// <summary>
+        /// converts the given string parameter into a message using our protocol.
+        /// </summary>
+        /// <param name="messageToSend">the message string to send</param>
+        /// <returns>a byte array using our protocol to send the message</returns>
         public static byte[] GetMessageToSend(string messageToSend)
         {
             dynamic json = new
@@ -53,6 +57,12 @@ namespace Util
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
         }
 
+        /// <summary>
+        /// creates a message for when the doctor wants to log in.
+        /// </summary>
+        /// <param name="mUsername">the username of the doctor</param>
+        /// <param name="mPassword">the (hashed) password of the doctor</param>
+        /// <returns>a byte array using our protocol that contains the username and password of the doctor</returns>
         public static byte[] LoginAsDoctor(string mUsername, string mPassword)
         {
             dynamic json = new
@@ -68,6 +78,13 @@ namespace Util
             return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json));
         }
 
+        /// <summary>
+        /// gets the username and password from a given message array.
+        /// </summary>
+        /// <param name="jsonbytes">the array of bytes containing the message</param>
+        /// <param name="username">the username variable that the username will be put into</param>
+        /// <param name="password">the password variable that the password will be put into</param>
+        /// <returns><c>true</c> if the username and password were received correctly, <c>false</c> otherwise</returns>
         public static bool GetUsernamePassword(byte[] jsonbytes, out string username, out string password)
         {
             dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonbytes));
@@ -85,6 +102,12 @@ namespace Util
             }
         }
 
+        /// <summary>
+        /// gets message using our protocol of the given identifier and data.
+        /// </summary>
+        /// <param name="mIdentifier">the identifier string of the message</param>
+        /// <param name="data">the payload data of the message</param>
+        /// <returns>a byte array containing the json message with the given parameters, using our protocol.</returns>
         private static byte[] getJsonMessage(string mIdentifier, dynamic data)
         {
             dynamic json = new
@@ -95,6 +118,11 @@ namespace Util
             return getMessage(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json)), 0x01);
         }
 
+        /// <summary>
+        /// gets a message using our protocol with only the given identifier string.
+        /// </summary>
+        /// <param name="mIdentifier">the identifier to put into the message</param>
+        /// <returns>a byte array containing the json with only the identifier, using our protocol.</returns>
         private static byte[] getJsonMessage(string mIdentifier)
         {
             dynamic json = new
@@ -104,11 +132,21 @@ namespace Util
             return getMessage(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(json)), 0x01);
         }
 
+        /// <summary>
+        /// gets the login response of the given status
+        /// </summary>
+        /// <param name="mStatus">the status of the response</param>
+        /// <returns>a byte array containing the response for the given status, using our protocol.</returns>
         public static byte[] getLoginResponse(string mStatus)
         {
             return getJsonMessage(LOGIN_RESPONSE, new { status = mStatus });
         }
 
+        /// <summary>
+        /// gets the status of the given json message
+        /// </summary>
+        /// <param name="json">the byte array containing a json message using our protocol</param>
+        /// <returns>the response of the message</returns>
         public static string getResponseStatus(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.status;
@@ -195,6 +233,11 @@ namespace Util
             return getMessage(payload, 0x01);
         }
 
+        /// <summary>
+        /// gets the message to start a session with the given user username
+        /// </summary>
+        /// <param name="user">the username of the user we want to start the session for</param>
+        /// <returns>a byte array containing the message to start the session of the given user, using our protocol.</returns>
         public static byte[] getStartSessionJson(string user)
         {
             dynamic data = new
@@ -204,6 +247,11 @@ namespace Util
             return getJsonMessage(START_SESSION, data);
         }
 
+        /// <summary>
+        /// gets the message to stop a session with the given user username
+        /// </summary>
+        /// <param name="user">the username of the user we want to stop the session for</param>
+        /// <returns>a byte array containing the message to stop the session of the given user, using our protocol.</returns>
         public static byte[] getStopSessionJson(string user)
         {
             dynamic data = new
@@ -212,7 +260,13 @@ namespace Util
             };
             return getJsonMessage(STOP_SESSION, data);
         }
-
+        
+        /// <summary>
+        /// gets the message to set the resistance of the given user with the given resistance.
+        /// </summary>
+        /// <param name="user">the username to set the resistance of.</param>
+        /// <param name="mResistance">the resistance value to set</param>
+        /// <returns>a byte array containing a json messsage to set the user's resistance, using our protocol.</returns>
         public static byte[] getSetResistanceJson(string user,float mResistance)
         {
             dynamic data = new
@@ -223,6 +277,11 @@ namespace Util
             return getJsonMessage(SET_RESISTANCE, data);
         }
 
+        /// <summary>
+        /// gets the response message with the given value.
+        /// </summary>
+        /// <param name="mWorked">the boolean value to indicate if the operation we want to send a response for was successful or not.</param>
+        /// <returns>a byte array containing a json message with the response and the given value.</returns>
         public static byte[] getSetResistanceResponseJson(bool mWorked)
         {
             dynamic data = new
@@ -232,6 +291,11 @@ namespace Util
             return getJsonMessage(SET_RESISTANCE, data);
         }
 
+        /// <summary>
+        /// gets the message to indicate a new connection for the given user.
+        /// </summary>
+        /// <param name="user">the username of the user to start a connection for.</param>
+        /// <returns>a byte array containing a json message to indicate a new connection for the given user, using our protocol.</returns>
         public static byte[] getNewConnectionJson(string user)
         {
             if (user == null)
@@ -243,6 +307,11 @@ namespace Util
             return getJsonMessage(NEW_CONNECTION, data);
         }
 
+        /// <summary>
+        /// gets the message for when a user has been disconnected.
+        /// </summary>
+        /// <param name="user">the username of the user that has been disconnected</param>
+        /// <returns>a byte array containing a json message to indicate that the given user has disconnected, using our protocol.</returns>
         public static byte[] getDisconnectJson(string user)
         {
             dynamic data = new
@@ -252,31 +321,62 @@ namespace Util
             return getJsonMessage(DISCONNECT, data);
         }
 
+        /// <summary>
+        /// gets the resistance from the given json message
+        /// </summary>
+        /// <param name="json">the json messag</param>
+        /// <returns>the resistance that was in the message</returns>
         public static float getResistanceFromJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.resistance;
         }
 
+        /// <summary>
+        /// gets the resistance response from the given json message
+        /// </summary>
+        /// <param name="json">the byte array containin the json message</param>
+        /// <returns>the response of the message, so wether it was successful or not.</returns>
         public static bool getResistanceFromResponseJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.worked;
         }
 
+        /// <summary>
+        /// gets the username from the given response message.
+        /// </summary>
+        /// <param name="json">the byte array containin the json message</param>
+        /// <returns>the username in the message.</returns>
         public static string getUsernameFromResponseJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
         }
 
+        /// <summary>
+        /// gets the chat message from the given json message.
+        /// </summary>
+        /// <param name="json">the byte array containin the json message</param>
+        /// <returns>the chat message in the json message</returns>
         public static string getChatMessageFromJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.chat;           
         }
 
+        /// <summary>
+        /// gets the username from the given json message.
+        /// </summary>
+        /// <param name="json">the byte array containin the json message</param>
+        /// <returns>the username that is in the message</returns>
         public static string getUsernameFromJson(byte[] json)
         {
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
         }
 
+        /// <summary>
+        /// gets the byte array with the json message to send a message with the given parameters.
+        /// </summary>
+        /// <param name="user">the username of the user that wants to send the message</param>
+        /// <param name="message">the message the user wants to send</param>
+        /// <returns>a byte array containing a json message with the username and corresponding message, using our protocol.</returns>
         public static byte[] getChatJson(string user, string message)
         {
             dynamic data = new
