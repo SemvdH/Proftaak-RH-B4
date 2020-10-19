@@ -165,6 +165,7 @@ namespace ClientApp.Utils
                             break;
                         case DataParser.MESSAGE:
                             engineConnection.DoctorMessage = DataParser.getChatMessageFromJson(payloadbytes);
+                            Debug.WriteLine("received message from doctor");
                             break;
                         default:
                             Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");

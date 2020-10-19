@@ -44,7 +44,7 @@ namespace ClientApp.Utils
         private static string groundPlaneId = string.Empty;
         private static string terrainId = string.Empty;
 
-        public string DoctorMessage { get; set; };
+        public string DoctorMessage { get; set; }
         public float BikeSpeed { get; set; }
         public float BikePower { get; set; }
         public float BikeBPM { get; set; }
