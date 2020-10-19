@@ -93,17 +93,23 @@ namespace Hardware.Simulators
         //Generate an ANT message for page 0x10
         private byte[] GenerateBike0x10()
         {
-            //SOMEONE FIX THIS!!!!!!!!!
+            
             try
             {
-                byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime * 4 % 64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
+                byte[] bikeByte = { 0x10, check(equipmentType), check(elapsedTime * 4 % 64), check((int)Math.Round(distanceTraveled)), speedArray[0], speedArray[1], check(BPM), 0xFF };
                 return bikeByte;
             }
             catch (OverflowException e)
             {
                 Debug.WriteLine(e);
-                return GenerateBike0x10();
             }
+            byte[] res = { 0x10,0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0xFF};
+            return res;
+        }
+
+        private byte check(int value)
+        {
+            return value > 255 ? Convert.ToByte(0) : Convert.ToByte(value);
         }
 
         //Generate an ANT message for BPM
