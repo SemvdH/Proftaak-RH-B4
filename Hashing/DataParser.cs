@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Util
@@ -185,7 +186,7 @@ namespace Util
         /// </summary>
         /// <param name="bytes">message</param>
         /// <returns>if message contains raw data</returns>
-        public static bool isRawData(byte[] bytes)
+        public static bool isRawDataBikeServer(byte[] bytes)
         {
             if (bytes.Length <= 5)
             {
@@ -193,6 +194,34 @@ namespace Util
             }
             return bytes[4] == 0x02;
         }
+
+        public static bool isRawDataBPMServer(byte[] bytes)
+        {
+            if (bytes.Length <= 5)
+            {
+                throw new ArgumentException("bytes to short");
+            }
+            return bytes[4] == 0x03;
+        }
+
+        public static bool isRawDataBikeDoctor(byte[] bytes)
+        {
+            if (bytes.Length <= 5)
+            {
+                throw new ArgumentException("bytes to short");
+            }
+            return bytes[4] == 0x04;
+        }
+
+        public static bool isRawDataBPMDoctor(byte[] bytes)
+        {
+            if (bytes.Length <= 5)
+            {
+                throw new ArgumentException("bytes to short");
+            }
+            return bytes[4] == 0x05;
+        }
+
 
         /// <summary>
         /// constructs a message with the payload, messageId and clientId
@@ -218,11 +247,34 @@ namespace Util
         /// <param name="payload"></param>
         /// <param name="clientId"></param>
         /// <returns>the message ready for sending</returns>
-        public static byte[] GetRawDataMessage(byte[] payload)
+        public static byte[] GetRawBikeDataMessageServer(byte[] payload)
         {
             return getMessage(payload, 0x02);
         }
 
+        public static byte[] GetRawBPMDataMessageServer(byte[] payload)
+        {
+            return getMessage(payload, 0x03);
+        }
+
+        public static byte[] GetRawBikeDataDoctor(byte[] payload, string username)
+        {
+
+            return GetRawDataDoctor(payload, username, 0x04);
+
+        }
+
+        public static byte[] GetRawBPMDataDoctor(byte[] payload, string username)
+        {
+            return GetRawDataDoctor(payload,username,0x05);
+        }
+
+        private static byte[] GetRawDataDoctor(byte[] payload, string username, byte messageID)
+        {
+
+            return getMessage(payload.Concat(Encoding.ASCII.GetBytes(username)).ToArray(), messageID);
+
+        }
         /// <summary>
         /// constructs a message with the payload and clientId and assumes the payload is json
         /// </summary>

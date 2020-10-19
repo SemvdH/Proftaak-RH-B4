@@ -90,7 +90,7 @@ namespace DoctorApp.Utils
                             string responseStatus = DataParser.getResponseStatus(payloadbytes);
                             if (responseStatus == "OK")
                             {
-                                Debug.WriteLine("Username and password correct!");
+                                Debug.WriteLine("Doctor Username and password correct!");
                                 this.LoginViewModel.setLoginStatus(true);
                                 this.connected = true;
 
@@ -121,9 +121,13 @@ namespace DoctorApp.Utils
                             break;
                     }
                 }
-                else if (DataParser.isRawData(messageBytes))
+                else if (DataParser.isRawDataBikeDoctor(messageBytes))
                 {
-                    Console.WriteLine($"Received data: {BitConverter.ToString(payloadbytes)}");
+                    MainViewModel.TransferDataToClientBike(payloadbytes);
+                }
+                else if (DataParser.isRawDataBPMDoctor(messageBytes))
+                {
+                    MainViewModel.TransferDataToClientBPM(payloadbytes);
                 }
 
                 totalBufferReceived -= expectedMessageLength;

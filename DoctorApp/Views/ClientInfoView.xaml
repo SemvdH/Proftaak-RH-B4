@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DoctorApp.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             
-             >
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="15,5,15,15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
@@ -56,13 +55,35 @@
             </DockPanel>
         </StackPanel>
         <ListBox Name="ChatBox"  ItemsSource="{Binding PatientInfo.ChatLog}" Grid.Column="1" Margin="59,41,0,0" Grid.RowSpan="3"/>
-        <TextBox Name="textBox_Chat" Grid.Column="1" HorizontalAlignment="Left" Margin="59,10,0,0" Grid.Row="3" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
+        <TextBox Name="textBox_Chat" Grid.Column="1" HorizontalAlignment="Left" Margin="59,10,0,0" Grid.Row="3" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
         <Button x:Name="Send" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" Command="{Binding Chat}" CommandParameter="{Binding ElementName=textBox_Chat}"/>
         <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StartSession}" CommandParameter=""/>
         <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StopSession}" CommandParameter=""/>
         <TextBox x:Name="textBox_SetResistance" Grid.Column="1" HorizontalAlignment="Left" Margin="69,128,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Width="97"/>
         <Button Content="Set Resistance" Grid.Column="1" HorizontalAlignment="Left" Margin="187,128,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Height="18" Command="{Binding SetResistance}" CommandParameter="{Binding ElementName=textBox_SetResistance}"/>
-        <Canvas Grid.Row="3" Background="White" Margin="0,33,0,0"/>
-        <ComboBox Name="DropBox" HorizontalAlignment="Left" Margin="0,6,0,0" Grid.Row="3" VerticalAlignment="Top" Width="190"/>
+        <lvc:CartesianChart Grid.Row="3" AnimationsSpeed="0:0:0.5" Hoverable="False" DataTooltip="{x:Null}" Margin="0,33,0,-5">
+            <lvc:CartesianChart.Series>
+                <lvc:LineSeries Values="{Binding Chart.ChartValues}" 
+                                PointGeometry="{x:Null}" 
+                                LineSmoothness="1"
+                                StrokeThickness="6" 
+                                Stroke="#F34336"
+                                Fill="Transparent"/>
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis LabelFormatter="{Binding Chart.DateTimeFormatter}" 
+                          MaxValue="{Binding Chart.AxisMax}" 
+                          MinValue="{Binding Chart.AxisMin}"
+                          Unit="{Binding Chart.AxisUnit}">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator Step="{Binding Chart.AxisStep}" />
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+        </lvc:CartesianChart>
+        <ComboBox Name="DropBox" HorizontalAlignment="Left" Margin="0,6,0,0" Grid.Row="3" VerticalAlignment="Top" Width="190" SelectedItem="{Binding Path=MySelectedItem}">
+            <ComboBoxItem Content="Speed" IsSelected="True"></ComboBoxItem>
+            <ComboBoxItem Content="BPM"></ComboBoxItem>
+        </ComboBox>
     </Grid>
 </UserControl>

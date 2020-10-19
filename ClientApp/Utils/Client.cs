@@ -181,7 +181,7 @@ namespace ClientApp.Utils
                             break;
                     }
                 }
-                else if (DataParser.isRawData(messageBytes))
+                else if (DataParser.isRawDataBikeServer(messageBytes))
                 {
                     Console.WriteLine($"Received data: {BitConverter.ToString(payloadbytes)}");
                 }
@@ -228,7 +228,7 @@ namespace ClientApp.Utils
             {
                 throw new ArgumentNullException("no bytes");
             }
-            byte[] message = DataParser.GetRawDataMessage(bytes);
+            byte[] message = DataParser.GetRawBPMDataMessageServer(bytes);
 
             if (engineConnection.Connected && engineConnection.FollowingRoute)
             {
@@ -255,7 +255,7 @@ namespace ClientApp.Utils
             {
                 throw new ArgumentNullException("no bytes");
             }
-            byte[] message = DataParser.GetRawDataMessage(bytes);
+            byte[] message = DataParser.GetRawBikeDataMessageServer(bytes);
             bool canSendToEngine = engineConnection.Connected && engineConnection.FollowingRoute;
             switch (bytes[0])
             {

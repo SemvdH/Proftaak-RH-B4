@@ -10,11 +10,11 @@ namespace DoctorApp.Models
 
         public string Status { get; set; }
 
-        public int Speed { get; set; }
+        public double Speed { get; set; }
 
         public int BPM { get; set; }
 
-        public int Resistance { get; set; }
+        public float Resistance { get; set; }
         public int Acc_Power { get; set; }
 
         public int Curr_Power { get; set; }

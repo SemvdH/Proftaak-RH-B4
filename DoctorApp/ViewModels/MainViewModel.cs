@@ -48,6 +48,30 @@ namespace DoctorApp.ViewModels
                 }
             });
         }
+
+        public void TransferDataToClientBike(byte[] bytes)
+        {
+            string username = DataParser.getNameFromBytesBike(bytes);
+            foreach(ClientInfoViewModel item in Tabs)
+            {
+                if(item.PatientInfo.Username == username)
+                {
+                    item.BikeData(bytes);
+                }
+            }
+        }
+
+        public void TransferDataToClientBPM(byte[] bytes)
+        {
+            string username = DataParser.getNameFromBytesBPM(bytes);
+            foreach (ClientInfoViewModel item in Tabs)
+            {
+                if (item.PatientInfo.Username == username)
+                {
+                    item.BikeData(bytes);
+                }
+            }
+        }
     }
 
 

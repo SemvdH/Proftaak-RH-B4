@@ -140,26 +140,16 @@ namespace Server
                 dynamic json = JsonConvert.DeserializeObject(Encoding.ASCII.GetString(payloadbytes));
 
             }
-            else if (DataParser.isRawData(message))
+            else if (DataParser.isRawDataBikeServer(message))
             {
-                // print the raw data
-                //Console.WriteLine(BitConverter.ToString(payloadbytes));
-                // TODO change, checking for length is not that safe
-                if (payloadbytes.Length == 8)
-                {
-                    saveData?.WriteDataRAWBike(payloadbytes);
-                }
-                else if (payloadbytes.Length == 2)
-                {
-                    saveData?.WriteDataRAWBPM(payloadbytes);
-                }
-                else
-                {
-                    Console.WriteLine("received raw data with weird lenght " + BitConverter.ToString(payloadbytes));
-                }
+                saveData?.WriteDataRAWBike(payloadbytes);
+
             }
-
-
+            else if (DataParser.isRawDataBPMServer(message))
+            {
+                saveData?.WriteDataRAWBPM(payloadbytes);
+            }
+               
         }
 
         private bool handleLogin(byte[] payloadbytes)
