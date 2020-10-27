@@ -43,7 +43,7 @@ namespace ClientApp.Utils
         /// </summary>
         private void initEngine()
         {
-            Debug.WriteLine("init engine");
+            Debug.WriteLine("[CLIENT] init engine");
             engineConnection = EngineConnection.INSTANCE;
             engineConnection.OnNoTunnelId = RetryEngineConnection;
             engineConnection.OnSuccessFullConnection = engineConnected;

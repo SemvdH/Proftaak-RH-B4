@@ -6,6 +6,7 @@ using System.Windows.Input;
 using DoctorApp.Models;
 using DoctorApp.Utils;
 using Util.MagicCode;
+using System;
 
 namespace DoctorApp.ViewModels
 {

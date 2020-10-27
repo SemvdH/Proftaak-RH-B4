@@ -30,7 +30,7 @@ namespace DoctorApp.ViewModels
             Debug.WriteLine("new tab with name " + username);
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                Tabs.Add(new ClientInfoViewModel(MainWindowViewModel, username));
+                Tabs.Add(new ClientInfoViewModel(this,MainWindowViewModel, username));
             });
         }
 
@@ -70,6 +70,15 @@ namespace DoctorApp.ViewModels
                 {
                     item.BikeData(DataParser.getDataWithoutName(bytes, 0,2));
                 }
+            }
+        }
+
+        internal void SendToAllClients(string text)
+        {
+            Debug.WriteLine("[MAINVIEWMODEL] Sending message to all clients: " + text);
+            foreach (ClientInfoViewModel item in Tabs)
+            {
+                item.SendMessageToClient(item.PatientInfo.Username, text);
             }
         }
     }

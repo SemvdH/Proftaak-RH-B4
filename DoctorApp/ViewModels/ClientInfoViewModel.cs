@@ -43,12 +43,14 @@ namespace DoctorApp.ViewModels
 
         public MainWindowViewModel MainWindowViewModel { get; set; }
         private Client client;
+        private MainViewModel parent;
 
         public Chart Chart { get; set; }
 
-        public ClientInfoViewModel(MainWindowViewModel mainWindowViewModel, string username)
+        public ClientInfoViewModel(MainViewModel parent,MainWindowViewModel mainWindowViewModel, string username)
         {
             MainWindowViewModel = mainWindowViewModel;
+            this.parent = parent;
             this.PatientInfo = new PatientInfo() { Username = username, Status = "Waiting to start" };
             this.Chart = new Chart(this.PatientInfo);
             PatientInfo.ChatLog = new ObservableCollection<string>();
@@ -75,8 +77,7 @@ namespace DoctorApp.ViewModels
 
             ChatToAll = new RelayCommand<object>((parameter) =>
             {
-                //todo save clientinfoviewmodels in mainviewmodel
-                //todo send message to client of every clientinfoviewmodel
+                this.parent?.SendToAllClients(((TextBox)parameter).Text);
             });
 
             SetResistance = new RelayCommand<object>((parameter) =>

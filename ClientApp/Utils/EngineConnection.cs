@@ -27,7 +27,7 @@ namespace ClientApp.Utils
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
-            //new PC("HP-ZBOOK-SEM", "Sem")
+            new PC("HP-ZBOOK-SEM", "Sem")
             //new PC("DESKTOP-TV73FKO", "Wouter"),
             //new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
@@ -71,7 +71,7 @@ namespace ClientApp.Utils
             updateTimer.AutoReset = true;
             updateTimer.Enabled = false;
 
-            noVRResponseTimer = new System.Timers.Timer(15000);
+            noVRResponseTimer = new System.Timers.Timer(30000);
             noVRResponseTimer.Elapsed += noVRResponseTimeout;
             noVRResponseTimer.AutoReset = false;
             noVRResponseTimer.Enabled = false;
