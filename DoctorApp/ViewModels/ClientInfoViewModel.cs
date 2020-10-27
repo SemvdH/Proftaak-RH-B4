@@ -68,11 +68,16 @@ namespace DoctorApp.ViewModels
 
             Chat = new RelayCommand<object>((parameter) =>
             {
-                client.sendMessage(DataParser.getChatJson(PatientInfo.Username, ((TextBox)parameter).Text));
-                PatientInfo.ChatLog.Add(DateTime.Now + ": " + ((TextBox)parameter).Text);
+                SendMessageToClient(PatientInfo.Username, ((TextBox)parameter).Text);
             });
 
             //TODO RelayCommand ChatToAll
+
+            ChatToAll = new RelayCommand<object>((parameter) =>
+            {
+                //todo save clientinfoviewmodels in mainviewmodel
+                //todo send message to client of every clientinfoviewmodel
+            });
 
             SetResistance = new RelayCommand<object>((parameter) =>
             {
@@ -81,6 +86,12 @@ namespace DoctorApp.ViewModels
                 PatientInfo.Resistance = float.Parse(((TextBox)parameter).Text);
             });
 
+        }
+
+        public void SendMessageToClient(string username, string text)
+        {
+            client.sendMessage(DataParser.getChatJson(username, text));
+            PatientInfo.ChatLog.Add(DateTime.Now + ": " + text);
         }
 
         public void BPMData(byte [] bytes)
