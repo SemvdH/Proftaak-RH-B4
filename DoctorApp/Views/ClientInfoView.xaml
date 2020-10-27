@@ -57,6 +57,7 @@
         <ListBox Name="ChatBox"  ItemsSource="{Binding PatientInfo.ChatLog}" Grid.Column="1" Margin="59,41,0,0" Grid.RowSpan="3"/>
         <TextBox Name="textBox_Chat" Grid.Column="1" HorizontalAlignment="Left" Margin="59,10,0,0" Grid.Row="3" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="235"/>
         <Button x:Name="Send" Content="Send" Grid.Column="1" HorizontalAlignment="Left" Margin="59,33,0,0" Grid.Row="3" VerticalAlignment="Top" Command="{Binding Chat}" CommandParameter="{Binding ElementName=textBox_Chat}"/>
+        <Button x:Name="SendToAll" Content="Send to all clients" Grid.Column="1" HorizontalAlignment="Left" Margin="107,33,0,0" Grid.Row="3" VerticalAlignment="Top" Command="{Binding ChatToAll}" CommandParameter="{Binding ElementName=textBox_Chat}"/>
         <Button Content="Start Session" Grid.Column="1" HorizontalAlignment="Left" Margin="69,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StartSession}" CommandParameter=""/>
         <Button Content="Stop Session" Grid.Column="1" HorizontalAlignment="Left" Margin="187,86,0,0" Grid.Row="3" VerticalAlignment="Top" Width="97" Command="{Binding StopSession}" CommandParameter=""/>
         <TextBox x:Name="textBox_SetResistance" Grid.Column="1" HorizontalAlignment="Left" Margin="69,128,0,0" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top" Width="97"/>

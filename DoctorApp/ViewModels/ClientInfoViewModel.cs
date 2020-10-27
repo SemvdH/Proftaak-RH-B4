@@ -77,6 +77,7 @@ namespace DoctorApp.ViewModels
 
             ChatToAll = new RelayCommand<object>((parameter) =>
             {
+                Debug.WriteLine("[CLIENTINFOVIEWMODEL] sending message to all clients");
                 this.parent?.SendToAllClients(((TextBox)parameter).Text);
             });
 
