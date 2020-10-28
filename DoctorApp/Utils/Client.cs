@@ -129,14 +129,13 @@ namespace DoctorApp.Utils
                 {
                     MainViewModel.TransferDataToClientBPM(payloadbytes);
                 }
-
+                Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk 
                 totalBufferReceived -= expectedMessageLength;
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);
             }
 
             if (ar == null || (!ar.IsCompleted) || (!this.stream.CanRead) || !this.client.Connected)
                 return;
-            ar.AsyncWaitHandle.WaitOne();
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 
         }

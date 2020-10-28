@@ -243,7 +243,7 @@ namespace ClientApp.Utils
                     SendMessageAndOnResponse(mainCommand.addPanel("panelAdd", bikeId), "panelAdd",
                         (message) =>
                         {
-
+                            Write("got panel id");
                             panelId = JSONParser.getPanelID(message);
 
                             WriteTextMessage(mainCommand.ColorPanel(panelId));
@@ -295,6 +295,7 @@ namespace ClientApp.Utils
 
         public void UpdateInfoPanel()
         {
+            Write("updating info panel");
             ShowPanel(BikeSpeed, (int)BikeBPM, (int)BikePower, (int)BikeResistance);
             WriteTextMessage(mainCommand.RouteSpeed(BikeSpeed, bikeId));
             WriteTextMessage(mainCommand.RouteSpeed(BikeSpeed, cameraId));
