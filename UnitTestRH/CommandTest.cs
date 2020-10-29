@@ -360,17 +360,47 @@ namespace UnitTestRH
         }
 
         [TestMethod]
-        public void zzzDummy()
+        public void SwapPanelCommand_TestMethod()
         {
             string testTunnelID = "dummyTunnelID";
-            string testSerial = "dummySerialCode";
 
             string payloadId = "tunnel/send";
-            string messageId = "scene/node/addlayer";
+            string messageId = "scene/panel/swap";
+
+            string uuid = "dummyUuid";
+
 
             Command command = new Command(testTunnelID);
 
-            string terrainAddCommand = command.AddLayer("Dum", testSerial);
+            string terrainAddCommand = command.SwapPanelCommand(uuid);
+
+            dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
+
+            //Test payload
+            Assert.AreEqual(payloadId, (string)json.id);
+            Assert.AreEqual(testTunnelID, (string)json.data.dest);
+
+            //Test message
+            Assert.AreEqual(messageId, (string)json.data.data.id);
+
+            //Test data
+            Assert.AreEqual(uuid, (string)json.data.data.data.id);
+        }
+
+        [TestMethod]
+        public void ClearPanel_TestMethod()
+        {
+            string testTunnelID = "dummyTunnelID";
+
+            string payloadId = "tunnel/send";
+            string messageId = "scene/panel/clear";
+
+            string uuid = "dummyUuid";
+
+
+            Command command = new Command(testTunnelID);
+
+            string terrainAddCommand = command.ClearPanel(uuid);
 
             dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
 
@@ -380,7 +410,9 @@ namespace UnitTestRH
 
             //Test terrain
             Assert.AreEqual(messageId, (string)json.data.data.id);
-            Assert.AreEqual(testSerial, (string)json.data.data.serial);
+
+            //Test data
+            Assert.AreEqual(uuid, (string)json.data.data.data.id);
         }
     }
 }
