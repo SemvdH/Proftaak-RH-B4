@@ -1,8 +1,11 @@
 using LibNoise.Primitive;
+using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
@@ -10,24 +13,34 @@ namespace RH_Engine
 {
     public delegate void HandleSerial(string message);
 
-    class Program
+    public class Program
     {
         private static PC[] PCs = {
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
-            new PC("HP-ZBOOK-SEM", "Sem"),
+            //new PC("HP-ZBOOK-SEM", "Sem"),
             //new PC("DESKTOP-TV73FKO", "Wouter"),
             new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
         };
 
         private static ServerResponseReader serverResponseReader;
+        
+        private static string terrainId = string.Empty;
         private static string sessionId = string.Empty;
         private static string tunnelId = string.Empty;
+        private static string cameraId = string.Empty;
         private static string routeId = string.Empty;
         private static string panelId = string.Empty;
         private static string bikeId = string.Empty;
+        private static string headId = string.Empty;
+
+        private static double bikeSpeed = 6.66;
+        private static int bpm = 6;
+        private static int power = 6;
+        private static int resistance = 6;
+        private static string lastMessage = "No message received yet";
 
         private static Dictionary<string, HandleSerial> serialResponses = new Dictionary<string, HandleSerial>();
 
@@ -55,6 +68,7 @@ namespace RH_Engine
         /// <param name="message">the response message from the server</param>
         public static void HandleResponse(string message)
         {
+            //Console.WriteLine(message);
             string id = JSONParser.GetID(message);
 
             // because the first messages don't have a serial, we need to check on the id
@@ -77,7 +91,11 @@ namespace RH_Engine
                 //Console.WriteLine("GOT MESSAGE WITH SERIAL: " + message + "\n\n\n");
                 string serial = JSONParser.GetSerial(message);
                 //Console.WriteLine("Got serial " + serial);
-                if (serialResponses.ContainsKey(serial)) serialResponses[serial].Invoke(message);
+                if (serialResponses.ContainsKey(serial))
+                {
+                    serialResponses[serial].Invoke(message);
+                    serialResponses.Remove(serial);
+                }
             }
         }
 
@@ -109,7 +127,7 @@ namespace RH_Engine
 
             stream.Write(res);
 
-            Console.WriteLine("sent message " + message);
+            //Console.WriteLine("sent message " + message);
         }
 
         /// <summary>
@@ -144,40 +162,86 @@ namespace RH_Engine
         {
             Command mainCommand = new Command(tunnelID);
 
+            // Reset scene
             WriteTextMessage(stream, mainCommand.ResetScene());
-            SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
+            //headId = GetId("Root", stream, mainCommand);
+            //while (headId == string.Empty) { }
 
-            //WriteTextMessage(stream, mainCommand.TerrainCommand(new int[] { 256, 256 }, null));
-            //string command;
-
-            SendMessageAndOnResponse(stream, mainCommand.AddBikeModel("bikeID"), "bikeID", (message) => bikeId = JSONParser.GetResponseUuid(message));
-
-            SendMessageAndOnResponse(stream, mainCommand.addPanel("panelID", bikeId), "panelID",
+            //Get sceneinfo
+            SendMessageAndOnResponse(stream, mainCommand.GetSceneInfoCommand("sceneinfo"), "sceneinfo",
                 (message) =>
                 {
-                    panelId = JSONParser.GetResponseUuid(message);
-                    while (bikeId == string.Empty) { }
-                    WriteTextMessage(stream, mainCommand.RouteFollow(routeId, bikeId, 5, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
+                    //Console.WriteLine("\r\n\r\n\r\nscene info" + message);
+                    cameraId = JSONParser.GetIdSceneInfoChild(message, "Camera");
+                    string headId = JSONParser.GetIdSceneInfoChild(message, "Head");
+                    string handLeftId = JSONParser.GetIdSceneInfoChild(message, "LeftHand");
+                    string handRightId = JSONParser.GetIdSceneInfoChild(message, "RightHand");
+
+                    //Force(stream, mainCommand.DeleteNode(handLeftId, "deleteHandL"), "deleteHandL", (message) => Console.WriteLine("Left hand deleted"));
+                    //Force(stream, mainCommand.DeleteNode(handRightId, "deleteHandR"), "deleteHandR", (message) => Console.WriteLine("Right hand deleted"));
                 });
 
-            Console.WriteLine("id of head " + GetId(Command.STANDARD_HEAD, stream, mainCommand));
+            CreateTerrain(stream, mainCommand);
 
-            //command = mainCommand.AddModel("car", "data\\customModels\\TeslaRoadster.fbx");
-            //WriteTextMessage(stream, command);
+            //Add route, bike and put camera and bike to follow route at same speed.
+            SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
+            SendMessageAndOnResponse(stream, mainCommand.AddBikeModelAnim("bikeID", 0.01f), "bikeID",
+                (message) =>
+                {
+                bikeId = JSONParser.GetResponseUuid(message);
+                    SendMessageAndOnResponse(stream, mainCommand.addPanel("panelAdd", bikeId), "panelAdd",
+                        (message) =>
+                            {
+                                bool speedReplied = false;
+                                bool moveReplied = true;
+                                panelId = JSONParser.getPanelID(message);
+                                
+                                showPanel(stream, mainCommand);
 
-            //command = mainCommand.addPanel();
-            //  WriteTextMessage(stream, command);
-            //  string response = ReadPrefMessage(stream);
-            //  Console.WriteLine("add Panel response: \n\r" + response);
-            //  string uuidPanel = JSONParser.getPanelID(response);
-            //  WriteTextMessage(stream, mainCommand.ClearPanel(uuidPanel));
-            //  Console.WriteLine(ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.bikeSpeed(uuidPanel, 2.42));
-            //  Console.WriteLine(ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.ColorPanel(uuidPanel));
-            //  Console.WriteLine("Color panel: " + ReadPrefMessage(stream));
-            //  WriteTextMessage(stream, mainCommand.SwapPanel(uuidPanel));
-            //  Console.WriteLine("Swap panel: " + ReadPrefMessage(stream));
+
+                                //while (!(speedReplied && moveReplied)) { }
+                                
+                                while (cameraId == string.Empty) { }
+                                SetFollowSpeed(5.0f, stream, mainCommand);
+                                WriteTextMessage(stream, mainCommand.RoadCommand(routeId, "road"));
+                                WriteTextMessage(stream, mainCommand.ShowRoute("showRouteFalse", false));
+                            });
+                });
+
+            string groundplaneId = GetId("GroundPlane", stream, mainCommand);
+            WriteTextMessage(stream, mainCommand.DeleteNode(groundplaneId, "none"));
+
+            PlaceHouses(stream, mainCommand);
+
+            WriteTextMessage(stream, mainCommand.SkyboxCommand(DateTime.Now.Hour));
+            
+        }
+
+        private static void PlaceHouses(NetworkStream stream, Command mainCommand)
+        {
+            // public string AddModel(string nodeName, string serial, string fileLocation, float[] positionVector, float scalar, float[] rotationVector)
+            //string folderHouses = @"data\NetworkEngine\models\houses\set1\";
+            //SendMessageAndOnResponse(stream, mainCommand.AddModel("House1", "uselessSerial_atm", folderHouses + "house1.obj", new float[] { -20f, 1f, 0f }, 4 , new float[] { 0f, 0f, 0f }), "uselessSerial_atm", (message) => Console.WriteLine(message));
+            //WriteTextMessage(stream, mainCommand.AddModel("House1", "uselessSerial_atm", @"C:\Users\Ralf van Aert\Documents\AvansTI\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\models\houses\set1\house4.obj"));
+
+            PlaceHouse(stream, mainCommand, 2, new float[] { 10f, 1f, 30f }, 1);
+            PlaceHouse(stream, mainCommand, 1, new float[] { 42f, 1f, 22f }, new float[] { 0f, 90f, 0f }, 2);
+            PlaceHouse(stream, mainCommand, 11, new float[] { -20f, 1f, 0f }, new float[] { 0f, -35f, 0f }, 3);
+            PlaceHouse(stream, mainCommand, 7, new float[] { -15f, 1f, 50f }, new float[] { 0f, -50f, 0f }, 4);
+            PlaceHouse(stream, mainCommand, 24, new float[] { 40f, 1f, 40f }, new float[] { 0f, 75f, 0f }, 5);
+            PlaceHouse(stream, mainCommand, 22, new float[] { 34f, 1f, -20f }, 6);
+            PlaceHouse(stream, mainCommand, 14, new float[] { 0f, 1f, -20f }, new float[] { 0f, 210f, 0f }, 7);
+        }
+
+        private static void PlaceHouse(NetworkStream stream, Command mainCommand, int numberHousemodel, float[] position, int serialNumber)
+        {
+            PlaceHouse(stream, mainCommand, numberHousemodel, position, new float[] { 0f, 0f, 0f }, serialNumber);
+        }
+
+        private static void PlaceHouse(NetworkStream stream, Command mainCommand, int numberHousemodel, float[] position, float[] rotation, int serialNumber)
+        {
+            string folderHouses = @"data\NetworkEngine\models\houses\set1\";
+            SendMessageAndOnResponse(stream, mainCommand.AddModel("House1", "housePlacement" + serialNumber, folderHouses + "house" + numberHousemodel + ".obj", position, 4, rotation), "housePlacement" + serialNumber, (message) => Console.WriteLine(message));
         }
 
         /// <summary>
@@ -209,12 +273,32 @@ namespace RH_Engine
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
             for (int i = 0; i < 256 * 256; i++)
             {
-                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100) + 1;
+                height[i] = improvedPerlin.GetValue(x / 10, x / 10, x * 100)/3.5f + 1;
+                
+                if (height[i] > 1.1f)
+                {
+                    height[i] = height[i] * 0.8f;
+                }
+                else if (height[i] < 0.9f)
+                {
+                    height[i] = height[i] * 1.2f;
+                }
                 x += 0.001f;
             }
-            WriteTextMessage(stream, createGraphics.TerrainCommand(new int[] { 256, 256 }, height));
 
-            WriteTextMessage(stream, createGraphics.AddNodeCommand());
+            SendMessageAndOnResponse(stream, createGraphics.TerrainAdd(new int[] { 256, 256 }, height, "terrain"), "terrain",
+                (message) =>
+                {
+
+                    SendMessageAndOnResponse(stream, createGraphics.renderTerrain("renderTerrain"), "renderTerrain",
+                        (message) =>
+                        {
+                            terrainId = JSONParser.GetTerrainID(message);
+                            string addLayerMsg = createGraphics.AddLayer(terrainId, "addLayer");
+                        SendMessageAndOnResponse(stream, addLayerMsg, "addLayer", (message) => Console.WriteLine(""));
+
+                        });
+                });
         }
 
         /// <summary>
@@ -254,6 +338,66 @@ namespace RH_Engine
             }
 
             return res;
+        }
+
+        
+        private static void showPanel(NetworkStream stream, Command mainCommand)
+        {
+            WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
+            WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
+            SendMessageAndOnResponse(stream, mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showHeartrate(panelId, "bpm", bpm), "bpm",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showPower(panelId, "power", power), "power",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+            SendMessageAndOnResponse(stream, mainCommand.showMessage(panelId, "message", lastMessage), "message",
+                (message) =>
+                {
+                    // TODO check if is drawn
+                });
+
+            // Check if every text is drawn!
+
+            WriteTextMessage(stream, mainCommand.SwapPanel(panelId));
+        }
+
+        private static void SetFollowSpeed(float speed, NetworkStream stream, Command mainCommand)
+        {
+            WriteTextMessage(stream, mainCommand.RouteFollow(routeId, bikeId, speed, new float[] { 0, -(float)Math.PI / 2f, 0 }, new float[] { 0, 0, 0 }));
+            WriteTextMessage(stream, mainCommand.RouteFollow(routeId, cameraId, speed));
+            //WriteTextMessage(stream, mainCommand.RouteFollow(routeId, panelId, speed, 1f, "XYZ", 1, false, new float[] { 0, 0, 0 }, new float[] { 0f, 5f, 5f }));
+        }
+        //string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        private static void Force(NetworkStream stream, string message, string serial, HandleSerial action)
+        {
+            SendMessageAndOnResponse(stream, message, serial,
+                (message) =>
+                {
+                    if (!JSONParser.GetStatus(message))
+                    {
+                        serialResponses.Remove(serial);
+                        Force(stream, message, serial,action);
+                    } else
+                    {
+                        action(message);
+                    }
+                }
+                );
         }
     }
 

@@ -2,6 +2,7 @@
 using ProftaakRH;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,6 +29,8 @@ namespace Hardware.Simulators
         byte[] powerArray;
         byte[] accPowerArray;
 
+        bool running = false;
+
 
 
         public BikeSimulator(IDataReceiver dataReceiver)
@@ -47,15 +50,18 @@ namespace Hardware.Simulators
 
         public void StartSimulation()
         {
+            Console.WriteLine("simulating bike...");
             //Example BLE Message
             //4A-09-4E-05-19-16-00-FF-28-00-00-20-F0
+
+            this.running = true;
 
             float x = 0.0f;
 
             //Perlin for Random values
             ImprovedPerlin improvedPerlin = new ImprovedPerlin(0, LibNoise.NoiseQuality.Best);
 
-            while (true)
+            while (this.running)
             {
                 CalculateVariables(improvedPerlin.GetValue(x) + 1);
 
@@ -87,8 +93,24 @@ namespace Hardware.Simulators
         //Generate an ANT message for page 0x10
         private byte[] GenerateBike0x10()
         {
-            byte[] bikeByte = { 0x10, Convert.ToByte(equipmentType), Convert.ToByte(elapsedTime * 4 % 64), Convert.ToByte(distanceTraveled), speedArray[0], speedArray[1], Convert.ToByte(BPM), 0xFF };
-            return bikeByte;
+            
+            try
+            {
+                byte[] bikeByte = { 0x10, check(equipmentType), check(elapsedTime * 4 % 64), check((int)Math.Round(distanceTraveled)), speedArray[0], speedArray[1], check(BPM), 0xFF };
+                return bikeByte;
+            }
+            catch (OverflowException e)
+            {
+                Debug.WriteLine(e);
+                byte[] res = { 0x10,0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0xFF};
+                return res;
+            }
+        }
+
+        private byte check(int value)
+        {
+           
+            return value > 255 ? Convert.ToByte(255) : value < 0 ? Convert.ToByte(0) : Convert.ToByte(value);
         }
 
         //Generate an ANT message for BPM
@@ -98,32 +120,7 @@ namespace Hardware.Simulators
             return hartByte;
         }
 
-        //Generate an ANT message for resistance
-        public byte[] GenerateResistance(float percentage)
-        {
-            byte[] antMessage = new byte[13];
-            antMessage[0] = 0x4A;
-            antMessage[1] = 0x09;
-            antMessage[2] = 0x4E;
-            antMessage[3] = 0x05;
-            antMessage[4] = 0x30;
-            for (int i = 5; i < 11; i++)
-            {
-                antMessage[i] = 0xFF;
-            }
-            antMessage[11] = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
-            //antMessage[11] = 50; //hardcoded for testing
 
-            byte checksum = 0;
-            for (int i = 0; i < 12; i++)
-            {
-                checksum ^= antMessage[i];
-            }
-
-            antMessage[12] = checksum;//reminder that i am dumb :P
-
-            return antMessage;
-        }
 
         //Calculates the needed variables
         //Input perlin value
@@ -143,20 +140,15 @@ namespace Hardware.Simulators
         }
 
         //Set resistance in simulated bike
-        public void setResistance(byte[] bytes)
+        public void setResistance(float percentage)
         {
-            //TODO check if message is correct
-            if (bytes.Length == 13)
-            {
-                this.resistance = Convert.ToDouble(bytes[11]) / 2;
-            }
+            this.resistance = (byte)Math.Max(Math.Min(Math.Round(percentage / 0.5), 255), 0);
+        }
+
+        public void stop()
+        {
+            this.running = false;
         }
     }
 
-    //Interface for receiving a message on the simulated bike
-    interface IHandler
-    {
-        void setResistance(byte[] bytes);
-
-    }
 }

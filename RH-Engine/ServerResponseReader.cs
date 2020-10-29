@@ -7,8 +7,10 @@ namespace RH_Engine
 {
     public delegate void OnResponse(string response);
 
-    class ServerResponseReader
+    public class ServerResponseReader
     {
+        private bool running;
+        private Thread t;
         public OnResponse callback
         {
             get; set;
@@ -23,7 +25,7 @@ namespace RH_Engine
 
         public void StartRead()
         {
-            Thread t = new Thread(() =>
+            t = new Thread(() =>
             {
                 if (this.callback == null)
                 {
@@ -31,8 +33,9 @@ namespace RH_Engine
                 }
                 else
                 {
-                    Console.WriteLine("Starting loop for reading");
-                    while (true)
+                    running = true;
+                    Console.WriteLine("[SERVERRESPONSEREADER] Starting loop for reading");
+                    while (running)
                     {
                         string res = ReadPrefMessage(Stream);
                         //Console.WriteLine("[SERVERRESPONSEREADER] got message from server: " + res);
@@ -42,6 +45,13 @@ namespace RH_Engine
             });
 
             t.Start();
+        }
+
+        public void Stop()
+        {
+            running = false;
+            t.Join();
+            Stream.Close();
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Hardware
     /// <summary>
     /// <c>BLEHandler</c> class that handles connection and traffic to and from the bike
     /// </summary>
-    public class BLEHandler
+    public class BLEHandler : IHandler
     {
         List<IDataReceiver> dataReceivers;
         private BLE bleBike;
@@ -25,11 +25,13 @@ namespace Hardware
         public BLEHandler(IDataReceiver dataReceiver)
         {
             this.dataReceivers = new List<IDataReceiver> { dataReceiver };
+
         }
 
         public BLEHandler(List<IDataReceiver> dataReceivers)
         {
             this.dataReceivers = dataReceivers;
+
         }
 
         public void addDataReceiver(IDataReceiver dataReceiver)
@@ -42,18 +44,20 @@ namespace Hardware
         /// </summary>
         public void Connect()
         {
+
             BLE bleBike = new BLE();
+
             Thread.Sleep(1000); // We need some time to list available devices
 
             // List available devices
             List<String> bleBikeList = bleBike.ListDevices();
-            Console.WriteLine("Devices found: ");
+            Console.WriteLine("[BLEHANDLER] Devices found: ");
             foreach (var name in bleBikeList)
             {
                 Console.WriteLine(name);
                 if (name.Contains("Avans Bike"))
                 {
-                    Console.WriteLine("connecting to {0}", name);
+                    Console.WriteLine("[BLEHANDLER] connecting to {0}", name);
                     Connect(name);
                     break;
 
@@ -170,6 +174,11 @@ namespace Hardware
         /// <param name="percentage">The precentage of resistance to set</param>
         public void setResistance(float percentage)
         {
+            if (!this.Running)
+            {
+                Console.WriteLine("BLE is not running");
+                return;
+            }
             byte[] antMessage = new byte[13];
             antMessage[0] = 0x4A;
             antMessage[1] = 0x09;
@@ -193,6 +202,12 @@ namespace Hardware
 
 
             bleBike.WriteCharacteristic("6e40fec3-b5a3-f393-e0a9-e50e24dcca9e", antMessage);
+        }
+
+        public void stop()
+        {
+            bleBike.SubscriptionValueChanged -= BleBike_SubscriptionValueChanged;
+            bleHeart.SubscriptionValueChanged -= BleBike_SubscriptionValueChanged;
         }
     }
 }

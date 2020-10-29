@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>doctor.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="img\doctor.ico" />
+		<None Remove="img\patient.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="img\doctor.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="img\patient.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AsyncAwaitBestPractices.MVVM" Version="4.3.0" />
+		<PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+		<PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
+		<PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
+		<PackageReference Include="PropertyChanged.Fody" Version="3.2.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
+	</ItemGroup>
+
+	<Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
+
+</Project>

@@ -4,7 +4,7 @@ using System;
 
 namespace RH_Engine
 {
-    class Command
+    public class Command
     {
         public const string STANDARD_HEAD = "Head";
         public const string STANDARD_GROUND = "GroundPlane";
@@ -19,30 +19,32 @@ namespace RH_Engine
             this.tunnelID = tunnelID;
         }
 
-        public string TerrainCommand(int[] sizeArray, float[] heightsArray)
+        public string TerrainAdd(int[] sizeArray, float[] heightsArray, string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/terrain/add",
+                serial = serialCode,
                 data = new
                 {
                     size = sizeArray,
-                    heights = heightsArray
+                    heights = heightsArray,
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddLayer(string uid, string texture)
+        public string AddLayer(string uuid, string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/node/addlayer",
+                serial = serialCode,
                 data = new
                 {
-                    id = uid,
-                    diffuse = @"C:\Users\woute\Downloads\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\textures\terrain\adesert_cracks_d.jpg",
-                    normal = @"C:\Users\woute\Downloads\NetworkEngine.18.10.10.1\NetworkEngine\data\NetworkEngine\textures\terrain\adesert_mntn_d.jpg",
+                    id = uuid,
+                    diffuse = @"data\NetworkEngine\textures\terrain\grass_green_d.jpg",
+                    normal = @"data\NetworkEngine\textures\terrain\grass_green_n.jpg",
                     minHeight = 0,
                     maxHeight = 10,
                     fadeDist = 1
@@ -63,19 +65,27 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string AddNodeCommand()
+        public string renderTerrain(string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/node/add",
+                serial = serialCode,
                 data = new
                 {
                     name = "newNode",
                     components = new
                     {
+                        transform = new
+                        {
+                            position = new int[] { -80, 0, -80 },
+                            scale = 1f,
+                            rotation = new int[] { 0, 0, 0 }
+                        },
                         terrain = new
                         {
-                            smoothnormals = true
+                            smoothnormals = true,
+
                         }
                     }
                 }
@@ -83,11 +93,12 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string DeleteNode(string uuid)
+        public string DeleteNode(string uuid, string serialCode)
         {
             dynamic payload = new
             {
                 id = "scene/node/delete",
+                serial = serialCode,
                 data = new
                 {
                     id = uuid,
@@ -108,11 +119,23 @@ namespace RH_Engine
                     parent = uuidBike,
                     components = new
                     {
+                        transform = new
+                        {
+                            position = new float[]
+                            {
+                                -1.5f, 1f, 0f
+                            },
+                            scale = 1,
+                            rotation = new int[]
+                            {
+                                -30, 90,0
+                            }
+                        },
                         panel = new
                         {
                             size = new int[] { 1, 1 },
                             resolution = new int[] { 512, 512 },
-                            background = new int[] { 1, 0, 0, 0 },
+                            background = new int[] { 1, 1, 1, 1 },
                             castShadow = false
                         }
                     }
@@ -130,7 +153,7 @@ namespace RH_Engine
                 data = new
                 {
                     id = uuidPanel,
-                    color = new int[] { 1, 1, 1, 1 }
+                    color = new float[] { 0f, 0f, 0f, 0f }
                 }
             };
 
@@ -151,16 +174,17 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string bikeSpeed(string uuidPanel, double speed)
+        public string showOnPanel(string uuidPanel, string serialCode, string mText, int index)
         {
             dynamic payload = new
             {
                 id = "scene/panel/drawtext",
+                serial = serialCode,
                 data = new
                 {
                     id = uuidPanel,
-                    text = "Bike speed placeholder",
-                    position = new int[] { 0, 0 },
+                    text = mText,
+                    position = new int[] { 4, 24 + index * 32 },
                     size = 32.0,
                     color = new int[] { 0, 0, 0, 1 },
                     font = "segoeui"
@@ -168,6 +192,32 @@ namespace RH_Engine
             };
 
             return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+
+        public string showBikespeed(string uuidPanel, string serialCode, double speed)
+        {
+            return showOnPanel(uuidPanel, serialCode, $"Speed: {string.Format("{0:.##}", speed)} m /s ({string.Format("{0:.##}", speed * 3.6)} km/h)", 0);
+        }
+
+        public string showHeartrate(string uuidPanel, string serialCode, int bpm)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Heartrate: " + bpm + " bpm", 1);
+        }
+
+        public string showPower(string uuidPanel, string serialCode, double power)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Inst. Power: " + power + " W", 2);
+        }
+
+        public string showResistance(string uuidPanel, string serialCode, double resistance)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Resistance: " + resistance + " %", 3);
+        }
+
+        public string showMessage(string uuidPanel, string serialCode, string message)
+        {
+            return showOnPanel(uuidPanel, serialCode, "Last message: " + message, 5);
         }
 
         public string SwapPanelCommand(string uuid)
@@ -201,6 +251,11 @@ namespace RH_Engine
         public string AddBikeModel(string serial)
         {
             return AddModel("bike", serial, "data\\NetworkEngine\\models\\bike\\bike.fbx");
+        }
+
+        public string AddBikeModelAnim(string serial, float scalar)
+        {
+            return AddModel("bike", serial, "data\\NetworkEngine\\models\\bike\\bike_anim.fbx", "Armature|Fietsen", new float[] { 0, 0, 0 }, scalar, new float[] { 0, 0, 0 });
         }
 
         public string AddModel(string nodeName, string serial, string fileLocation)
@@ -250,16 +305,17 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string MoveTo(string uuid, float[] positionVector, float rotateValue, float speedValue, float timeValue)
+        public string MoveTo(string uuid, string serial, float[] positionVector, string rotateValue, int speedValue, int timeValue)
         {
-            return MoveTo(uuid, "idk", positionVector, rotateValue, "linear", false, speedValue, timeValue);
+            return MoveTo(uuid, serial, "stop", positionVector, rotateValue, "linear", false, speedValue, timeValue);
         }
 
-        private string MoveTo(string uuid, string stopValue, float[] positionVector, float rotateValue, string interpolateValue, bool followHeightValue, float speedValue, float timeValue)
+        private string MoveTo(string uuid, string serialCode, string stopValue, float[] positionVector, string rotateValue, string interpolateValue, bool followHeightValue, int speedValue, int timeValue)
         {
             dynamic payload = new
             {
                 id = "scene/node/moveto",
+                serial = serialCode,
                 data = new
                 {
                     id = uuid,
@@ -270,6 +326,19 @@ namespace RH_Engine
                     followheight = followHeightValue,
                     speed = speedValue,
                     time = timeValue
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        public string ShowRoute(string serialCode, bool goShow)
+        {
+            dynamic payload = new
+            {
+                id = "route/show",
+                data = new
+                {
+                    show = goShow
                 }
             };
             return JsonConvert.SerializeObject(Payload(payload));
@@ -319,7 +388,7 @@ namespace RH_Engine
                     }
                 }
             };
-            Console.WriteLine("route command: " + JsonConvert.SerializeObject(Payload(payload)));
+            //Console.WriteLine("route command: " + JsonConvert.SerializeObject(Payload(payload)));
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
@@ -350,7 +419,7 @@ namespace RH_Engine
         {
             return RouteFollow(routeID, nodeID, speedValue, 0, "XYZ", 1, true, new float[] { 0, 0, 0 }, positionOffsetVector);
         }
-        private string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
+        public string RouteFollow(string routeID, string nodeID, float speedValue, float offsetValue, string rotateValue, float smoothingValue, bool followHeightValue, float[] rotateOffsetVector, float[] positionOffsetVector)
         {
             dynamic payload = new
             {
@@ -372,12 +441,27 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        public string RoadCommand(string uuid_route)
+        public string RouteSpeed(float speedValue,string nodeID)
         {
-            Console.WriteLine("road");
+            dynamic payload = new
+            {
+                id = "route/follow/speed",
+                data = new
+                {
+                    node = nodeID,
+                    speed = speedValue
+                }
+            };
+            return JsonConvert.SerializeObject(Payload(payload));
+        }
+
+        
+        public string RoadCommand(string uuid_route, string serialCode)
+        {
             dynamic payload = new
             {
                 id = "scene/road/add",
+                serial = serialCode,
                 data = new
                 {
                     route = uuid_route,
@@ -414,6 +498,7 @@ namespace RH_Engine
 
         public string SkyboxCommand(double timeToSet)
         {
+            Console.WriteLine(timeToSet);
             if (timeToSet < 0 || timeToSet > 24)
             {
                 throw new Exception("The time must be between 0 and 24!");

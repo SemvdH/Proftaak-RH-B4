@@ -1,0 +1,30 @@
+﻿<Application x:Class="ClientApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ClientApp"
+             xmlns:viewModels="clr-namespace:ClientApp.ViewModels"
+               xmlns:views="clr-namespace:ClientApp.Views"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+
+
+        <ResourceDictionary>
+            <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
+                <views:MainView />
+                <!-- This is a Page -->
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
+                <views:LoginView />
+                <!-- This is a Page -->
+            </DataTemplate>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="WPFStuff/Styles/Fonts.xaml"/>
+                <ResourceDictionary Source="WPFStuff/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="WPFStuff/Styles/Buttons.xaml"/>
+                <ResourceDictionary Source="WPFStuff/Styles/Texts.xaml"/>
+                <ResourceDictionary Source="WPFStuff/Styles/Windows.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

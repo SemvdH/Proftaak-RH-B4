@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace RH_Engine
 {
-    class JSONParser
+    public class JSONParser
     {
         /// <summary>
         /// returns all the users from the given response
@@ -25,6 +26,20 @@ namespace RH_Engine
             return res;
         }
 
+        public static string GetIdSceneInfoChild(string msg, string nodeName)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(msg);
+            Newtonsoft.Json.Linq.JArray children = jsonData.data.data.data.children;
+            foreach (dynamic d in children)
+            {
+                if (d.name == nodeName)
+                {
+                    return d.uuid;
+                }
+            }
+            return null;
+        }
+
         public static string GetSessionID(string msg, PC[] PCs)
         {
             dynamic jsonData = JsonConvert.DeserializeObject(msg);
@@ -36,13 +51,19 @@ namespace RH_Engine
                 {
                     if (d.clientinfo.host == pc.host && d.clientinfo.user == pc.user)
                     {
-                        Console.WriteLine("connecting to {0}, on {1} with id {2}", pc.user, pc.host, d.id);
+                        Console.WriteLine("[JSONPARSER] connecting to {0}, on {1} with id {2}", pc.user, pc.host, d.id);
                         return d.id;
                     }
                 }
             }
 
             return null;
+        }
+
+        public static bool GetStatus(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            return jsonData.data.data.status == "ok";
         }
 
         public static string GetSerial(string json)
@@ -53,6 +74,7 @@ namespace RH_Engine
 
         public static string GetID(string json)
         {
+            //TODO fix null
             dynamic d = JsonConvert.DeserializeObject(json);
             return d.id;
         }
@@ -63,6 +85,16 @@ namespace RH_Engine
             if (jsonData.data.status == "ok")
             {
                 return jsonData.data.id;
+            }
+            return null;
+        }
+
+        public static string GetTerrainID(string json)
+        {
+            dynamic jsonData = JsonConvert.DeserializeObject(json);
+            if (jsonData.data.data.status == "ok")
+            {
+                return jsonData.data.data.data.uuid;
             }
             return null;
         }
@@ -92,5 +124,19 @@ namespace RH_Engine
             }
             return null;
         }
+
+        public static string GetChildUuid(string name, JArray children)
+        {
+            foreach (dynamic child in children)
+            {
+                if (child.name == name)
+                {
+                    return child.uuid;
+                }
+            }
+            Console.WriteLine("Could not find id of " + name);
+            return null;
+        }
+
     }
 }
