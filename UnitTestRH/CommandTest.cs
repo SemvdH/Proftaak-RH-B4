@@ -163,11 +163,204 @@ namespace UnitTestRH
 
             //Test terrain
             Assert.AreEqual(smoothnormalsExpected, (bool)json.data.data.data.components.terrain.smoothnormals);
-
         }
 
         [TestMethod]
-        public void Dummy()
+        public void DeleteNode_TestMethod()
+        {
+            string testTunnelID = "dummyTunnelID";
+            string testSerial = "dummySerialCode";
+
+            string payloadId = "tunnel/send";
+            string messageId = "scene/node/delete";
+
+            string uuid = "dummyUuid";
+
+
+            Command command = new Command(testTunnelID);
+
+            string terrainAddCommand = command.DeleteNode(uuid, testSerial);
+
+            dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
+
+            //Test payload
+            Assert.AreEqual(payloadId, (string)json.id);
+            Assert.AreEqual(testTunnelID, (string)json.data.dest);
+
+            //Test message
+            Assert.AreEqual(messageId, (string)json.data.data.id);
+            Assert.AreEqual(testSerial, (string)json.data.data.serial);
+
+            //Test data
+            Assert.AreEqual(uuid, (string)json.data.data.data.id);
+        }
+
+        [TestMethod]
+        public void addPanel_TestMethod()
+        {
+            string testTunnelID = "dummyTunnelID";
+            string testSerial = "dummySerialCode";
+
+            string payloadId = "tunnel/send";
+            string messageId = "scene/node/add";
+
+            string uuidBike = "dummyUuidBike";
+
+            string nameExpected = "dashboard";
+
+                //components
+            //transform
+            float[] positionExpected = new float[] { -1.5f, 1f, 0f };
+            int scaleExpected = 1;
+            int[] rotationExpected = new int[] { -30, 90, 0 };
+
+            //panel
+            int[] sizeExpected = new int[] { 1, 1 };
+            int[] resolutionExpected = new int[] { 512, 512 };
+            int[] backgroundExpected = new int[] { 1, 1, 1, 1 };
+            bool castShadowExpected = false;
+
+            Command command = new Command(testTunnelID);
+
+            string terrainAddCommand = command.addPanel(testSerial, uuidBike);
+
+            dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
+
+            //Test payload
+            Assert.AreEqual(payloadId, (string)json.id);
+            Assert.AreEqual(testTunnelID, (string)json.data.dest);
+
+            //Test message
+            Assert.AreEqual(messageId, (string)json.data.data.id);
+            Assert.AreEqual(testSerial, (string)json.data.data.serial);
+
+            //Test data
+            Assert.AreEqual(nameExpected, (string)json.data.data.data.name);
+            Assert.AreEqual(uuidBike, (string)json.data.data.data.parent);
+
+            //Test components
+
+                //Test transform
+            JArray jArrayPosition = (JArray)json.data.data.data.components.transform.position;
+            JArray jArrayRotation = (JArray)json.data.data.data.components.transform.rotation;
+
+            float[] outPositionArray = jArrayPosition.Select(ja => (float)ja).ToArray();
+            int[] outRotationArray = jArrayRotation.Select(ja => (int)ja).ToArray();
+
+            CollectionAssert.AreEqual(positionExpected, outPositionArray);
+            CollectionAssert.AreEqual(rotationExpected, outRotationArray);
+
+            Assert.AreEqual(scaleExpected, (int)json.data.data.data.components.transform.scale);
+
+            //Test panel
+            CollectionAssert.AreEqual(sizeExpected, ((JArray)json.data.data.data.components.panel.size).Select(ja => (int)ja).ToArray());
+            CollectionAssert.AreEqual(resolutionExpected, ((JArray)json.data.data.data.components.panel.resolution).Select(ja => (int)ja).ToArray());
+            CollectionAssert.AreEqual(backgroundExpected, ((JArray)json.data.data.data.components.panel.background).Select(ja => (int)ja).ToArray());
+            Assert.AreEqual(castShadowExpected, (bool)json.data.data.data.components.panel.castShadow);
+        }
+
+        [TestMethod]
+        public void ColorPanel_TestMethod()
+        {
+            string testTunnelID = "dummyTunnelID";
+
+            string payloadId = "tunnel/send";
+            string messageId = "scene/panel/setclearcolor";
+
+            string uuidPanel = "dummyUuidPanel";
+
+            float[] colorExpected = new float[] { 0f, 0f, 0f, 0f };
+
+
+            Command command = new Command(testTunnelID);
+
+            string terrainAddCommand = command.ColorPanel(uuidPanel);
+
+            dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
+
+            //Test payload
+            Assert.AreEqual(payloadId, (string)json.id);
+            Assert.AreEqual(testTunnelID, (string)json.data.dest);
+
+            //Test message
+            Assert.AreEqual(messageId, (string)json.data.data.id);
+
+            //Test data
+            Assert.AreEqual(uuidPanel, (string)json.data.data.data.id);
+            CollectionAssert.AreEqual(colorExpected, ((JArray)json.data.data.data.color).Select(ja => (float)ja).ToArray());
+        }
+
+        [TestMethod]
+        public void SwapPanel_TestMethod()
+        {
+            string testTunnelID = "dummyTunnelID";
+
+            string payloadId = "tunnel/send";
+            string messageId = "scene/panel/swap";
+
+            string uuid = "dummyUuid";
+
+
+            Command command = new Command(testTunnelID);
+
+            string terrainAddCommand = command.SwapPanel(uuid);
+
+            dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
+
+            //Test payload
+            Assert.AreEqual(payloadId, (string)json.id);
+            Assert.AreEqual(testTunnelID, (string)json.data.dest);
+
+            //Test message
+            Assert.AreEqual(messageId, (string)json.data.data.id);
+
+            //Test data
+            Assert.AreEqual(uuid, (string)json.data.data.data.id);
+        }
+
+        [TestMethod]
+        public void showOnPanel_TestMethod()
+        {
+            string testTunnelID = "dummyTunnelID";
+            string testSerial = "dummySerialCode";
+
+            string payloadId = "tunnel/send";
+            string messageId = "scene/panel/drawtext";
+
+            string uuidPanel = "dummyUuidPanel";
+            string text = "dummyText";
+            int index = 3;
+            int[] positionExpected = new int[] { 4, 24 + index * 32 };
+            double sizeExpected = 32.0;
+            int[] colorExpected = new int[] { 0, 0, 0, 1 };
+            string fontExpected = "segoeui";
+
+
+            Command command = new Command(testTunnelID);
+
+            string terrainAddCommand = command.showOnPanel(uuidPanel, testSerial, text, index);
+
+            dynamic json = JsonConvert.DeserializeObject(terrainAddCommand);
+
+            //Test payload
+            Assert.AreEqual(payloadId, (string)json.id);
+            Assert.AreEqual(testTunnelID, (string)json.data.dest);
+
+            //Test message
+            Assert.AreEqual(messageId, (string)json.data.data.id);
+            Assert.AreEqual(testSerial, (string)json.data.data.serial);
+
+            //Test data
+            Assert.AreEqual(uuidPanel, (string)json.data.data.data.id);
+            Assert.AreEqual(text, (string)json.data.data.data.text);
+            CollectionAssert.AreEqual(positionExpected, ((JArray)json.data.data.data.position).Select(ja => (int)ja).ToArray());
+            Assert.AreEqual(sizeExpected, (double)json.data.data.data.size);
+            CollectionAssert.AreEqual(colorExpected, ((JArray)json.data.data.data.color).Select(ja => (int)ja).ToArray());
+            Assert.AreEqual(fontExpected, (string)json.data.data.data.font);
+        }
+
+        [TestMethod]
+        public void zzzDummy()
         {
             string testTunnelID = "dummyTunnelID";
             string testSerial = "dummySerialCode";
