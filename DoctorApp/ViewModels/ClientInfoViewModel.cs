@@ -41,6 +41,8 @@ namespace DoctorApp.ViewModels
 
         public ICommand SetResistance { get; set; }
 
+        public ICommand SaveHistoricData { get; set; }
+
         public MainWindowViewModel MainWindowViewModel { get; set; }
         private Client client;
 
@@ -81,13 +83,23 @@ namespace DoctorApp.ViewModels
                 PatientInfo.Resistance = float.Parse(((TextBox)parameter).Text);
             });
 
+            // request the historic data from the server
+            this.SaveHistoricData = new RelayCommand<object>((parameter) =>
+            {
+                this.client.sendMessage(DataParser.GetGetFileMessage(PatientInfo.Username));
+                // data is stored on the server
+                // send request to server that we want to get the current historic data from the patient
+                // server sends this back
+                // we parse it
+            });
+
         }
 
-        public void BPMData(byte [] bytes)
+        public void BPMData(byte[] bytes)
         {
             //TODO
             //Parsen van de data you fuck
-            if(bytes[0] == 0x00)
+            if (bytes[0] == 0x00)
             {
 
             }
@@ -95,13 +107,13 @@ namespace DoctorApp.ViewModels
             {
                 PatientInfo.BPM = bytes[1];
                 if (MySelectedItem == "BPM")
-                    {
+                {
                     Chart.NewValue(PatientInfo.BPM);
                 }
 
             }
-            
-            
+
+
         }
 
         public void BikeData(byte[] bytes)

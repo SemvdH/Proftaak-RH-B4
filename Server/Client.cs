@@ -147,6 +147,9 @@ namespace Server
                     case DataParser.MESSAGE:
                         communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         break;
+                    case DataParser.GET_FILE:
+                        getClientBikeData(payloadbytes);
+                        break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
@@ -177,8 +180,35 @@ namespace Server
                     Array.Copy(payloadbytes, 0, this.BPMDataBuffer, 0, 2);
                 }
                 //this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
+            } 
+
+        }
+
+        private void getClientBikeData(byte[] payloadbytes)
+        {
+            //ugly
+            //get the raw bike data of the user with the specified username
+            string username = DataParser.GetUsernameFromGetFileBytes(payloadbytes);
+            string path = Directory.GetCurrentDirectory() + "/" + username + "/";
+            string bytes = string.Empty;
+            StringBuilder sb = new StringBuilder(bytes);
+            try
+            {
+                DirectoryInfo dirInf = new DirectoryInfo(Directory.GetCurrentDirectory() + "/" + username + "/");
+                DirectoryInfo[] directoryInfos = dirInf.GetDirectories();
+                DirectoryInfo latest = directoryInfos[directoryInfos.Length - 1];
+                path = path + latest.Name + "/rawBike.bin";
+                FileInfo fi = new FileInfo(path);
+
+                if ((int)fi.Length >= 1024) return;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("[SERVER CLIENT] excetion while trying to get raw bike data: " + e.Message);
             }
 
+            Debug.WriteLine("[SERVER CLIENT] about to send " +sb.ToString());
+            communication.Doctor.sendMessage(DataParser.GetFileMessage(File.ReadAllBytes(path)));
         }
 
         private bool handleLogin(byte[] payloadbytes)
