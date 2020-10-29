@@ -23,6 +23,7 @@ namespace Util
         public const string DISCONNECT = "DISCONNECT";
         public const string LOGIN_DOCTOR = "LOGIN DOCTOR";
         public const string MESSAGE = "MESSAGE";
+        public const string GET_FILE = "GET FILE";
         /// <summary>
         /// makes the json object with LOGIN identifier and username and password
         /// </summary>
@@ -72,7 +73,7 @@ namespace Util
             return getName(bytes, 2, bytes.Length - 2);
         }
 
-        private static string getName(byte[] bytes , int offset, int lenght)
+        private static string getName(byte[] bytes, int offset, int lenght)
         {
             byte[] nameArray = new byte[lenght];
             Array.Copy(bytes, offset, nameArray, 0, lenght);
@@ -286,7 +287,7 @@ namespace Util
 
         public static byte[] GetRawBPMDataDoctor(byte[] payload, string username)
         {
-            return GetRawDataDoctor(payload,username,0x05);
+            return GetRawDataDoctor(payload, username, 0x05);
         }
 
         private static byte[] GetRawDataDoctor(byte[] payload, string username, byte messageID)
@@ -295,8 +296,8 @@ namespace Util
             byte[] nameArray = Encoding.ASCII.GetBytes(username);
             byte[] total = new byte[nameArray.Length + payload.Length];
             Array.Copy(payload, 0, total, 0, payload.Length);
-            Array.Copy(nameArray,0,total,payload.Length,nameArray.Length);
-            return getMessage(total,messageID);
+            Array.Copy(nameArray, 0, total, payload.Length, nameArray.Length);
+            return getMessage(total, messageID);
 
         }
         /// <summary>
@@ -337,14 +338,14 @@ namespace Util
             };
             return getJsonMessage(STOP_SESSION, data);
         }
-        
+
         /// <summary>
         /// gets the message to set the resistance of the given user with the given resistance.
         /// </summary>
         /// <param name="user">the username to set the resistance of.</param>
         /// <param name="mResistance">the resistance value to set</param>
         /// <returns>a byte array containing a json messsage to set the user's resistance, using our protocol.</returns>
-        public static byte[] getSetResistanceJson(string user,float mResistance)
+        public static byte[] getSetResistanceJson(string user, float mResistance)
         {
             dynamic data = new
             {
@@ -436,7 +437,7 @@ namespace Util
         /// <returns>the chat message in the json message</returns>
         public static string getChatMessageFromJson(byte[] json)
         {
-            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.chat;           
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.chat;
         }
 
         /// <summary>
@@ -472,6 +473,33 @@ namespace Util
             return data;
         }
 
+        public static byte[] GetGetFileMessage(string mUsername, DateTime mDateTime)
+        {
+            if (mUsername == null)
+            {
+                throw new ArgumentNullException("username null");
+            }
+            dynamic data = new
+            {
+                username = mUsername,
+                dateTime = mDateTime.ToString("yyyy-MM-dd HH-mm-ss")
+            };
+            return getJsonMessage(GET_FILE, data);
+        }
 
+        public static string GetUsernameFromGetFileBytes(byte[] json)
+        {
+            return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.username;
+        }
+
+        public static string GetDateFromGetFileBytes(byte[] json)
+        {
+            return ((string)((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.dateTime));
+        }
+
+        public static byte[] GetFileMessage(byte[] file)
+        {
+            return getMessage(file, 0x04);
+        }
     }
 }

@@ -147,6 +147,25 @@ namespace Server
                     case DataParser.MESSAGE:
                         communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         break;
+                    case DataParser.GET_FILE:
+                        //ugly
+                        string username = DataParser.GetUsernameFromGetFileBytes(payloadbytes);
+                        string path = Directory.GetCurrentDirectory() + "/" + username + "/" + DataParser.GetDateFromGetFileBytes(payloadbytes) + "/rawBike.bin";
+                        int length = Int32.MaxValue;
+                        try
+                        {
+                            FileInfo fi = new FileInfo(path);
+                            length = (int)fi.Length;
+                        }
+                        catch
+                        {
+                            Console.WriteLine("couldn't find file " + path);
+                        }
+                        if (length > 10240)
+                            break;
+
+                        communication.SendMessageToClient(username, DataParser.GetFileMessage(File.ReadAllBytes(path)));
+                        break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
                         break;
