@@ -236,7 +236,7 @@ namespace ClientApp.Utils
             Write("Starting route follow...");
             FollowingRoute = true;
 
-            SendMessageAndOnResponse(mainCommand.AddBikeModelAnim("bikeID", 0.01f), "bikeID",
+            SendMessageAndOnResponse(mainCommand.AddBikeModel("bikeID"), "bikeID",
                 (message) =>
                 {
                     bikeId = JSONParser.GetResponseUuid(message);

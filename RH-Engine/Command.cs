@@ -124,11 +124,13 @@ namespace RH_Engine
                             position = new float[]
                             {
                                 -1.5f, 1f, 0f
+                                //0f,0f,0f
                             },
                             scale = 1,
                             rotation = new int[]
                             {
                                 -30, 90,0
+                                //0,0,0
                             }
                         },
                         panel = new

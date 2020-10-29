@@ -19,9 +19,9 @@ namespace RH_Engine
             //new PC("DESKTOP-M2CIH87", "Fabian"),
             //new PC("T470S", "Shinichi"),
             //new PC("DESKTOP-DHS478C", "semme"),
-            //new PC("HP-ZBOOK-SEM", "Sem"),
+            new PC("HP-ZBOOK-SEM", "Sem"),
             //new PC("DESKTOP-TV73FKO", "Wouter"),
-            new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
+            //new PC("DESKTOP-SINMKT1", "Ralf van Aert"),
             //new PC("NA", "Bart")
         };
 
@@ -94,7 +94,7 @@ namespace RH_Engine
                 if (serialResponses.ContainsKey(serial))
                 {
                     serialResponses[serial].Invoke(message);
-                    serialResponses.Remove(serial);
+                    //serialResponses.Remove(serial);
                 }
             }
         }
@@ -181,39 +181,41 @@ namespace RH_Engine
                     //Force(stream, mainCommand.DeleteNode(handRightId, "deleteHandR"), "deleteHandR", (message) => Console.WriteLine("Right hand deleted"));
                 });
 
-            CreateTerrain(stream, mainCommand);
+            //CreateTerrain(stream, mainCommand);
 
             //Add route, bike and put camera and bike to follow route at same speed.
-            SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
-            SendMessageAndOnResponse(stream, mainCommand.AddBikeModelAnim("bikeID", 0.01f), "bikeID",
+            //SendMessageAndOnResponse(stream, mainCommand.RouteCommand("routeID"), "routeID", (message) => routeId = JSONParser.GetResponseUuid(message));
+            SendMessageAndOnResponse(stream, mainCommand.AddBikeModelAnim("bikeID",0.01f), "bikeID",
                 (message) =>
                 {
                 bikeId = JSONParser.GetResponseUuid(message);
+                    Console.WriteLine("got bike id " + bikeId);
                     SendMessageAndOnResponse(stream, mainCommand.addPanel("panelAdd", bikeId), "panelAdd",
                         (message) =>
                             {
                                 bool speedReplied = false;
                                 bool moveReplied = true;
+                                Console.WriteLine(message);
                                 panelId = JSONParser.getPanelID(message);
-                                
+                                Console.WriteLine("got panel id " + panelId);
                                 showPanel(stream, mainCommand);
 
 
                                 //while (!(speedReplied && moveReplied)) { }
                                 
-                                while (cameraId == string.Empty) { }
-                                SetFollowSpeed(5.0f, stream, mainCommand);
-                                WriteTextMessage(stream, mainCommand.RoadCommand(routeId, "road"));
-                                WriteTextMessage(stream, mainCommand.ShowRoute("showRouteFalse", false));
+                                //while (cameraId == string.Empty) { }
+                                //SetFollowSpeed(5.0f, stream, mainCommand);
+                                //WriteTextMessage(stream, mainCommand.RoadCommand(routeId, "road"));
+                                //WriteTextMessage(stream, mainCommand.ShowRoute("showRouteFalse", false));
                             });
                 });
 
-            string groundplaneId = GetId("GroundPlane", stream, mainCommand);
-            WriteTextMessage(stream, mainCommand.DeleteNode(groundplaneId, "none"));
+            //string groundplaneId = GetId("GroundPlane", stream, mainCommand);
+            //WriteTextMessage(stream, mainCommand.DeleteNode(groundplaneId, "none"));
 
-            PlaceHouses(stream, mainCommand);
+            //PlaceHouses(stream, mainCommand);
 
-            WriteTextMessage(stream, mainCommand.SkyboxCommand(DateTime.Now.Hour));
+            //WriteTextMessage(stream, mainCommand.SkyboxCommand(DateTime.Now.Hour));
             
         }
 
@@ -343,31 +345,36 @@ namespace RH_Engine
         
         private static void showPanel(NetworkStream stream, Command mainCommand)
         {
-            WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
+            //WriteTextMessage(stream, mainCommand.ColorPanel(panelId));
             WriteTextMessage(stream, mainCommand.ClearPanel(panelId));
             SendMessageAndOnResponse(stream, mainCommand.showBikespeed(panelId, "bikeSpeed", bikeSpeed), "bikeSpeed",
                 (message) =>
                 {
+                    Console.WriteLine(message);
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(stream, mainCommand.showHeartrate(panelId, "bpm", bpm), "bpm",
                 (message) =>
                 {
+                    Console.WriteLine(message);
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(stream, mainCommand.showPower(panelId, "power", power), "power",
                 (message) =>
                 {
+                    Console.WriteLine(message);
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(stream, mainCommand.showResistance(panelId, "resistance", resistance), "resistance",
                 (message) =>
                 {
+                    Console.WriteLine(message);
                     // TODO check if is drawn
                 });
             SendMessageAndOnResponse(stream, mainCommand.showMessage(panelId, "message", lastMessage), "message",
                 (message) =>
                 {
+                    Console.WriteLine(message);
                     // TODO check if is drawn
                 });
 
