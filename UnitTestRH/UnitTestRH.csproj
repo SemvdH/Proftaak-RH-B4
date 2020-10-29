@@ -21,4 +21,6 @@
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
 
+  <Import Project="..\Hashing\Hashing.projitems" Label="Shared" />
+
 </Project>

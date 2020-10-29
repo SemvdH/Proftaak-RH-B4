@@ -26,6 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestRH", "..\UnitTestRH
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Hashing\Hashing.projitems*{0b6ccc1d-5e76-420e-b54d-eb3e5ffea6cb}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{70277749-d423-4871-b692-2efc5a6ed932}*SharedItemsImports = 13
 		..\Hashing\Hashing.projitems*{7d751284-17e8-434c-a7f6-2eb37572e7ae}*SharedItemsImports = 5
 		..\Hashing\Hashing.projitems*{7ef854c1-73eb-4099-a7d7-057cceee6f8f}*SharedItemsImports = 5
