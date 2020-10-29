@@ -134,8 +134,10 @@ namespace DoctorApp.Utils
                 else if (DataParser.IsHistoricBikeData(messageBytes))
                 {
 
-                    //todo read bytes, they are seperated in pairs of 8
-                    string result = "PATIENT INFO FOR " + ClientInfoViewModel.PatientInfo.Username + "\n\n";
+
+                    // todo change to name of patient
+                    string name = MainViewModel.Tabs[0].PatientInfo.Username;
+                    string result = "PATIENT INFO FOR " + name + "\n\n";
                     for (int i = 0; i < payloadbytes.Length; i += 8)
                     {
                         byte[] res = new byte[8];
@@ -143,7 +145,7 @@ namespace DoctorApp.Utils
                         result += handleBikeHistory(res);
                     }
 
-                    string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + ClientInfoViewModel.PatientInfo.Username + ".txt";
+                    string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + name + ".txt";
                     File.WriteAllText(path,result);
                 }
                 Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk
@@ -167,7 +169,7 @@ namespace DoctorApp.Utils
                     res += "Distance traveled: " + bytes[3] + "\n";
                     int input = bytes[4] | (bytes[5] << 8);
                     res += $"Speed {input * 0.01}m/s\n";
-                    res += $"Heart rate: { Convert.ToString(bytes[6], 2)}";
+                    res += $"Heart rate: { Convert.ToString(bytes[6], 10)}";
                     break;
                 case 0x19:
                     res += $"RPM: {bytes[2]}\n";
