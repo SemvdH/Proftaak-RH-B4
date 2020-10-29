@@ -21,7 +21,7 @@ namespace ClientApp.Utils
         private byte[] totalBuffer = new byte[1024];
         private int totalBufferReceived = 0;
         public EngineConnection engineConnection;
-        private bool sessionRunning = false;
+        private bool sessionRunning = true;
         private IHandler handler = null;
         private LoginViewModel LoginViewModel;
 
@@ -146,6 +146,7 @@ namespace ClientApp.Utils
                         case DataParser.STOP_SESSION:
                             Console.WriteLine("Stop session identifier");
                             this.sessionRunning = false;
+                            stopBikeInSimulation();
                             Debug.WriteLine("stop");
                             break;
                         case DataParser.SET_RESISTANCE:
@@ -230,14 +231,12 @@ namespace ClientApp.Utils
             }
             byte[] message = DataParser.GetRawBPMDataMessageServer(bytes);
 
-            if (engineConnection.Connected && engineConnection.FollowingRoute)
+            if (engineConnection != null && engineConnection.Connected && engineConnection.FollowingRoute)
             {
                 engineConnection.BikeBPM = bytes[1];
-
             }
 
-
-            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+            this.stream?.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }
 
         /// <summary>
@@ -256,21 +255,29 @@ namespace ClientApp.Utils
                 throw new ArgumentNullException("no bytes");
             }
             byte[] message = DataParser.GetRawBikeDataMessageServer(bytes);
-            bool canSendToEngine = engineConnection.Connected && engineConnection.FollowingRoute;
+            bool canSendToEngine = engineConnection != null && engineConnection.Connected && engineConnection.FollowingRoute && this.sessionRunning;
             switch (bytes[0])
             {
 
                 case 0x10:
 
                     if (canSendToEngine) engineConnection.BikeSpeed = (bytes[4] | (bytes[5] << 8)) * 0.01f;
+                    else if (engineConnection != null) engineConnection.BikeSpeed = 0;
                     break;
                 case 0x19:
                     if (canSendToEngine) engineConnection.BikePower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+                    else if (engineConnection != null) engineConnection.BikePower = 0;
                     break;
             }
 
 
-            this.stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+            this.stream?.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
+        }
+
+        private void stopBikeInSimulation()
+        {
+            engineConnection.BikeSpeed = 0;
+            engineConnection.BikePower = 0;
         }
 
         #endregion
