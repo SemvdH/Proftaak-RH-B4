@@ -125,12 +125,16 @@ namespace DoctorApp.Utils
                 {
                     // read the .bin file that is in the message
                     // update the view
-
+                    //Debug.WriteLine($"[DOCTOR CLIENT] Got raw bike data: " + Encoding.ASCII.GetString(payloadbytes));
                     MainViewModel.TransferDataToClientBike(payloadbytes);
                 }
                 else if (DataParser.isRawDataBPMDoctor(messageBytes))
                 {
                     MainViewModel.TransferDataToClientBPM(payloadbytes);
+                }
+                else if (DataParser.IsHistoricBikeData(messageBytes))
+                {
+                    Debug.WriteLine("[DOCTOR CLIENT] got historic bike data: " + Encoding.ASCII.GetString(payloadbytes));
                 }
                 Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk
                 totalBufferReceived -= expectedMessageLength;

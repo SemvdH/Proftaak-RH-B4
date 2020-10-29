@@ -148,26 +148,7 @@ namespace Server
                         communication.SendMessageToClient(DataParser.getUsernameFromJson(payloadbytes), message);
                         break;
                     case DataParser.GET_FILE:
-                        //ugly
-
-                        //get the raw bike data of the user with the specified username
-                        string username = DataParser.GetUsernameFromGetFileBytes(payloadbytes);
-                        string path = Directory.GetCurrentDirectory() + "/" + username + "/" + DataParser.GetDateFromGetFileBytes(payloadbytes) + "/rawBike.bin";
-                        int length = Int32.MaxValue;
-                        try
-                        {
-                            FileInfo fi = new FileInfo(path);
-                            length = (int)fi.Length;
-                        }
-                        catch
-                        {
-                            Console.WriteLine("couldn't find file " + path);
-                        }
-                        if (length > 10240)
-                            break;
-
-                        // we need to send it to the doctor and not to the user with the username
-                        communication.SendMessageToClient(this.username, DataParser.GetFileMessage(File.ReadAllBytes(path)));
+                        getClientBikeData(payloadbytes);
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");
@@ -199,8 +180,57 @@ namespace Server
                     Array.Copy(payloadbytes, 0, this.BPMDataBuffer, 0, 2);
                 }
                 //this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
+            } 
+
+        }
+
+        private void getClientBikeData(byte[] payloadbytes)
+        {
+            //ugly
+            //get the raw bike data of the user with the specified username
+            string username = DataParser.GetUsernameFromGetFileBytes(payloadbytes);
+            string path = Directory.GetCurrentDirectory() + "/" + username + "/";
+            string bytes = string.Empty;
+            StringBuilder sb = new StringBuilder(bytes);
+            int length = 0;
+            try
+            {
+                DirectoryInfo dirInf = new DirectoryInfo(Directory.GetCurrentDirectory() + "/" + username + "/");
+                DirectoryInfo[] directoryInfos = dirInf.GetDirectories();
+                for (int i = 0; i < directoryInfos.Length; i++)
+                {
+                    DirectoryInfo info = directoryInfos[i];
+                    string newPath =  path + info.Name + "/rawBike.bin";
+                    Debug.WriteLine("[SERVER CLIENT] checking for " + newPath);
+
+
+                    sb.Append(getRawBikeDataFromFile(newPath));
+                    if (i != directoryInfos.Length - 1) sb.Append("\n");
+
+                    FileInfo fi = new FileInfo(newPath);
+                    length += (int)fi.Length;
+                }
+                
+                Debug.WriteLine("[SERVER CLIENT] made path to " + path);
+            }
+            catch
+            {
+                Debug.WriteLine("Folder for user " + username + " does not exist");
             }
 
+            if (length > 10240)
+            {
+                Debug.WriteLine("[SERVER CLIENT] packet was too big!");
+                return;
+            }
+
+            communication.Doctor.sendMessage(DataParser.GetFileMessage(Encoding.ASCII.GetBytes(sb.ToString())));
+        }
+
+        public byte[] getRawBikeDataFromFile(string path)
+        {
+
+            return File.ReadAllBytes(path);
         }
 
         private bool handleLogin(byte[] payloadbytes)

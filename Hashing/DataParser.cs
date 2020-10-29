@@ -243,6 +243,12 @@ namespace Util
             return bytes[4] == 0x05;
         }
 
+        public static bool IsHistoricBikeData(byte[] bytes)
+        {
+            if (bytes.Length <= 5) throw new ArgumentException("bytes too short");
+            return bytes[4] == 0x06;
+        }
+
 
         /// <summary>
         /// constructs a message with the payload, messageId and clientId
@@ -473,7 +479,7 @@ namespace Util
             return data;
         }
 
-        public static byte[] GetGetFileMessage(string mUsername, DateTime mDateTime)
+        public static byte[] GetGetFileMessage(string mUsername)
         {
             if (mUsername == null)
             {
@@ -482,7 +488,6 @@ namespace Util
             dynamic data = new
             {
                 username = mUsername,
-                dateTime = mDateTime.ToString("yyyy-MM-dd HH-mm-ss")
             };
             return getJsonMessage(GET_FILE, data);
         }
@@ -499,7 +504,7 @@ namespace Util
 
         public static byte[] GetFileMessage(byte[] file)
         {
-            return getMessage(file, 0x04);
+            return getMessage(file, 0x06);
         }
     }
 }
