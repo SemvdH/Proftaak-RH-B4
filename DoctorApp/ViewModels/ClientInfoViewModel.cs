@@ -99,13 +99,13 @@ namespace DoctorApp.ViewModels
         {
             //TODO
             //Parsen van de data you fuck
+            PatientInfo.BPM = bytes[1];
             if (bytes[0] == 0x00)
             {
 
             }
             else
             {
-                PatientInfo.BPM = bytes[1];
                 if (MySelectedItem == "BPM")
                 {
                     Chart.NewValue(PatientInfo.BPM);
