@@ -192,28 +192,15 @@ namespace Server
             string path = Directory.GetCurrentDirectory() + "/" + username + "/";
             string bytes = string.Empty;
             StringBuilder sb = new StringBuilder(bytes);
-            int length = 0;
             try
             {
                 DirectoryInfo dirInf = new DirectoryInfo(Directory.GetCurrentDirectory() + "/" + username + "/");
                 DirectoryInfo[] directoryInfos = dirInf.GetDirectories();
-                for (int i = directoryInfos.Length-1; i >= 0; i--)
-                {
+                DirectoryInfo latest = directoryInfos[directoryInfos.Length - 1];
+                path = path + latest.Name + "/rawBike.bin";
+                FileInfo fi = new FileInfo(path);
 
-                    DirectoryInfo info = directoryInfos[i];
-                    string newPath = path + info.Name + "/rawBike.bin";
-                    Debug.WriteLine("[SERVER CLIENT] checking for " + newPath);
-
-                    FileInfo fi = new FileInfo(newPath);
-                    length += (int)fi.Length;
-
-                    if (length >= 1024) break;
-                    string append = Encoding.ASCII.GetString(File.ReadAllBytes(newPath));
-                    Debug.WriteLine("[SERVER CLIENT] appending " + append);
-                    sb.Append(append);
-                    if (i != 0) sb.Append("\n");
-
-                }
+                if ((int)fi.Length >= 1024) return;
             }
             catch (Exception e)
             {
@@ -221,7 +208,7 @@ namespace Server
             }
 
             Debug.WriteLine("[SERVER CLIENT] about to send " +sb.ToString());
-            communication.Doctor.sendMessage(DataParser.GetFileMessage(Encoding.ASCII.GetBytes(sb.ToString())));
+            communication.Doctor.sendMessage(DataParser.GetFileMessage(File.ReadAllBytes(path)));
         }
 
         private bool handleLogin(byte[] payloadbytes)

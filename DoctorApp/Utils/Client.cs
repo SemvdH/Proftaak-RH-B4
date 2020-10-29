@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using DoctorApp.ViewModels;
+using Microsoft.Win32;
 using ProftaakRH;
 using Util;
 
@@ -123,9 +125,6 @@ namespace DoctorApp.Utils
                 }
                 else if (DataParser.isRawDataBikeDoctor(messageBytes))
                 {
-                    // read the .bin file that is in the message
-                    // update the view
-                    //Debug.WriteLine($"[DOCTOR CLIENT] Got raw bike data: " + Encoding.ASCII.GetString(payloadbytes));
                     MainViewModel.TransferDataToClientBike(payloadbytes);
                 }
                 else if (DataParser.isRawDataBPMDoctor(messageBytes))
@@ -134,7 +133,18 @@ namespace DoctorApp.Utils
                 }
                 else if (DataParser.IsHistoricBikeData(messageBytes))
                 {
-                    Debug.WriteLine("[DOCTOR CLIENT] got historic bike data: " + Encoding.ASCII.GetString(payloadbytes));
+
+                    //todo read bytes, they are seperated in pairs of 8
+                    string result = "PATIENT INFO FOR " + ClientInfoViewModel.PatientInfo.Username + "\n\n";
+                    for (int i = 0; i < payloadbytes.Length; i += 8)
+                    {
+                        byte[] res = new byte[8];
+                        Array.Copy(payloadbytes, i, res, 0, 8);
+                        result += handleBikeHistory(res);
+                    }
+
+                    string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/" + ClientInfoViewModel.PatientInfo.Username + ".txt";
+                    File.WriteAllText(path,result);
                 }
                 Array.Copy(totalBuffer, expectedMessageLength, totalBuffer, 0, (totalBufferReceived - expectedMessageLength)); //maybe unsafe idk
                 totalBufferReceived -= expectedMessageLength;
@@ -147,11 +157,40 @@ namespace DoctorApp.Utils
 
         }
 
-        /// <summary>
-        /// starts sending a message to the server
-        /// </summary>
-        /// <param name="message">the message to send</param>
-        public void sendMessage(byte[] message)
+        private string handleBikeHistory(byte[] bytes)
+        {
+            string res = string.Empty;
+            switch (bytes[0])
+            {
+                case 0x10:
+                    res += "Time elapsed: " + bytes[2] / 4 + "s\n";
+                    res += "Distance traveled: " + bytes[3] + "\n";
+                    int input = bytes[4] | (bytes[5] << 8);
+                    res += $"Speed {input * 0.01}m/s\n";
+                    res += $"Heart rate: { Convert.ToString(bytes[6], 2)}";
+                    break;
+                case 0x19:
+                    res += $"RPM: {bytes[2]}\n";
+                    int accumPower = bytes[3] | (bytes[4] << 8);
+                    res += $"Accumulated power: {accumPower} watt\n";
+                    int instantPower = (bytes[5]) | (bytes[6] & 0b00001111) << 8;
+                    if (instantPower != 0xFFF)
+                    {
+                        res += $"Instant power: {instantPower} watt\n"; 
+                    }
+                    break;
+
+            }
+            return res + "\n";
+            
+            
+        }
+
+            /// <summary>
+            /// starts sending a message to the server
+            /// </summary>
+            /// <param name="message">the message to send</param>
+            public void sendMessage(byte[] message)
         {
             stream.BeginWrite(message, 0, message.Length, new AsyncCallback(OnWrite), null);
         }

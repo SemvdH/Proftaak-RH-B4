@@ -16,7 +16,7 @@ namespace ClientApp.ViewModels
         public string Username { get; set; }
         public ICommand LoginCommand { get; set; }
 
-        public bool LoginStatus { get; set; }
+        public bool LoginStatus { get; set; } = false;
 
         public bool InvertedLoginStatus { get; set; }
 
