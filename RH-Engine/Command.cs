@@ -174,7 +174,7 @@ namespace RH_Engine
             return JsonConvert.SerializeObject(Payload(payload));
         }
 
-        private string showOnPanel(string uuidPanel, string serialCode, string mText, int index)
+        public string showOnPanel(string uuidPanel, string serialCode, string mText, int index)
         {
             dynamic payload = new
             {
