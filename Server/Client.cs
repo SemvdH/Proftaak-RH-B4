@@ -197,40 +197,31 @@ namespace Server
             {
                 DirectoryInfo dirInf = new DirectoryInfo(Directory.GetCurrentDirectory() + "/" + username + "/");
                 DirectoryInfo[] directoryInfos = dirInf.GetDirectories();
-                for (int i = 0; i < directoryInfos.Length; i++)
+                for (int i = directoryInfos.Length-1; i >= 0; i--)
                 {
+
                     DirectoryInfo info = directoryInfos[i];
-                    string newPath =  path + info.Name + "/rawBike.bin";
+                    string newPath = path + info.Name + "/rawBike.bin";
                     Debug.WriteLine("[SERVER CLIENT] checking for " + newPath);
-
-
-                    sb.Append(getRawBikeDataFromFile(newPath));
-                    if (i != directoryInfos.Length - 1) sb.Append("\n");
 
                     FileInfo fi = new FileInfo(newPath);
                     length += (int)fi.Length;
+
+                    if (length >= 1024) break;
+                    string append = Encoding.ASCII.GetString(File.ReadAllBytes(newPath));
+                    Debug.WriteLine("[SERVER CLIENT] appending " + append);
+                    sb.Append(append);
+                    if (i != 0) sb.Append("\n");
+
                 }
-                
-                Debug.WriteLine("[SERVER CLIENT] made path to " + path);
             }
-            catch
+            catch (Exception e)
             {
-                Debug.WriteLine("Folder for user " + username + " does not exist");
+                Debug.WriteLine("[SERVER CLIENT] excetion while trying to get raw bike data: " + e.Message);
             }
 
-            if (length > 10240)
-            {
-                Debug.WriteLine("[SERVER CLIENT] packet was too big!");
-                return;
-            }
-
+            Debug.WriteLine("[SERVER CLIENT] about to send " +sb.ToString());
             communication.Doctor.sendMessage(DataParser.GetFileMessage(Encoding.ASCII.GetBytes(sb.ToString())));
-        }
-
-        public byte[] getRawBikeDataFromFile(string path)
-        {
-
-            return File.ReadAllBytes(path);
         }
 
         private bool handleLogin(byte[] payloadbytes)
