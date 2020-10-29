@@ -129,7 +129,8 @@ namespace Server
                         break;
                     case DataParser.START_SESSION:
                         this.communication.StartSessionUser(DataParser.getUsernameFromJson(payloadbytes));
-                        this.timer.Start();
+                        if (communication.Doctor != this)
+                            this.timer.Start();
                         break;
                     case DataParser.STOP_SESSION:
                         this.communication.StopSessionUser(DataParser.getUsernameFromJson(payloadbytes));
@@ -169,7 +170,8 @@ namespace Server
                     Array.Copy(this.BikeDataBuffer, 0, this.BikeDataBuffer, 8, 8);
                     Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 8);
                 }
-                //this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(payloadbytes, this.username));
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(payloadbytes, this.username));
+
             }
             else if (DataParser.isRawDataBPMServer(message))
             {
@@ -179,8 +181,8 @@ namespace Server
                 {
                     Array.Copy(payloadbytes, 0, this.BPMDataBuffer, 0, 2);
                 }
-                //this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
-            } 
+                this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
+            }
 
         }
 
@@ -207,7 +209,7 @@ namespace Server
                 Debug.WriteLine("[SERVER CLIENT] excetion while trying to get raw bike data: " + e.Message);
             }
 
-            Debug.WriteLine("[SERVER CLIENT] about to send " +sb.ToString());
+            Debug.WriteLine("[SERVER CLIENT] about to send " + sb.ToString());
             communication.Doctor.sendMessage(DataParser.GetFileMessage(File.ReadAllBytes(path)));
         }
 
@@ -316,6 +318,7 @@ namespace Server
                 this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(this.BPMDataBuffer, this.username));
             }
             this.timer.Start();
+            Debug.WriteLine("[serverclient] send bike and bpm data timer");
         }
     }
 }

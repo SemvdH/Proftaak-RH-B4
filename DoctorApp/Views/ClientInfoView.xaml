@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="DoctorApp.Views.ClientInfoView"
+<UserControl x:Class="DoctorApp.Views.ClientInfoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -44,7 +44,7 @@
             </DockPanel>
             <DockPanel Height="26" LastChildFill="False" HorizontalAlignment="Stretch">
                 <TextBox Name="textBox_Resistance" Text="{Binding Path=PatientInfo.Resistance}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Right" IsReadOnly="true"/>
-                <TextBox Name="textBox_CurrentSpeed" Text="{Binding Path=PatientInfo.Speed}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
+                <TextBox Name="textBox_CurrentSpeed" Text="{Binding Path=PatientInfo.Speed, StringFormat=N2}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Left" IsReadOnly="true"/>
                 <TextBox Name="textBox_CurrentBPM" Text="{Binding Path=PatientInfo.BPM}" TextWrapping="Wrap" Width="110" DockPanel.Dock="Top" Height="26" IsReadOnly="true"/>
             </DockPanel>
             <DockPanel Height="26" LastChildFill="False">

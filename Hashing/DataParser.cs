@@ -298,7 +298,6 @@ namespace Util
 
         private static byte[] GetRawDataDoctor(byte[] payload, string username, byte messageID)
         {
-            Debug.WriteLine(BitConverter.ToString(Encoding.ASCII.GetBytes(username)));
             byte[] nameArray = Encoding.ASCII.GetBytes(username);
             byte[] total = new byte[nameArray.Length + payload.Length];
             Array.Copy(payload, 0, total, 0, payload.Length);
@@ -422,7 +421,6 @@ namespace Util
         /// <returns>the response of the message, so wether it was successful or not.</returns>
         public static bool getResistanceFromResponseJson(byte[] json)
         {
-            Debug.WriteLine("got message " + Encoding.ASCII.GetString(json));
             return ((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.worked;
         }
 

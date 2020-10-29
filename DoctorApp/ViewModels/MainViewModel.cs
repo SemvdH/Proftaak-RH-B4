@@ -52,13 +52,15 @@ namespace DoctorApp.ViewModels
         public void TransferDataToClientBike(byte[] bytes)
         {
             string username = DataParser.getNameFromBytesBike(bytes);
-            foreach(ClientInfoViewModel item in Tabs)
+            foreach (ClientInfoViewModel item in Tabs)
             {
-                if(item.PatientInfo.Username == username)
+                if (item.PatientInfo.Username == username)
                 {
-                    item.BikeData(DataParser.getDataWithoutName(bytes,0,8));
+                    item.BikeData(DataParser.getDataWithoutName(bytes, 0, 8));
+                    return;
                 }
             }
+            Debug.WriteLine("[MainViewModel] did not find client (bike) username is " + username);
         }
 
         public void TransferDataToClientBPM(byte[] bytes)
@@ -68,9 +70,11 @@ namespace DoctorApp.ViewModels
             {
                 if (item.PatientInfo.Username == username)
                 {
-                    item.BikeData(DataParser.getDataWithoutName(bytes, 0,2));
+                    item.BPMData(DataParser.getDataWithoutName(bytes, 0, 2));
+                    return;
                 }
             }
+            Debug.WriteLine("[MainViewModel] did not find client (bpm) username is " + username);
         }
     }
 
