@@ -13,4 +13,12 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClientApp\ClientApp.csproj" />
+    <ProjectReference Include="..\DoctorApp\DoctorApp.csproj" />
+    <ProjectReference Include="..\ProftaakRH\ProftaakRH.csproj" />
+    <ProjectReference Include="..\RH-Engine\RH-Engine.csproj" />
+    <ProjectReference Include="..\Server\Server.csproj" />
+  </ItemGroup>
+
 </Project>
