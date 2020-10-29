@@ -83,9 +83,14 @@ namespace DoctorApp.ViewModels
                 PatientInfo.Resistance = float.Parse(((TextBox)parameter).Text);
             });
 
+            // request the historic data from the server
             this.SaveHistoricData = new RelayCommand<object>((parameter) =>
             {
                 this.client.sendMessage(DataParser.GetGetFileMessage(PatientInfo.Username, DateTime.Now));
+                // data is stored on the server
+                // send request to server that we want to get the current historic data from the patient
+                // server sends this back
+                // we parse it
             });
 
         }

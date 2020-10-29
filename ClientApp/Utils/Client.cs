@@ -184,7 +184,7 @@ namespace ClientApp.Utils
                 else if (DataParser.isRawDataBikeServer(messageBytes))
                 {
                     Console.WriteLine($"Received data: {BitConverter.ToString(payloadbytes)}");
-                }
+                } 
 
                 totalBufferReceived -= expectedMessageLength;
                 expectedMessageLength = BitConverter.ToInt32(totalBuffer, 0);

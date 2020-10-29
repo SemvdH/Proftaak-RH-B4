@@ -149,6 +149,8 @@ namespace Server
                         break;
                     case DataParser.GET_FILE:
                         //ugly
+
+                        //get the raw bike data of the user with the specified username
                         string username = DataParser.GetUsernameFromGetFileBytes(payloadbytes);
                         string path = Directory.GetCurrentDirectory() + "/" + username + "/" + DataParser.GetDateFromGetFileBytes(payloadbytes) + "/rawBike.bin";
                         int length = Int32.MaxValue;
@@ -164,7 +166,8 @@ namespace Server
                         if (length > 10240)
                             break;
 
-                        communication.SendMessageToClient(username, DataParser.GetFileMessage(File.ReadAllBytes(path)));
+                        // we need to send it to the doctor and not to the user with the username
+                        communication.SendMessageToClient(this.username, DataParser.GetFileMessage(File.ReadAllBytes(path)));
                         break;
                     default:
                         Console.WriteLine($"Received json with identifier {identifier}:\n{Encoding.ASCII.GetString(payloadbytes)}");

@@ -494,7 +494,7 @@ namespace Util
 
         public static string GetDateFromGetFileBytes(byte[] json)
         {
-            return ((string)((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.dateTime));
+            return ((string)((dynamic)JsonConvert.DeserializeObject(Encoding.ASCII.GetString(json))).data.dateTime);
         }
 
         public static byte[] GetFileMessage(byte[] file)

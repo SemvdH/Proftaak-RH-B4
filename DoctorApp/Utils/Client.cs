@@ -123,6 +123,9 @@ namespace DoctorApp.Utils
                 }
                 else if (DataParser.isRawDataBikeDoctor(messageBytes))
                 {
+                    // read the .bin file that is in the message
+                    // update the view
+
                     MainViewModel.TransferDataToClientBike(payloadbytes);
                 }
                 else if (DataParser.isRawDataBPMDoctor(messageBytes))
