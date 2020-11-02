@@ -170,6 +170,7 @@ namespace Server
                     Array.Copy(this.BikeDataBuffer, 0, this.BikeDataBuffer, 8, 8);
                     Array.Copy(payloadbytes, 0, this.BikeDataBuffer, 0, 8);
                 }
+                if (this.username != null)
                 this.communication.Doctor?.sendMessage(DataParser.GetRawBikeDataDoctor(payloadbytes, this.username));
 
             }
@@ -181,6 +182,7 @@ namespace Server
                 {
                     Array.Copy(payloadbytes, 0, this.BPMDataBuffer, 0, 2);
                 }
+                if (this.username != null)
                 this.communication.Doctor?.sendMessage(DataParser.GetRawBPMDataDoctor(payloadbytes, this.username));
             }
 
